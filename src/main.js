@@ -1,12 +1,15 @@
 import ReactDOM from "react-dom";
-import Button from '@material-ui/core/Button';
 import React from 'react';
 
 import NavBar from './components/navbar'
-
+import Description from './components/description'
+import CenteredGrid from './components/grid'
 const nodeUrl = 'https://testnodes.wavesnodes.com';
 const seed = 'melody eye stock ostrich camera talk unlock royal insane pipe step squeeze';
 const address = '3N67wqt9Xvvn1Qtgz6KvyEcdmr8AL7EVaQM';
+import Container from '@material-ui/core/Container';
+import { makeStyles } from '@material-ui/core/styles';
+import { spacing } from "@material-ui/system";
 
 class App extends React.Component {
     constructor(props) {
@@ -41,8 +44,12 @@ class App extends React.Component {
 
     render() {
         return (
-            <div className="container">
-                <NavBar auth={this.authFunc}/>
+            <div className="container" style={{display: 'flex', flexDirection: "column"}}>
+                <NavBar position="static" auth={this.authFunc}/>
+                <Container maxWidth="lg" style={{paddingTop: "20px"}}>
+                    <Description />
+                    
+                </Container>
             </div>
         )
     }
