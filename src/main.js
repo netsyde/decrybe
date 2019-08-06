@@ -44,9 +44,9 @@ class App extends React.Component {
 
     render() {
         return (
-            <div className="container" style={{display: 'flex', flexDirection: "column"}}>
+            <div className="container" style={{display: 'flex', flexDirection: "column", padding: 0, margin: 0}}>
                 <NavBar position="static" auth={this.authFunc}/>
-                <Container maxWidth="lg" style={{paddingTop: "20px"}}>
+                <Container style={{paddingTop: "20px"}}>
                     <Description />
                     
                 </Container>
