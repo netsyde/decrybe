@@ -22,20 +22,39 @@ const useStyles = makeStyles(theme => ({
 
 export default function NavBar(props) {
   const classes = useStyles();
-
-  return (
-    <div className={classes.root}>
-      <AppBar position={props.position}>
-        <Toolbar>
-          <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" className={classes.title}>
-            deLance
-          </Typography>
-          <Button color="inherit" onClick={() => { props.auth() }}>Login</Button>
-        </Toolbar>
-      </AppBar>
-    </div>
-  );
+  if (props.address != "Login") {
+    return (
+      <div className={classes.root}>
+        <AppBar position={props.position}>
+          <Toolbar>
+            <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+              <MenuIcon />
+            </IconButton>
+            <Typography variant="h6" className={classes.title}>
+              deLance
+            </Typography>
+            <Typography variant="h6">
+              {props.address}, balance: {props.balance}
+            </Typography>
+          </Toolbar>
+        </AppBar>
+      </div>
+    );
+  } else {
+    return (
+      <div className={classes.root}>
+        <AppBar position={props.position}>
+          <Toolbar>
+            <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+              <MenuIcon />
+            </IconButton>
+            <Typography variant="h6" className={classes.title}>
+              deLance
+            </Typography>
+            <Button color="inherit" onClick={() => { props.auth() }}>{props.address}</Button>
+          </Toolbar>
+        </AppBar>
+      </div>
+    );
+  }
 }
