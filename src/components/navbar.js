@@ -60,7 +60,6 @@ const useStyles = makeStyles(theme => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
     }),
-    //height: '100%'
   },
   drawerPaperClose: {
     overflowX: 'hidden',
@@ -72,7 +71,6 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.up('sm')]: {
       width: theme.spacing(9),
     },
-    //height: '100%'
   },
   appBarSpacer: theme.mixins.toolbar,
   content: {
@@ -122,10 +120,10 @@ export default function NavBar(props) {
               <MenuIcon />
             </IconButton>
             <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-              deLance
+              deLance.Dashboard
             </Typography>
             <Typography component="h1" variant="h6" color="inherit">
-              {props.address}, balance {props.balance}
+              {props.address}
             </Typography>
           </Toolbar>
         </AppBar>
@@ -163,7 +161,7 @@ export default function NavBar(props) {
               <MenuIcon />
             </IconButton>
             <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-              deLance
+              deLance.Dashboard
             </Typography>
             <Button color="inherit" onClick={() => { props.auth() }}>{props.address}</Button>
           </Toolbar>

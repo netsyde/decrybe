@@ -11,6 +11,7 @@ import Paper from '@material-ui/core/Paper';
 import clsx from 'clsx';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
+import Balance from './components/balance'
 
 const drawerWidth = 240;
 
@@ -99,7 +100,7 @@ export default function Main (props) {
 	return (
 		<div className={classes.root}>
 		<CssBaseline />
-		<NavBar auth={props.auth} address={props.address ? props.address : "Login"} balance={props.balance ? props.balance : "Nan" }/>
+		<NavBar auth={props.auth} address={props.address ? props.address : "Login"}/>
 		<main className={classes.content}>
 			<div className={classes.appBarSpacer} />
 			<Container maxWidth="lg" className={classes.container}>
@@ -113,7 +114,7 @@ export default function Main (props) {
 					{/* Recent Deposits */}
 					<Grid item xs={12} md={4} lg={3}>
 						<Paper className={fixedHeightPaper}>
-						 
+						 	<Balance balance={props.balance ? props.balance : "Nan"}/>
 						</Paper>
 					</Grid>
 					{/* Recent Orders */}
@@ -173,7 +174,7 @@ class App extends React.Component {
 function MadeWithLove() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
-      {'Built with love by the '}
+      {'Built on Waves with love by the '}
       <Link color="inherit" href="https://netsy.de/">
         NetSyde
       </Link>
