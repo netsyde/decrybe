@@ -1,7 +1,6 @@
 import ReactDOM from "react-dom";
 import React from 'react';
 import NavBar from './components/navbar'
-const nodeUrl = 'https://testnodes.wavesnodes.com';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import * as nodeInt from './modules/nodeInt';
@@ -100,7 +99,7 @@ export default function Main (props) {
 	return (
 		<div className={classes.root}>
 		<CssBaseline />
-		<NavBar auth={props.auth} address={props.address ? props.address : "Login"}/>
+		<NavBar network={props.network} auth={props.auth} address={props.address ? props.address : "Login"}/>
 		<main className={classes.content}>
 			<div className={classes.appBarSpacer} />
 			<Container maxWidth="lg" className={classes.container}>
@@ -137,7 +136,8 @@ class App extends React.Component {
    super(props);
     this.state = {
       isAuth: false,
-      keeperData: {},
+			keeperData: {},
+			balance: "",
     }
     this.authFunc = this.authFunc.bind(this);
   }
@@ -147,11 +147,19 @@ class App extends React.Component {
       const getPublicState = async () => {
         try {
           const state = await WavesKeeper.publicState();
-          console.log(state);
-          let balance = await nodeInt.getBalance(state.account.address, nodeUrl)
+					console.log(state);
+					if (state.network.code == "W") {
+						this.setState({nodeUrl: "https://nodes.wavesplatform.com"})
+					} else if (state.network.code == "T") {
+						this.setState({nodeUrl: "https://testnodes.wavesnodes.com"})
+					} else {
+						console.log("GET NODE ERROR")
+					}
+          let balance = await nodeInt.getBalance(state.account.address, this.state.nodeUrl)
           this.setState({
             isAuth: true,
-            keeperData: state.account,
+						keeperData: state.account,
+						net: state.network,
             balance: balance.balance/1e8
           })
           console.log(balance)
@@ -166,7 +174,7 @@ class App extends React.Component {
 	}
   render() {
 		return (
-	  	<Main auth={this.authFunc} address={this.state.keeperData.address ? this.state.keeperData.address : "Login"} balance={this.state.balance ? this.state.balance : "Nan" }/>
+	  	<Main network={this.state.net} auth={this.authFunc} address={this.state.keeperData.name ? this.state.keeperData.name : (this.state.keeperData.address ? this.state.keeperData.address : "Login")} balance={this.state.balance ? this.state.balance : "Nan" }/>
     )
   }
 }

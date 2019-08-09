@@ -120,7 +120,7 @@ export default function NavBar(props) {
               <MenuIcon />
             </IconButton>
             <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-              deLance.Dashboard
+              deLance.Dashboard {props.network.code == "T" ? "[Testnet]" : "[Mainnet]"}
             </Typography>
             <Typography component="h1" variant="h6" color="inherit">
               {props.address}
