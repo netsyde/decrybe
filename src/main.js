@@ -10,7 +10,9 @@ import Paper from '@material-ui/core/Paper';
 import clsx from 'clsx';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
-import Balance from './components/balance'
+import Balance from './components/balance';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
 
 const drawerWidth = 240;
 
@@ -91,11 +93,28 @@ const useStyles = makeStyles(theme => ({
   fixedHeight: {
     height: 240,
   },
+  textField: {
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
+    width: 200,
+  },
+  containerFields: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+  descriptionField: {
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
+  },
+  button: {
+    backgroundColor: "#654EA3",
+    margin: theme.spacing(1),
+  },
 }));
 
 export default function Main (props) {
 	const classes = useStyles();
-	const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 	return (
 		<div className={classes.root}>
 		<CssBaseline />
@@ -107,7 +126,31 @@ export default function Main (props) {
 					{/* Chart */}
 					<Grid item xs={12} md={8} lg={9}>
 						<Paper className={fixedHeightPaper}>
-						 
+              <form className={classes.containerFields} noValidate autoComplete="off">
+                <TextField
+                  id="title"
+                  label="Title"
+                  margin="normal"
+                  className={classes.textField}
+                />
+                <TextField
+                  id="price"
+                  type="number"
+                  label="Price"
+                  margin="normal"
+                  className={classes.textField}
+                />
+              </form>
+              <TextField
+                id="standard-name"
+                label="Description"
+                multiline
+                margin="normal"
+                className={classes.descriptionField}
+              />
+              <Button variant="contained" color="primary" className={classes.button}>
+                Create a task
+              </Button>
 						</Paper>
 					</Grid>
 					{/* Recent Deposits */}
