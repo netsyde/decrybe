@@ -11,7 +11,14 @@ export let getBalance = async (address, nodeUrl) => {
 
 export let dataTx = async (info, seed, nodeUrl) => {
     try {
-        broadcast( data( {data: info, fee: 100000}, seed), nodeUrl ).then( (v) => {
+        let dataParams = {
+            data: [
+              {
+                key: info.id, value: JSON.stringify(info)
+              }
+            ]
+          }
+        broadcast( data( {data: dataParams.data, fee: 100000}, seed), nodeUrl ).then( (v) => {
             if (v.id) {
                 console.log(`Data transaction id: ${v.id}`);
                 return true;

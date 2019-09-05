@@ -11,8 +11,7 @@ import clsx from 'clsx';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
 import Balance from './components/balance';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
+import TaskCreator from './components/taskCreator'
 
 const drawerWidth = 240;
 
@@ -93,23 +92,7 @@ const useStyles = makeStyles(theme => ({
   fixedHeight: {
     height: 240,
   },
-  textField: {
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
-    width: 200,
-  },
-  containerFields: {
-    display: 'flex',
-    flexWrap: 'wrap',
-  },
-  descriptionField: {
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
-  },
-  button: {
-    backgroundColor: "#654EA3",
-    margin: theme.spacing(1),
-  },
+
 }));
 
 export default function Main (props) {
@@ -126,31 +109,7 @@ export default function Main (props) {
 					{/* Chart */}
 					<Grid item xs={12} md={8} lg={9}>
 						<Paper className={fixedHeightPaper}>
-              <form className={classes.containerFields} noValidate autoComplete="off">
-                <TextField
-                  id="title"
-                  label="Title"
-                  margin="normal"
-                  className={classes.textField}
-                />
-                <TextField
-                  id="price"
-                  type="number"
-                  label="Price"
-                  margin="normal"
-                  className={classes.textField}
-                />
-              </form>
-              <TextField
-                id="standard-name"
-                label="Description"
-                multiline
-                margin="normal"
-                className={classes.descriptionField}
-              />
-              <Button variant="contained" color="primary" className={classes.button}>
-                Create a task
-              </Button>
+              <TaskCreator nodeUrl={props.nodeUrl}/>
 						</Paper>
 					</Grid>
 					{/* Recent Deposits */}
@@ -217,7 +176,7 @@ class App extends React.Component {
 	}
   render() {
 		return (
-	  	<Main network={this.state.net} auth={this.authFunc} address={this.state.keeperData.name ? this.state.keeperData.name : (this.state.keeperData.address ? this.state.keeperData.address : "Login")} balance={this.state.balance ? this.state.balance : "Nan" }/>
+	  	<Main network={this.state.net} nodeUrl={this.state.nodeUrl} auth={this.authFunc} address={this.state.keeperData.name ? this.state.keeperData.name : (this.state.keeperData.address ? this.state.keeperData.address : "Login")} balance={this.state.balance ? this.state.balance : "Nan" }/>
     )
   }
 }
