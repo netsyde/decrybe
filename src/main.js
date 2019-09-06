@@ -109,7 +109,7 @@ export default function Main (props) {
 					{/* Chart */}
 					<Grid item xs={12} md={8} lg={9}>
 						<Paper className={fixedHeightPaper}>
-              <TaskCreator nodeUrl={props.nodeUrl}/>
+              <TaskCreator nodeUrl={props.nodeUrl} address={props.keeperData.address}/>
 						</Paper>
 					</Grid>
 					{/* Recent Deposits */}
@@ -176,7 +176,7 @@ class App extends React.Component {
 	}
   render() {
 		return (
-	  	<Main network={this.state.net} nodeUrl={this.state.nodeUrl} auth={this.authFunc} address={this.state.keeperData.name ? this.state.keeperData.name : (this.state.keeperData.address ? this.state.keeperData.address : "Login")} balance={this.state.balance ? this.state.balance : "Nan" }/>
+	  	<Main network={this.state.net} nodeUrl={this.state.nodeUrl} auth={this.authFunc} keeperData={this.state.keeperData} address={this.state.keeperData.name ? this.state.keeperData.name : (this.state.keeperData.address ? this.state.keeperData.address : "Login")} balance={this.state.balance ? this.state.balance : "Nan" }/>
     )
   }
 }

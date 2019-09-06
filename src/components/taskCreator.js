@@ -42,7 +42,9 @@ export default function TaskCreator(props) {
     title: "",
     price: "",
     description: "",
-    id: 1 // add logic
+    id: "1", // add logic
+    customer: props.address,
+    type: "task"
   }
   let changeField = (e, field) => {
     console.log(`changeField`);
