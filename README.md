@@ -4,6 +4,9 @@
 ### Stage I
 - ~~Authorization via Waves Keeper~~
 - ~~Ability to create a job (record information in the blockchain)~~
+- ~~Ability to get all the data from dApp~~
+- ~~Ability to get all user tasks~~
+- Ability to receive information about the task
 - Ability to change the status of the order (active, completed)
 - Implementation of the possibility to take the order
 - Development of a smart contract
@@ -44,7 +47,7 @@ console.log(nodeInt.getBalance('3N67wqt9Xvvn1Qtgz6KvyEcdmr8AL7EVaQM', 'https://t
 ```
 
 #### dataTx
-**dataTx** - function to send data transaction in waves blockchain
+**dataTx** - function to send data transaction in waves blockchain.
 Params:
 - info (data object)
 - seed (dApp seed)
@@ -67,3 +70,28 @@ let data = {
 nodeInt.dataTx(data, seed, nodeUrl);
 ```
 Returns **true** if tx is sent, or **false** if not.
+
+#### getAllData
+**getAllData** - function to recieve all data from dApp storage.
+Params:
+- address (address dApp)
+- nodeUrl (node Url)
+
+Usage:
+```javascript
+let allTask = getAllData(dAppAddress, nodeUrl);
+```
+Returns an array.
+
+#### getAllUserTasksId
+**getAllUserTasksId** - function to recieve all user tasks.
+Params:
+- userAddress
+- dAppAddress
+- nodeUrl
+
+Usage:
+```javascript
+getAllUserTasksId("3N8Ayob7haCp5N32V6gYcdPsLMKMaS3qH3E", "3N67wqt9Xvvn1Qtgz6KvyEcdmr8AL7EVaQM", "https://testnodes.wavesnodes.com");
+```
+Returns an array of keys.

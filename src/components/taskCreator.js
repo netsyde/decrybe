@@ -39,12 +39,12 @@ const useStyles = makeStyles(theme => ({
 export default function TaskCreator(props) {
   const classes = useStyles();
   let data = {
+    type: "task",
     title: "",
     price: "",
     description: "",
-    id: "1", // add logic
+    id: "2", // add logic
     customer: props.address,
-    type: "task",
     status: "active", // active, closed, completed
     version: "1" // version of task
   }
