@@ -97,7 +97,7 @@ const drawerWidth = 240;
 
 export default function NavBar(props) {
   const classes = useStyles();
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = React.useState(false);
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -120,7 +120,7 @@ export default function NavBar(props) {
               <MenuIcon />
             </IconButton>
             <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-              deLance.Dashboard {props.network.code == "T" ? "[Testnet]" : "[Mainnet]"}
+              decrybe.Dashboard {props.network.code == "T" ? "[Testnet]" : "[Mainnet]"}
             </Typography>
             <Typography component="h1" variant="h6" color="inherit">
               {props.address}
@@ -161,7 +161,7 @@ export default function NavBar(props) {
               <MenuIcon />
             </IconButton>
             <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-              deLance.Dashboard
+              decrybe.Dashboard
             </Typography>
             <Button color="inherit" onClick={() => { props.auth() }}>{props.address}</Button>
           </Toolbar>

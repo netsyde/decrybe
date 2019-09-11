@@ -44,7 +44,9 @@ export default function TaskCreator(props) {
     description: "",
     id: "1", // add logic
     customer: props.address,
-    type: "task"
+    type: "task",
+    status: "active", // active, closed, completed
+    version: "1" // version of task
   }
   let changeField = (e, field) => {
     console.log(`changeField`);

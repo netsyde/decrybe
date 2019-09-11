@@ -1,6 +1,6 @@
 {
-    "name": "delance",
-    "version": "0.0.1",
+    "name": "decrybe",
+    "version": "0.0.9",
     "scripts": {
         "build": "webpack",
         "watch": "webpack --watch"
