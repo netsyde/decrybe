@@ -6,8 +6,8 @@
 - ~~Ability to create a job (record information in the blockchain)~~
 - ~~Ability to get all the data from dApp~~
 - ~~Ability to get all user tasks~~
-- Ability to receive information about the task
-- Ability to change the status of the order (active, completed)
+- ~~Ability to receive information about the task~~
+- ~~Ability to change the status of the order (active, completed)~~
 - Implementation of the possibility to take the order
 - Development of a smart contract
 - ~~Development of the customer's balance check function~~
@@ -32,8 +32,7 @@
 - Development of mobile applications
 
 ## API
-### Module nodeInt
-#### getBalance
+### getBalance
 **getBalance** - function to get user balance.
 Params:
 - address (wallet address)
@@ -46,7 +45,7 @@ import * as nodeInt from './modules/nodeInt';
 console.log(nodeInt.getBalance('3N67wqt9Xvvn1Qtgz6KvyEcdmr8AL7EVaQM', 'https://testnodes.wavesnodes.com') // 3.98
 ```
 
-#### dataTx
+### dataTx
 **dataTx** - function to send data transaction in waves blockchain.
 Params:
 - info (data object)
@@ -71,8 +70,8 @@ nodeInt.dataTx(data, seed, nodeUrl);
 ```
 Returns **true** if tx is sent, or **false** if not.
 
-#### getAllData
-**getAllData** - function to recieve all data from dApp storage.
+### getAllData
+**getAllData** - function to receive all data from dApp storage.
 Params:
 - address (address dApp)
 - nodeUrl (node Url)
@@ -83,8 +82,8 @@ let allTask = getAllData(dAppAddress, nodeUrl);
 ```
 Returns an array.
 
-#### getAllUserTasksId
-**getAllUserTasksId** - function to recieve all user tasks.
+### getAllUserTasksId
+**getAllUserTasksId** - function to receive all user tasks.
 Params:
 - userAddress
 - dAppAddress
@@ -95,3 +94,21 @@ Usage:
 getAllUserTasksId("3N8Ayob7haCp5N32V6gYcdPsLMKMaS3qH3E", "3N67wqt9Xvvn1Qtgz6KvyEcdmr8AL7EVaQM", "https://testnodes.wavesnodes.com");
 ```
 Returns an array of keys.
+
+### getDataFromTask
+**getDataFromTask** - function to receive data from task by key.
+Params:
+- key (task id)
+- dAppAddress
+- nodeUrl
+
+Usage:
+```javascript
+getDataFromTask(key, dAppAddress, nodeUrl);
+```
+Returns an array.
+## Install and run
+- git clone https://github.com/Sgoldik/Dracotion
+- yarn or npm i
+- yarn build or npm build
+- node server
