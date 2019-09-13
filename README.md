@@ -8,7 +8,7 @@
 - ~~Ability to get all user tasks~~
 - ~~Ability to receive information about the task~~
 - ~~Ability to change the status of the order (active, completed)~~
-- Implementation of the possibility to take the order
+- ~~Implementation of the possibility to take the order~~
 - Development of a smart contract
 - ~~Development of the customer's balance check function~~
 - Development of the reservation function of the amount allocated to the order
@@ -143,7 +143,7 @@ Params:
 - nodeUrl
 
 ## taskIdGenerator
-**taskIdGenerator** - generator task id
+**taskIdGenerator** - generator task id.
 Params:
 - address (customer address)
 - dAppAddress
