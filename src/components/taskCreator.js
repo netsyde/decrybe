@@ -36,23 +36,39 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+
 export default function TaskCreator(props) {
   const classes = useStyles();
-  let data = {
-    type: "task",
-    title: "",
-    price: "",
-    description: "",
-    id: "2", // add logic
-    customer: props.address,
-    status: "active", // active, closed, completed
-    version: "1" // version of task
+  let data;
+  if (props.address && props.dAppAddress && props.nodeUrl) {
+
+    async function getTaskId() {
+      try {
+        let id = await nodeInt.taskIdGenerator(props.address, props.dAppAddress, props.nodeUrl)
+        console.log(id)
+        data.id = id;
+      } catch (e) {
+        console.log(e)
+      }
+    }
+    getTaskId();
+    data = {
+      type: "task",
+      title: "",
+      price: "",
+      description: "",
+      id: "", // add logic
+      customer: props.address,
+      freelancer: "",
+      status: "active", // active, closed, completed
+      version: 1 // version of task
+    }
   }
   let changeField = (e, field) => {
-    console.log(`changeField`);
-    console.log(props.nodeUrl)
+    console.log(data.id);
     if (field == "title") {
       data.title = e.target.value;
+
     } else if (field == "price") {
       data.price = e.target.value;
     } else if (field == "description") {

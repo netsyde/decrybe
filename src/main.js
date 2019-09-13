@@ -109,7 +109,11 @@ export default function Main (props) {
 					{/* Chart */}
 					<Grid item xs={12} md={8} lg={9}>
 						<Paper className={fixedHeightPaper}>
-              <TaskCreator nodeUrl={props.nodeUrl} address={props.keeperData.address}/>
+              <TaskCreator
+                dAppAddress={props.dAppAddress}
+                nodeUrl={props.nodeUrl}
+                address={props.keeperData.address}
+              />
 						</Paper>
 					</Grid>
 					{/* Recent Deposits */}
@@ -139,7 +143,8 @@ class App extends React.Component {
     this.state = {
       isAuth: false,
 			keeperData: {},
-			balance: "",
+      balance: "",
+      dAppAddress: "3N67wqt9Xvvn1Qtgz6KvyEcdmr8AL7EVaQM"
     }
     this.authFunc = this.authFunc.bind(this);
   }
@@ -176,7 +181,15 @@ class App extends React.Component {
 	}
   render() {
 		return (
-	  	<Main network={this.state.net} nodeUrl={this.state.nodeUrl} auth={this.authFunc} keeperData={this.state.keeperData} address={this.state.keeperData.name ? this.state.keeperData.name : (this.state.keeperData.address ? this.state.keeperData.address : "Login")} balance={this.state.balance ? this.state.balance : "Nan" }/>
+      <Main
+        dAppAddress={this.state.dAppAddress}
+        network={this.state.net}
+        nodeUrl={this.state.nodeUrl}
+        auth={this.authFunc}
+        keeperData={this.state.keeperData}
+        address={this.state.keeperData.name ? this.state.keeperData.name : (this.state.keeperData.address ? this.state.keeperData.address : "Login")}
+        balance={this.state.balance ? this.state.balance : "Nan" }
+      />
     )
   }
 }

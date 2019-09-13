@@ -107,8 +107,66 @@ Usage:
 getDataFromTask(key, dAppAddress, nodeUrl);
 ```
 Returns an array.
+
+### getLastTaskVersion
+**getLastTaskVersion** - function to receive last task version.
+Params:
+- key (task id)
+- address
+- dAppAddress
+- nodeUrl
+
+Usage:
+```javascript
+let version = await getLastTaskVersion(key, address, dAppAddress, nodeUrl);
+```
+Returns number.
+
+### changeTaskData
+**changeTaskData** - function to change any task field.
+Params:
+- key (task id)
+- address
+- seed (dApp seed)
+- dAppAddress
+- nodeUrl
+- field (field name (ex. "status", "title", "description"))
+- newData (update value (ex. "test task title"))
+
+### takeOrder
+**takeOrder** - function to take order.
+Params:
+- key (task id)
+- freelancer (freelancer address)
+- dAppAddress
+- seed (dApp seed)
+- nodeUrl
+
+## taskIdGenerator
+**taskIdGenerator** - generator task id
+Params:
+- address (customer address)
+- dAppAddress
+- nodeUrl
+
+Usage:
+```javascript
+import * as nodeInt from '../modules/nodeInt';
+let data = {}
+async function getTaskId() {
+    try {
+        let id = await nodeInt.taskIdGenerator(props.address, props.dAppAddress, props.nodeUrl)
+        console.log(id)
+        data.id = id;
+    } catch (e) {
+        console.log(e)
+    }
+}
+getTaskId();
+```
+
 ## Install and run
-- git clone https://github.com/Sgoldik/Dracotion
+- git clone https://github.com/Sgoldik/decrybe
 - yarn or npm i
 - yarn build or npm build
 - node server

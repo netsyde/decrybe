@@ -1,4 +1,5 @@
-const {broadcast, data, nodeInteraction} =  require('@waves/waves-transactions');
+const {broadcast, data, nodeInteraction, seedUtils} =  require('@waves/waves-transactions');
+const {address} = require('@waves/ts-lib-crypto');
 const axios = require('axios');
 
 /**
@@ -59,7 +60,6 @@ export let getAllUserTasksId = async (userAddress, dAppAddress, nodeUrl) => {
     try {
         let allTask = await getAllData(dAppAddress, nodeUrl);
         let userTasks = [];
-        setTimeout(() => {
             console.log(allTask)
             let z = 0;
             for (let i in allTask) {
@@ -74,11 +74,11 @@ export let getAllUserTasksId = async (userAddress, dAppAddress, nodeUrl) => {
             }
             console.log(userTasks);
             return userTasks;
-        }, 5000);
     } catch (e) {
         console.log(`ERROR in nodeInt.getAllUserTasksId! ${e.name}: ${e.message}\n${e.stack}`);
     }
 }
+
 
 /**
  * Receive data from task
@@ -135,32 +135,75 @@ export let getLastTaskVersion = async (key, address, dAppAddress, nodeUrl) => {
 }
 
 /**
- * Change task status
+ * Change task data
  * @param key - task id
  * @param address - customer address
  * @param seed - dApp seed
- * @param status - task status
- * @param dAppAddress - dApp address
+ * @param dAppAddress - dApp Address
  * @param nodeUrl - node url
+ * @param field - field name (ex. "status", "title", "description")
+ * @param newData - update value (ex. "test task title")
  */
-export let changeTaskStatus = async (key, address, seed, status, dAppAddress, nodeUrl) => {
+export let changeTaskData = async (key, seed, dAppAddress, nodeUrl, field, newData) => {
     try {
         let data = await getDataFromTask(key, dAppAddress, nodeUrl);
         data = JSON.parse(data);
-        data.status = status;
-        console.log(data.status)
-        let version = await getLastTaskVersion(key, address, dAppAddress, nodeUrl);
-        console.log()
+        data[field] = newData;
+
+        console.log(data[field])
+
+        let version = await getLastTaskVersion(key, data.customer, dAppAddress, nodeUrl);
         data.version = version + 1;
+
         dataTx(data, seed, nodeUrl);
     } catch (e) {
-        console.log(`ERROR in nodeInt.changeTaskStatus! ${e.name}: ${e.message}\n${e.stack}`);
+        console.log(`ERROR in nodeInt.changeTaskData! ${e.name}: ${e.message}\n${e.stack}`);
     }
 }
 
-changeTaskStatus("3N8Ayob7haCp5N32V6gYcdPsLMKMaS3qH3E_task_2_1", "3N8Ayob7haCp5N32V6gYcdPsLMKMaS3qH3E", "melody eye stock ostrich camera talk unlock royal insane pipe step squeeze",
-"completed", "3N67wqt9Xvvn1Qtgz6KvyEcdmr8AL7EVaQM", "https://testnodes.wavesnodes.com"
-)
-//getAllUserTasksId("3N8Ayob7haCp5N32V6gYcdPsLMKMaS3qH3E", "3N67wqt9Xvvn1Qtgz6KvyEcdmr8AL7EVaQM", "https://testnodes.wavesnodes.com")
-//getLastTaskVersion("3N8Ayob7haCp5N32V6gYcdPsLMKMaS3qH3E_task_2_1", "3N8Ayob7haCp5N32V6gYcdPsLMKMaS3qH3E", "3N67wqt9Xvvn1Qtgz6KvyEcdmr8AL7EVaQM", "https://testnodes.wavesnodes.com")
-//getDataFromTask("3N8Ayob7haCp5N32V6gYcdPsLMKMaS3qH3E_task_2_1", "3N67wqt9Xvvn1Qtgz6KvyEcdmr8AL7EVaQM", "https://testnodes.wavesnodes.com")
+/**
+ * Generator task id
+ * @param address - customer address
+ * @param dAppAddress - dApp address
+ * @param nodeUrl - node url
+ */
+export let taskIdGenerator = async (address, dAppAddress, nodeUrl) => {
+    try {
+        let tasks = await getAllUserTasksId(address, dAppAddress, nodeUrl);
+        console.log(tasks)
+        let data = await getDataFromTask(tasks[tasks.length - 1], dAppAddress, nodeUrl);
+        data = JSON.parse(data);
+        let id = Number(data.id) + 1;
+        console.log(id)
+        return id;
+    } catch (e) {
+        console.log(`ERROR in nodeInt.taskIdGenerator! ${e.name}: ${e.message}\n${e.stack}`);
+    }
+}
+
+/**
+ * Take order
+ * @param key - task id
+ * @param freelancer = freelancer address
+ * @param dAppAddress - dApp address
+ * @param seed - dApp seed
+ * @param nodeUrl - node url
+ */
+export let takeOrder = async (key, freelancer, dAppAddress, seed, nodeUrl) => {
+    try {
+        let data = await getDataFromTask(key, dAppAddress, nodeUrl);
+        let version = await getLastTaskVersion(key, data.customer, dAppAddress, nodeUrl);
+        data = JSON.parse(data);
+
+        if (!data.freelancer) {
+            data.freelancer = freelancer;
+            data.version = version + 1;
+            dataTx(data, seed, nodeUrl)
+        } else {
+            console.log("Task already taken");
+        }
+
+    } catch (e) {
+        console.log(`ERROR in nodeInt.takeOrder! ${e.name}: ${e.message}\n${e.stack}`);
+    }
+}
