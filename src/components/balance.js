@@ -22,6 +22,14 @@ const useStyles = makeStyles({
   },
 });
 
+function GetDateNow() {
+  let tempDate = new Date();
+  const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  let date = `on ${tempDate.getDate()} ${monthNames[tempDate.getMonth()]}, ${tempDate.getFullYear()}`;
+
+  return date;
+}
+
 export default function Balance(props) {
   const classes = useStyles();
   return (
@@ -31,7 +39,7 @@ export default function Balance(props) {
         {props.balance}
       </Typography>
       <Typography color="textSecondary" className={classes.depositContext}>
-        on 9 August, 2019
+        <GetDateNow />
       </Typography>
       <div>
         <Link color="primary" href="javascript:;">
