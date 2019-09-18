@@ -1,6 +1,6 @@
 import ReactDOM from "react-dom";
 import React from 'react';
-import NavBar from './components/navbar'
+import NavBar from './components/navbar';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import * as nodeInt from './modules/nodeInt';
@@ -11,8 +11,14 @@ import clsx from 'clsx';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
 import Balance from './components/balance';
-import TaskCreator from './components/taskCreator'
+import TaskCreator from './components/taskCreator';
 
+import Customers from './pages/Customers';
+import Dashboard from './pages/Dashboard';
+import Freelancers from './pages/Freelancers';
+import General from './pages/General';
+
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 const drawerWidth = 240;
 
 const useStyles = makeStyles(theme => ({
@@ -181,15 +187,22 @@ class App extends React.Component {
 	}
   render() {
 		return (
-      <Main
-        dAppAddress={this.state.dAppAddress}
-        network={this.state.net}
-        nodeUrl={this.state.nodeUrl}
-        auth={this.authFunc}
-        keeperData={this.state.keeperData}
-        address={this.state.keeperData.name ? this.state.keeperData.name : (this.state.keeperData.address ? this.state.keeperData.address : "Login")}
-        balance={this.state.balance ? this.state.balance : "Nan" }
-      />
+      <Router>
+        <Route path="/customers" component={Customers} />
+        <Route path="/dashboard" render={()=>
+          <Main
+            dAppAddress={this.state.dAppAddress}
+            network={this.state.net}
+            nodeUrl={this.state.nodeUrl}
+            auth={this.authFunc}
+            keeperData={this.state.keeperData}
+            address={this.state.keeperData.name ? this.state.keeperData.name : (this.state.keeperData.address ? this.state.keeperData.address : "Login")}
+            balance={this.state.balance ? this.state.balance : "Nan" }
+          />
+          }
+        />
+        
+      </Router>
     )
   }
 }

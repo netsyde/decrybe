@@ -34,7 +34,7 @@ export default function Balance(props) {
   const classes = useStyles();
   return (
     <React.Fragment>
-      <Title>Balance</Title>
+    <Title>Balance</Title>
       <Typography component="p" variant="h4">
         {props.balance}
       </Typography>

@@ -4,7 +4,12 @@ module.exports = {
 	],
 	mode: "development",
 	output: {
-		filename: 'build.js'
+		//path: path.resolve(__dirname, 'dist'),
+		filename: 'build.js',
+		publicPath: '/'
+	},
+	devServer: {
+		historyApiFallback: true
 	},
 	module: {
 		rules: [
