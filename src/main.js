@@ -108,36 +108,43 @@ export default function Main (props) {
 		<div className={classes.root}>
 		<CssBaseline />
 		<NavBar network={props.network} auth={props.auth} address={props.address ? props.address : "Login"}/>
-		<main className={classes.content}>
-			<div className={classes.appBarSpacer} />
-			<Container maxWidth="lg" className={classes.container}>
-				<Grid container spacing={3}>
-					{/* Chart */}
-					<Grid item xs={12} md={8} lg={9}>
-						<Paper className={fixedHeightPaper}>
-              <TaskCreator
-                dAppAddress={props.dAppAddress}
-                nodeUrl={props.nodeUrl}
-                address={props.keeperData.address}
-              />
-						</Paper>
-					</Grid>
-					{/* Recent Deposits */}
-					<Grid item xs={12} md={4} lg={3}>
-						<Paper className={fixedHeightPaper}>
-						 	<Balance balance={props.balance ? props.balance : "Nan"}/>
-						</Paper>
-					</Grid>
-					{/* Recent Orders */}
-					<Grid item xs={12}>
-						<Paper className={classes.paper}>
-							
-						</Paper>
-					</Grid>
-				</Grid>
-			</Container>
-			<MadeWithLove />
-		</main>
+    <Router>
+      <Route exact path="/" component={General} className={classes.content}/>
+      <Route path="/customers" component={Customers} className={classes.content}/>
+      <Route path="/dashboard" render={()=>
+        <main className={classes.content}>
+          <div className={classes.appBarSpacer} />
+          <Container maxWidth="lg" className={classes.container}>
+            <Grid container spacing={3}>
+              {/* Chart */}
+              <Grid item xs={12} md={8} lg={9}>
+                <Paper className={fixedHeightPaper}>
+                  <TaskCreator
+                    dAppAddress={props.dAppAddress}
+                    nodeUrl={props.nodeUrl}
+                    address={props.keeperData.address}
+                  />
+                </Paper>
+              </Grid>
+              {/* Recent Deposits */}
+              <Grid item xs={12} md={4} lg={3}>
+                <Paper className={fixedHeightPaper}>
+                  <Balance balance={props.balance ? props.balance : "Nan"}/>
+                </Paper>
+              </Grid>
+              {/* Recent Orders */}
+              <Grid item xs={12}>
+                <Paper className={classes.paper}>
+                  
+                </Paper>
+              </Grid>
+            </Grid>
+          </Container>
+          <MadeWithLove />
+        </main>
+        }
+      />        
+    </Router>
 	</div>
 	)
 }
@@ -187,9 +194,6 @@ class App extends React.Component {
 	}
   render() {
 		return (
-      <Router>
-        <Route path="/customers" component={Customers} />
-        <Route path="/dashboard" render={()=>
           <Main
             dAppAddress={this.state.dAppAddress}
             network={this.state.net}
@@ -199,10 +203,6 @@ class App extends React.Component {
             address={this.state.keeperData.name ? this.state.keeperData.name : (this.state.keeperData.address ? this.state.keeperData.address : "Login")}
             balance={this.state.balance ? this.state.balance : "Nan" }
           />
-          }
-        />
-        
-      </Router>
     )
   }
 }

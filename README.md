@@ -1,7 +1,7 @@
 # decrybe
 ![](https://decrybe.com/logo.png)
 
-**decrybe** is a decentralized freelancing exchange. **decrybe** at the initial stage will be only a website, and later will get mobile applications with a convenient API. All data of the exchange will be stored in a decentralized database – the Waves blockchain. Anyone can find them in our dApp.
+**decrybe** - is a decentralized freelancing exchange. **decrybe** at the initial stage will be only a website, and later will get mobile applications with a convenient API. All data of the exchange will be stored in a decentralized database – the Waves blockchain. Anyone can find them in our dApp.
 ## Stage of development
 ### Stage I
 - ~~Authorization via Waves Keeper~~

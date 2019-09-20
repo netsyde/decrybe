@@ -161,7 +161,7 @@ export default function NavBar(props) {
               <MenuIcon />
             </IconButton>
             <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-              decrybe.Dashboard
+              decrybe
             </Typography>
             <Button color="inherit" onClick={() => { props.auth() }}>{props.address}</Button>
           </Toolbar>
@@ -179,9 +179,9 @@ export default function NavBar(props) {
           </IconButton>
         </div>
         <Divider />
-        <List>{mainListItems}</List>
+        <List component="nav">{mainListItems}</List>
         <Divider />
-        <List>{secondaryListItems}</List>
+        <List component="nav">{secondaryListItems}</List>
       </Drawer>
     </div>
     );
