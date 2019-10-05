@@ -1,0 +1,64 @@
+{-# STDLIB_VERSION 3 #-}
+{-# CONTENT_TYPE DAPP #-}
+{-# SCRIPT_TYPE ACCOUNT #-}
+
+let NONE = "none"
+let FEATURED = "featured"
+let DAPP = ""
+let LISTINGFEE = (1 * 100000000)
+
+func getKeyItemData(item: String) = {
+    "datajson_" + item
+}
+
+func getStrByKey(key: String) = {
+    let str = match getString(this, key) {
+            case a:String => a
+            case _ => NONE
+    }
+    str
+}
+
+# Task author section
+func getKeyItemAuthor (item: String) = {
+    "author_" + item
+}
+
+func getValueItemAuthor(item: String) = {
+    getStrByKey(getKeyItemAuthor(item))
+}
+
+func getKeyItemBlock(item: String) = {
+    "block_" + item
+}
+func getKeyItemBank(item: String) = {
+    "bank_" + item
+}
+func getKeyItemStatus(item: String) = {
+    "status_" + item
+}
+
+func getKeyItemExpiration(item: String) = {
+    "expiration_block_" + item
+}
+
+@Callable(i)
+func createTask(item: String, expiration: Int, data: String) = {
+    let account = toBase58String(i.caller.bytes)
+    let pmt = extract(i.payment)
+    if (isDefined(pmt.assetId)) then throw("can use waves only at the moment")
+    else {
+        if (pmt.amount != LISTINGFEE)
+            then throw("Please pay exact amount for the listing: " + toString(LISTINGFEE) + ", actual payment is: " + toString(pmt.amount))
+        else if (getValueItemAuthor(item) != NONE)
+            then throw("Item already exist")
+        else WriteSet([
+            DataEntry(getKeyItemAuthor(item), account),
+            DataEntry(getKeyItemBlock(item), height),
+            DataEntry(getKeyItemExpiration(item), height + expiration),
+            DataEntry(getKeyItemBank(item), LISTINGFEE),
+            DataEntry(getKeyItemStatus(item), FEATURED),
+            DataEntry(getKeyItemData(item), data)
+        ])
+    }
+}
