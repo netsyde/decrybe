@@ -6,7 +6,8 @@ let NONE = "none"
 let FEATURED = "featured"
 let DAPP = ""
 let LISTINGFEE = (1 * 100000000)
-
+let WHALE = "whale"
+let WHITELISTED = "registered"
 func getKeyItemData(item: String) = {
     "datajson_" + item
 }
@@ -17,6 +18,14 @@ func getStrByKey(key: String) = {
             case _ => NONE
     }
     str
+}
+
+func getNumberByKey(key: String) = {
+    let num = match getInteger(this, key) {
+            case a:Int => a
+            case _ => 0
+    }
+    num
 }
 
 # Task author section
@@ -42,6 +51,22 @@ func getKeyItemExpiration(item: String) = {
     "expiration_block_" + item
 }
 
+func getKeyWhitelistBio(account: String) = {
+    "wl_bio_" + account
+}
+
+func getKeyWhitelistStatus(account: String) = {
+    "wl_sts_" + account
+}
+
+func getValueWhitelistStatus(account: String) = {
+    getStrByKey(getKeyWhitelistStatus(account))
+}
+
+func getKeyWhitelistBlock(account: String) = {
+    "wl_blk_" + account
+}
+
 @Callable(i)
 func createTask(item: String, expiration: Int, data: String) = {
     let account = toBase58String(i.caller.bytes)
@@ -61,4 +86,14 @@ func createTask(item: String, expiration: Int, data: String) = {
             DataEntry(getKeyItemData(item), data)
         ])
     }
+}
+
+@Callable(i)
+func signUp(data: String, type: String) = {
+    let account = toBase58String(i.caller.bytes)
+    WriteSet([
+        DataEntry(getKeyWhitelistBio(account), data),
+        DataEntry(getKeyWhitelistBlock(account), height),
+        DataEntry(getKeyWhitelistStatus(account), if (type == WHALE) then WHALE else WHITELISTED)
+    ])
 }
