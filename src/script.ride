@@ -52,11 +52,11 @@ func getKeyItemExpiration(item: String) = {
 }
 
 func getKeyWhitelistBio(account: String) = {
-    "wl_bio_" + account
+    "d1_bio_" + account
 }
 
 func getKeyWhitelistStatus(account: String) = {
-    "wl_sts_" + account
+    "d1_sts_" + account
 }
 
 func getValueWhitelistStatus(account: String) = {
@@ -64,7 +64,7 @@ func getValueWhitelistStatus(account: String) = {
 }
 
 func getKeyWhitelistBlock(account: String) = {
-    "wl_blk_" + account
+    "d1_blk_" + account
 }
 
 @Callable(i)
@@ -76,7 +76,7 @@ func createTask(item: String, expiration: Int, data: String) = {
         if (pmt.amount != LISTINGFEE)
             then throw("Please pay exact amount for the listing: " + toString(LISTINGFEE) + ", actual payment is: " + toString(pmt.amount))
         else if (getValueItemAuthor(item) != NONE)
-            then throw("Item already exist")
+            then throw("Task already exist")
         else WriteSet([
             DataEntry(getKeyItemAuthor(item), account),
             DataEntry(getKeyItemBlock(item), height),

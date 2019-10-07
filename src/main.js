@@ -17,6 +17,7 @@ import Customers from './pages/Customers';
 import Dashboard from './pages/Dashboard';
 import Freelancers from './pages/Freelancers';
 import General from './pages/General';
+import blockchainInt from './modules/blockchainInt'
 
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 const drawerWidth = 240;
@@ -174,15 +175,21 @@ class App extends React.Component {
 						this.setState({nodeUrl: "https://testnodes.wavesnodes.com"})
 					} else {
 						console.log("GET NODE ERROR")
-					}
-          let balance = await nodeInt.getBalance(state.account.address, this.state.nodeUrl)
-          this.setState({
-            isAuth: true,
-						keeperData: state.account,
-						net: state.network,
-            balance: balance.balance/1e8
-          })
-          console.log(balance)
+          }
+          let isReg = await nodeInt.checkReg(state.account.address, this.state.dAppAddress, this.state.nodeUrl)
+          if (isReg) {
+            let balance = await nodeInt.getBalance(state.account.address, this.state.nodeUrl)
+            this.setState({
+              isAuth: true,
+              keeperData: state.account,
+              net: state.network,
+              balance: balance.balance/1e8
+            })
+            console.log(balance)
+          } else {
+            // func reg
+            
+          }
         } catch(error) {
     	    console.error(error);
   	    }

@@ -86,7 +86,7 @@ export let getAllUserTasksId = async (userAddress, dAppAddress, nodeUrl) => {
  * @param dAppAddress - dApp address
  * @param nodeUrl - node url
  */
-export let getDataFromTask = async (key, dAppAddress, nodeUrl) => {
+export let getDataByKey = async (key, dAppAddress, nodeUrl) => {
     try {
         let response;
         let data = await getAllData(dAppAddress, nodeUrl);
@@ -102,7 +102,7 @@ export let getDataFromTask = async (key, dAppAddress, nodeUrl) => {
 		}
 		return response;
     } catch (e) {
-        console.log(`ERROR in nodeInt.getDataFromTask! ${e.name}: ${e.message}\n${e.stack}`);
+        console.log(`ERROR in nodeInt.getDataByKey! ${e.name}: ${e.message}\n${e.stack}`);
     }
 }
 
@@ -146,7 +146,7 @@ export let getLastTaskVersion = async (key, address, dAppAddress, nodeUrl) => {
  */
 export let changeTaskData = async (key, seed, dAppAddress, nodeUrl, field, newData) => {
     try {
-        let data = await getDataFromTask(key, dAppAddress, nodeUrl);
+        let data = await getDataByKey(key, dAppAddress, nodeUrl);
         data = JSON.parse(data);
         data[field] = newData;
 
@@ -171,7 +171,7 @@ export let taskIdGenerator = async (address, dAppAddress, nodeUrl) => {
     try {
         let tasks = await getAllUserTasksId(address, dAppAddress, nodeUrl);
         console.log(tasks)
-        let data = await getDataFromTask(tasks[tasks.length - 1], dAppAddress, nodeUrl);
+        let data = await getDataByKey(tasks[tasks.length - 1], dAppAddress, nodeUrl);
         data = JSON.parse(data);
         let id = Number(data.id) + 1;
         console.log(id)
@@ -191,7 +191,7 @@ export let taskIdGenerator = async (address, dAppAddress, nodeUrl) => {
  */
 export let takeOrder = async (key, freelancer, dAppAddress, seed, nodeUrl) => {
     try {
-        let data = await getDataFromTask(key, dAppAddress, nodeUrl);
+        let data = await getDataByKey(key, dAppAddress, nodeUrl);
         let version = await getLastTaskVersion(key, data.customer, dAppAddress, nodeUrl);
         data = JSON.parse(data);
 
@@ -207,3 +207,27 @@ export let takeOrder = async (key, freelancer, dAppAddress, seed, nodeUrl) => {
         console.log(`ERROR in nodeInt.takeOrder! ${e.name}: ${e.message}\n${e.stack}`);
     }
 }
+
+/**
+ * Check user registration
+ * @param address - user address
+ * @param dAppAddress - dApp address
+ * @param nodeUrl - node url
+ */
+export let checkReg = async (address, dAppAddress, nodeUrl) => {
+    try {
+        let fAddress = `d1_sts_${address}`
+        let data = await getDataByKey(fAddress, dAppAddress, nodeUrl)
+        if (data) {
+            console.log(true)
+            return true;
+        } else {
+            console.log(false)
+            return false;
+        }
+    } catch (e) {
+        console.log(`ERROR in nodeInt.takeOrder! ${e.name}: ${e.message}\n${e.stack}`);
+    }
+}
+
+//checkReg("3N9HxpGzNtqg7cnyi3YKqNWn3Pg455qhC1v", "3N9HxpGzNtqg7cnyi3YKqNWn3Pg455qhC1v", "https://testnodes.wavesnodes.com")
