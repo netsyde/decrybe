@@ -6,11 +6,10 @@ let NONE = "none"
 let FEATURED = "featured"
 let DAPP = ""
 let LISTINGFEE = (1 * 100000000)
-let WHALE = "whale"
-let WHITELISTED = "registered"
-func getKeyItemData(item: String) = {
-    "datajson_" + item
-}
+let MOD = "mod"
+let REGISTERED = "registered"
+let ADMIN = "admin"
+let INPROGRESS = "inprogress"
 
 func getStrByKey(key: String) = {
     let str = match getString(this, key) {
@@ -28,6 +27,15 @@ func getNumberByKey(key: String) = {
     num
 }
 
+# Item Data
+func getKeyItemData(item: String) = {
+    "datajson_" + item
+}
+
+func getValueItemData(item: String) = {
+    getStrByKey(getKeyItemData(item))
+}
+
 # Task author section
 func getKeyItemAuthor (item: String) = {
     "author_" + item
@@ -37,41 +45,67 @@ func getValueItemAuthor(item: String) = {
     getStrByKey(getKeyItemAuthor(item))
 }
 
+# Item Block
 func getKeyItemBlock(item: String) = {
     "block_" + item
 }
+
+# Item Bank
 func getKeyItemBank(item: String) = {
     "bank_" + item
 }
+
+# Item Freelancer
+func getKeyItemFreelancer(item: String, account: String) = {
+    "freelancer_" + item + "_" + account
+}
+
+func getValueItemFreelancer(item: String, account: String) = {
+    getStrByKey(getKeyItemFreelancer(item, account))
+}
+
+# Item Status
 func getKeyItemStatus(item: String) = {
     "status_" + item
 }
 
+func getValueItemStatus(item: String) = {
+    getStrByKey(getKeyItemStatus(item))
+}
+
+# Item Expiration
 func getKeyItemExpiration(item: String) = {
     "expiration_block_" + item
 }
 
-func getKeyWhitelistBio(account: String) = {
-    "d1_bio_" + account
+# User Bio
+func getKeyUserBio(account: String) = {
+    "user_bio_" + account
 }
 
-func getKeyWhitelistStatus(account: String) = {
-    "d1_sts_" + account
+func getValueUserBio(account: String) = {
+    getStrByKey(getKeyUserBio(account))
 }
 
-func getValueWhitelistStatus(account: String) = {
-    getStrByKey(getKeyWhitelistStatus(account))
+# User Status
+func getKeyUserStatus(account: String) = {
+    "user_sts_" + account
 }
 
-func getKeyWhitelistBlock(account: String) = {
-    "d1_blk_" + account
+func getValueUserStatus(account: String) = {
+    getStrByKey(getKeyUserStatus(account))
+}
+
+# User Block
+func getKeyUserBlock(account: String) = {
+    "user_blk_" + account
 }
 
 @Callable(i)
 func createTask(item: String, expiration: Int, data: String) = {
     let account = toBase58String(i.caller.bytes)
     let pmt = extract(i.payment)
-    if (isDefined(pmt.assetId)) then throw("can use waves only at the moment")
+    if (isDefined(pmt.assetId)) then throw("Can use waves only at the moment")
     else {
         if (pmt.amount != LISTINGFEE)
             then throw("Please pay exact amount for the listing: " + toString(LISTINGFEE) + ", actual payment is: " + toString(pmt.amount))
@@ -88,12 +122,58 @@ func createTask(item: String, expiration: Int, data: String) = {
     }
 }
 
+
+# add check user reg
 @Callable(i)
 func signUp(data: String, type: String) = {
     let account = toBase58String(i.caller.bytes)
-    WriteSet([
-        DataEntry(getKeyWhitelistBio(account), data),
-        DataEntry(getKeyWhitelistBlock(account), height),
-        DataEntry(getKeyWhitelistStatus(account), if (type == WHALE) then WHALE else WHITELISTED)
-    ])
+    let pmt = extract(i.payment)
+    if (isDefined(pmt.assetId)) then throw("Waves tokens only at the moment")
+    else {
+        if (getKeyUserBio(account) == NONE) then
+            WriteSet([
+                DataEntry(getKeyUserBio(account), data),
+                DataEntry(getKeyUserBlock(account), height),
+                DataEntry(getKeyUserStatus(account), if (type == MOD) then MOD else REGISTERED)
+            ])
+        else throw("User already exist")
+    }
+    
+}
+
+@Callable(i)
+func takeTask(item: String, comment: String) = {
+    let account = toBase58String(i.caller.bytes)
+    if (getValueItemData(item) == NONE) then throw("Task doesnt exist") 
+    else if (getValueItemStatus(item) == INPROGRESS) then throw("Freelancer is no longer required (the task is already in progress)") 
+    else {
+        WriteSet([
+            DataEntry(getKeyItemFreelancer(item, account), comment)
+        ])
+    }
+}
+
+@Callable(i)
+func taskUpdate(item: String, data: String, type: String) = {
+    let account = toBase58String(i.caller.bytes)
+    if (getValueItemData(item) == NONE) then throw("Task doesnt exist")
+    else if (getValueItemAuthor(item) != account) then throw("You're not author")
+    else {
+        WriteSet([
+            DataEntry(getKeyItemData(item), data),
+            DataEntry(getKeyItemStatus(item), type)
+        ])
+    }
+}
+
+@Callable(i)
+func userUpdate(address: String, data: String) = {
+    let account = toBase58String(i.caller.bytes)
+    if (getKeyUserBio(account) == NONE) then throw("User not signup")
+    else if (address != account) then throw("You're not the account owner")
+    else {
+        WriteSet([
+            DataEntry(getKeyUserBio(account), data)
+        ])
+    }
 }

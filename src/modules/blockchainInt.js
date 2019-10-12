@@ -11,7 +11,7 @@ let data = {
     author: "3N67wqt9Xvvn1Qtgz6KvyEcdmr8AL7EVaQM",
     description: "Site for the game desc",
     expireTask: Date.now() + 50000, // Date
-    price: "200",
+    price: 200,
     tags: ["site", "react"],
     contents: "Need site", // Full description
     uuid: test, // uuid
@@ -19,11 +19,41 @@ let data = {
 
 }
 
+let dataUpd = {
+    title: "Site for The Witcher 3: Wild Hunt",
+    author: "3N67wqt9Xvvn1Qtgz6KvyEcdmr8AL7EVaQM",
+    description: "Site for the game desc",
+    expireTask: "1570457371253" + 50000, // Date
+    price: 200,
+    tags: ["site", "react"],
+    contents: "The Witcher 3 is riddled with consequential choices, all of which add up to a whopping 36 possible endgame states. Luckily, most of these are small variations of each other; there are, in fact, just three major endings.", // Full description
+    uuid: "fbe5dd88-68bf-41d5-a60e-114c89b4371b", // uuid
+    createTime: "1570457371253" // Date
+
+}
+
+let dataU = {
+    name: "Tester",
+    avatar: "https://wallpapercave.com/wp/wp4180080.jpg",
+    description: "Coder. Crypto evangelist",
+    tags: ["tester", "code", "js"],
+    location: "USA",
+    socials: {
+        telegram: "https://t.me/durov",
+        twitter: "https://twitter.com/durov",
+        medium: "",
+        github: ""
+    },
+    address: "3N67wqt9Xvvn1Qtgz6KvyEcdmr8AL7EVaQM",
+    createTime: Date.now()
+
+}
+
 /**
- * Send data transaction in waves blockchain
+ * Creates the task
  * @param item - UUID
+ * @param expiration - expiration in seconds
  * @param data - data object
- * @param invokeScript - invokeScript
  * @param nodeUrl - node url
  */
 export let createTask = async (item, expiration, data, nodeUrl) => {
@@ -47,11 +77,10 @@ export let createTask = async (item, expiration, data, nodeUrl) => {
         chainId: "T"
     }, seed)
     let tx = await broadcast(ts, nodeUrl);
-    await waitForTx(tx.id);
-    console.log(tx.id)
+    console.log(tx.id)  
 }
 
-//createTask(test, 30000, data, "https://testnodes.wavesnodes.com")
+// createTask(test, 30000, data, "https://testnodes.wavesnodes.com")
 
 /**
  * Send data transaction in waves blockchain
@@ -77,26 +106,95 @@ export let signUp = async (data, nodeUrl, type) => {
         chainId: "T"
     }, seed)
     let tx = await broadcast(ts, nodeUrl);
-    await waitForTx(tx.id);
-    console.log(tx.id)
+    console.log(tx.id)  
 }
 
-let dataU = {
-    name: "Tester",
-    avatar: "https://wallpapercave.com/wp/wp4180080.jpg",
-    description: "Coder. Crypto evangelist",
-    tags: ["tester", "code", "js"],
-    location: "USA",
-    socials: {
-        telegram: "https://t.me/durov",
-        twitter: "https://twitter.com/durov",
-        medium: "",
-        github: ""
-    },
-    address: "3N67wqt9Xvvn1Qtgz6KvyEcdmr8AL7EVaQM",
-    createTime: Date.now()
+// signUp(dataU, "https://testnodes.wavesnodes.com", "")
 
+/**
+ * Updates the task
+ * @param taskId - task UUID
+ * @param data - object
+ * @param nodeUrl - node url
+ * @param type - allow types: featured (default), inprogress, closed
+ */
+export let taskUpdate = async (taskId, data, nodeUrl, type = "featured") => {
+    let ts = await invokeScript({
+        dApp: dAppAddress,
+        call: {
+            function: "taskUpdate",
+            args: [
+                {
+                    type: "string", value: taskId
+                },
+                {
+                    type: "string", value: JSON.stringify(data)
+                },
+                {
+                    type: "string", value: type
+                },
+            ]
+        },
+        payment: [],
+        chainId: "T"
+    }, seed)
+    let tx = await broadcast(ts, nodeUrl);
+    console.log(tx.id)    
 }
-//signUp(dataU, "https://testnodes.wavesnodes.com", "")
 
+// taskUpdate("fbe5dd88-68bf-41d5-a60e-114c89b4371b", dataUpd, "https://testnodes.wavesnodes.com")
+
+/**
+ * Updates the user
+ * @param taskId - user address
+ * @param data - object
+ * @param nodeUrl - node url
+ */
+export let userUpdate = async (user, data, nodeUrl) => {
+    let ts = await invokeScript({
+        dApp: dAppAddress,
+        call: {
+            function: "userUpdate",
+            args: [
+                {
+                    type: "string", value: user
+                },
+                {
+                    type: "string", value: JSON.stringify(data)
+                },
+            ]
+        },
+        payment: [],
+        chainId: "T"
+    }, seed)
+    let tx = await broadcast(ts, nodeUrl);
+    console.log(tx.id)    
+}
+
+/**
+ * Take the task
+ * @param taskId - user address
+ * @param comment - encrypted message from the freelancer to the customer
+ * @param nodeUrl - node url
+ */
+export let takeTask = async (taskId, comment, nodeUrl) => {
+    let ts = await invokeScript({
+        dApp: dAppAddress,
+        call: {
+            function: "takeTask",
+            args: [
+                {
+                    type: "string", value: taskId
+                },
+                {
+                    type: "string", value: comment
+                },
+            ]
+        },
+        payment: [],
+        chainId: "T"
+    }, seed)
+    let tx = await broadcast(ts, nodeUrl);
+    console.log(tx.id)    
+}
 

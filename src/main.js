@@ -14,8 +14,8 @@ import Balance from './components/balance';
 import TaskCreator from './components/taskCreator';
 
 import Customers from './pages/Customers';
-import Dashboard from './pages/Dashboard';
-import Freelancers from './pages/Freelancers';
+//import Dashboard from './pages/Dashboard';
+//import Freelancers from './pages/Freelancers';
 import General from './pages/General';
 import blockchainInt from './modules/blockchainInt'
 
