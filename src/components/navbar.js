@@ -12,6 +12,7 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import Divider from '@material-ui/core/Divider';
 import List from '@material-ui/core/List';
 import { mainListItems, secondaryListItems } from './listItems';
+import mainLogo from'./logo.png';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -33,7 +34,7 @@ const useStyles = makeStyles(theme => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
-    backgroundColor: "#654EA3"
+    backgroundColor: "#080a0b"
   },
   appBarShift: {
     marginLeft: drawerWidth,
@@ -51,6 +52,8 @@ const useStyles = makeStyles(theme => ({
   },
   title: {
     flexGrow: 1,
+    display: "flex",
+    justifyContent: "center"
   },
   drawerPaper: {
     position: 'relative',
@@ -91,6 +94,9 @@ const useStyles = makeStyles(theme => ({
   fixedHeight: {
     height: 240,
   },
+  logo: {
+    height: 40,
+  }
 }));
 
 const drawerWidth = 240;
@@ -161,7 +167,7 @@ export default function NavBar(props) {
               <MenuIcon />
             </IconButton>
             <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-              decrybe
+              <img src={mainLogo} className={classes.logo}></img>
             </Typography>
             <Button color="inherit" onClick={() => { props.auth() }}>{props.address}</Button>
           </Toolbar>

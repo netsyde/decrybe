@@ -208,4 +208,4 @@ export let takeTask = async (taskId, comment, key, nodeUrl) => {
     console.log(tx.id)    
 }
 let mess = "Veloce are offering great discounts to fast bookings made in advance and in fall and winter time."
-takeTask("fbe2dd88-68bf-41d5-a60e-114c89b4371b", mess, "bitcoin", "https://testnodes.wavesnodes.com")
+//takeTask("fbe2dd88-68bf-41d5-a60e-114c89b4371b", mess, "bitcoin", "https://testnodes.wavesnodes.com")
