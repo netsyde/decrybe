@@ -1,10 +1,19 @@
 import {broadcast, waitForTx, invokeScript} from '@waves/waves-transactions';
-const dAppAddress = "3N9HxpGzNtqg7cnyi3YKqNWn3Pg455qhC1v";
+const dAppAddress = "3NBngsNecsVX8HzVFTyEQSVGbL9Xia8hBb4";
 let seed = "melody eye stock ostrich camera talk unlock royal insane pipe step squeeze";
 
 const uuid = require('uuid/v4');
 let test = uuid()
 console.log(test)
+
+let CryptoJS = require("crypto-js");
+
+// Encrypt
+//console.log(ciphertext); 
+// Decrypt
+//let originalText = CryptoJS.AES.decrypt(ciphertext, 'secret key 123').toString(CryptoJS.enc.Utf8)
+
+//console.log(originalText); // 'my message'
 
 let data = {
     title: "Site for the game",
@@ -83,10 +92,10 @@ export let createTask = async (item, expiration, data, nodeUrl) => {
 // createTask(test, 30000, data, "https://testnodes.wavesnodes.com")
 
 /**
- * Send data transaction in waves blockchain
+ * User registration
  * @param data - object
  * @param nodeUrl - node url
- * @param type - user type (whale, registered, admin, etc)
+ * @param type - user type (mod, registered, admin, etc)
  */
 export let signUp = async (data, nodeUrl, type) => {
     let ts = await invokeScript({
@@ -173,11 +182,12 @@ export let userUpdate = async (user, data, nodeUrl) => {
 
 /**
  * Take the task
- * @param taskId - user address
- * @param comment - encrypted message from the freelancer to the customer
+ * @param taskId - task UUID
+ * @param comment - message from the freelancer to the customer
  * @param nodeUrl - node url
  */
-export let takeTask = async (taskId, comment, nodeUrl) => {
+export let takeTask = async (taskId, comment, key, nodeUrl) => {
+    let ciphertext = CryptoJS.AES.encrypt(comment, key).toString();
     let ts = await invokeScript({
         dApp: dAppAddress,
         call: {
@@ -187,7 +197,7 @@ export let takeTask = async (taskId, comment, nodeUrl) => {
                     type: "string", value: taskId
                 },
                 {
-                    type: "string", value: comment
+                    type: "string", value: ciphertext
                 },
             ]
         },
@@ -197,4 +207,5 @@ export let takeTask = async (taskId, comment, nodeUrl) => {
     let tx = await broadcast(ts, nodeUrl);
     console.log(tx.id)    
 }
-
+let mess = "Veloce are offering great discounts to fast bookings made in advance and in fall and winter time."
+takeTask("fbe2dd88-68bf-41d5-a60e-114c89b4371b", mess, "bitcoin", "https://testnodes.wavesnodes.com")

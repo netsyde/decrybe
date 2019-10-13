@@ -1,20 +1,14 @@
-# decrybe
-![](https://decrybe.com/logo.png)
+![](https://decrybe.com/img/decrybe-logo-without-bg.png)
 
-**decrybe** - is a decentralized freelancing exchange. **decrybe** at the initial stage will be only a website, and later will get mobile applications with a convenient API. All data of the exchange will be stored in a decentralized database – the Waves blockchain. Anyone can find them in our dApp.
+**Decrybe** - is a decentralized freelancing exchange. The exchange is based on Web3 technologies, each user decides what information to disclose. The platform is completely Autonomous, it does not need centralized persons, because its work can be supported by any user with a certain rating. In addition, the work of the exchange is based on a smart contract, which means that all actions related to the platform are strictly described by a certain script, which can be read by any user. All data is stored in a blockchain-a decentralized database. Payment is carried out using cryptocurrencies.
 ## Stage of development
 ### Stage I
 - ~~Authorization via Waves Keeper~~
-- ~~Ability to create a job (record information in the blockchain)~~
-- ~~Ability to get all the data from dApp~~
-- ~~Ability to get all user tasks~~
-- ~~Ability to receive information about the task~~
-- ~~Ability to change the status of the order (active, completed)~~
-- ~~Implementation of the possibility to take the order~~
-- Development of a smart contract
-- ~~Development of the customer's balance check function~~
-- Development of the reservation function of the amount allocated to the order
-- Development of the function of payment of the claimed amount to the contractor during the execution of the order
+- ~~Ability to register user~~
+- ~~Ability to create tasks~~
+- ~~Ability to change user data~~
+- ~~Possibility to change the information about the task~~
+- ~~Ability to take tasks~~
 - Development of the first version of the site with a simple interface for private testing
 ### Stage II
 - Search for freelancers, orders
@@ -33,139 +27,109 @@
 - Release
 - Development of mobile applications
 
-## API
-### getBalance
-**getBalance** - function to get user balance.
+## API (blockchainInt.js)
+### createTask
+**createTask** - creates the task.
+
 Params:
-- address (wallet address)
-- nodeUrl (node Url)
+- UUID
+- expiration in seconds
+-  data object
+- node url
 
 Usage:
 ```javascript
-import * as nodeInt from './modules/nodeInt';
+const uuid = require('uuid/v4');
+let test = uuid()
 
-console.log(nodeInt.getBalance('3N67wqt9Xvvn1Qtgz6KvyEcdmr8AL7EVaQM', 'https://testnodes.wavesnodes.com') // 3.98
-```
-
-### dataTx
-**dataTx** - function to send data transaction in waves blockchain.
-Params:
-- info (data object)
-- seed (dApp seed)
-- nodeUrl (node Url)
-
-Usage:
-```javascript
-import * as nodeInt from './modules/nodeInt';
-let seed = "melody eye stock ostrich camera talk unlock royal insane pipe step squeeze";
-let nodeUrl = "https://testnodes.wavesnodes.com";
 let data = {
-    title: "ex task",
-    price: "33",
-    description: "desc",
-    id: "1",
-    customer: "address",
-    type: "task"
+    title: "Site for the game",
+    author: "3N67wqt9Xvvn1Qtgz6KvyEcdmr8AL7EVaQM",
+    description: "Site for the game desc",
+    expireTask: Date.now() + 50000, // Date
+    price: 200,
+    tags: ["site", "react"],
+    contents: "Need site", // Full description
+    uuid: test, // uuid
+    createTime: Date.now() // Date
+
 }
-  
-nodeInt.dataTx(data, seed, nodeUrl);
-```
-Returns **true** if tx is sent, or **false** if not.
 
-### getAllData
-**getAllData** - function to receive all data from dApp storage.
+createTask(test, 30000, data, "https://testnodes.wavesnodes.com")
+
+```
+
+### signUp
+**signUp** - user registration.
+
 Params:
-- address (address dApp)
-- nodeUrl (node Url)
+- data object
+- node url
+- user type (mod, registered, admin, etc)
 
 Usage:
 ```javascript
-let allTask = getAllData(dAppAddress, nodeUrl);
-```
-Returns an array.
+let dataU = {
+    name: "Tester",
+    avatar: "https://wallpapercave.com/wp/wp4180080.jpg",
+    description: "Coder. Crypto evangelist",
+    tags: ["tester", "code", "js"],
+    location: "USA",
+    socials: {
+        telegram: "https://t.me/durov",
+        twitter: "https://twitter.com/durov",
+        medium: "",
+        github: ""
+    },
+    address: "3N67wqt9Xvvn1Qtgz6KvyEcdmr8AL7EVaQM",
+    createTime: Date.now()
 
-### getAllUserTasksId
-**getAllUserTasksId** - function to receive all user tasks.
-Params:
-- userAddress
-- dAppAddress
-- nodeUrl
-
-Usage:
-```javascript
-getAllUserTasksId("3N8Ayob7haCp5N32V6gYcdPsLMKMaS3qH3E", "3N67wqt9Xvvn1Qtgz6KvyEcdmr8AL7EVaQM", "https://testnodes.wavesnodes.com");
-```
-Returns an array of keys.
-
-### getDataFromTask
-**getDataFromTask** - function to receive data from task by key.
-Params:
-- key (task id)
-- dAppAddress
-- nodeUrl
-
-Usage:
-```javascript
-getDataFromTask(key, dAppAddress, nodeUrl);
-```
-Returns an array.
-
-### getLastTaskVersion
-**getLastTaskVersion** - function to receive last task version.
-Params:
-- key (task id)
-- address
-- dAppAddress
-- nodeUrl
-
-Usage:
-```javascript
-let version = await getLastTaskVersion(key, address, dAppAddress, nodeUrl);
-```
-Returns number.
-
-### changeTaskData
-**changeTaskData** - function to change any task field.
-Params:
-- key (task id)
-- address
-- seed (dApp seed)
-- dAppAddress
-- nodeUrl
-- field (field name (ex. "status", "title", "description"))
-- newData (update value (ex. "test task title"))
-
-### takeOrder
-**takeOrder** - function to take order.
-Params:
-- key (task id)
-- freelancer (freelancer address)
-- dAppAddress
-- seed (dApp seed)
-- nodeUrl
-
-### taskIdGenerator
-**taskIdGenerator** - generator task id.
-Params:
-- address (customer address)
-- dAppAddress
-- nodeUrl
-
-Usage:
-```javascript
-import * as nodeInt from '../modules/nodeInt';
-let data = {}
-async function getTaskId() {
-    try {
-        let id = await nodeInt.taskIdGenerator(props.address, props.dAppAddress, props.nodeUrl)
-        console.log(id)
-        data.id = id;
-    } catch (e) {
-        console.log(e)
-    }
 }
-getTaskId();
+
+signUp(dataU, "https://testnodes.wavesnodes.com", "")
 ```
+### taskUpdate
+**taskUpdate** - updates the task.
+
+Params:
+- task UUID
+- data object
+- node url
+- type (allow types: featured (default), inprogress, closed)
+
+Usage:
+```javascript
+let dataUpd = {
+    title: "Site for The Witcher 3: Wild Hunt",
+    author: "3N67wqt9Xvvn1Qtgz6KvyEcdmr8AL7EVaQM",
+    description: "Site for the game desc",
+    expireTask: "1570457371253" + 50000, // Date
+    price: 200,
+    tags: ["site", "react"],
+    contents: "The Witcher 3 is riddled with consequential choices, all of which add up to a whopping 36 possible endgame states. Luckily, most of these are small variations of each other; there are, in fact, just three major endings.", // Full description
+    uuid: "fbe5dd88-68bf-41d5-a60e-114c89b4371b", // uuid
+    createTime: "1570457371253" // Date
+
+}
+
+taskUpdate("fbe5dd88-68bf-41d5-a60e-114c89b4371b", dataUpd, "https://testnodes.wavesnodes.com")
+```
+
+### userUpdate
+**userUpdate** - updates the user.
+
+Params:
+- user address
+- data object
+- node url
+
+### takeTask
+**takeTask** - take the task.
+
+Params:
+- task UUID
+- message from the freelancer to the customer
+- node url
 
 ## Install and run
 - git clone https://github.com/Sgoldik/decrybe

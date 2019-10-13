@@ -107,10 +107,9 @@ func createTask(item: String, expiration: Int, data: String) = {
     let pmt = extract(i.payment)
     if (isDefined(pmt.assetId)) then throw("Can use waves only at the moment")
     else {
-        if (pmt.amount != LISTINGFEE)
-            then throw("Please pay exact amount for the listing: " + toString(LISTINGFEE) + ", actual payment is: " + toString(pmt.amount))
-        else if (getValueItemAuthor(item) != NONE)
-            then throw("Task already exist")
+        if (pmt.amount != LISTINGFEE) then throw("Please pay exact amount for the listing: " + toString(LISTINGFEE) + ", actual payment is: " + toString(pmt.amount))
+        else if (getValueItemAuthor(item) != NONE) then throw("Task already exist")
+        else if (getValueUserBio(account) == NONE) then throw("User not signup")
         else WriteSet([
             DataEntry(getKeyItemAuthor(item), account),
             DataEntry(getKeyItemBlock(item), height),
@@ -127,16 +126,13 @@ func createTask(item: String, expiration: Int, data: String) = {
 @Callable(i)
 func signUp(data: String, type: String) = {
     let account = toBase58String(i.caller.bytes)
-    let pmt = extract(i.payment)
-    if (isDefined(pmt.assetId)) then throw("Waves tokens only at the moment")
+    if (getValueUserBio(account) != NONE) then throw("User already exist")
     else {
-        if (getKeyUserBio(account) == NONE) then
-            WriteSet([
-                DataEntry(getKeyUserBio(account), data),
-                DataEntry(getKeyUserBlock(account), height),
-                DataEntry(getKeyUserStatus(account), if (type == MOD) then MOD else REGISTERED)
-            ])
-        else throw("User already exist")
+        WriteSet([
+            DataEntry(getKeyUserBio(account), data),
+            DataEntry(getKeyUserBlock(account), height),
+            DataEntry(getKeyUserStatus(account), if (type == MOD) then MOD else REGISTERED)
+        ])
     }
     
 }
@@ -144,7 +140,9 @@ func signUp(data: String, type: String) = {
 @Callable(i)
 func takeTask(item: String, comment: String) = {
     let account = toBase58String(i.caller.bytes)
-    if (getValueItemData(item) == NONE) then throw("Task doesnt exist") 
+    if (getValueItemData(item) == NONE) then throw("Task doesnt exist")
+    else if (getValueUserBio(account) == NONE) then throw("User not signup")
+    else if (getValueItemAuthor(item) == account) then throw("You're author")
     else if (getValueItemStatus(item) == INPROGRESS) then throw("Freelancer is no longer required (the task is already in progress)") 
     else {
         WriteSet([
@@ -161,7 +159,7 @@ func taskUpdate(item: String, data: String, type: String) = {
     else {
         WriteSet([
             DataEntry(getKeyItemData(item), data),
-            DataEntry(getKeyItemStatus(item), type)
+            DataEntry(getKeyItemStatus(item), if (type == INPROGRESS) then INPROGRESS else FEATURED)
         ])
     }
 }
@@ -169,7 +167,7 @@ func taskUpdate(item: String, data: String, type: String) = {
 @Callable(i)
 func userUpdate(address: String, data: String) = {
     let account = toBase58String(i.caller.bytes)
-    if (getKeyUserBio(account) == NONE) then throw("User not signup")
+    if (getValueUserBio(account) == NONE) then throw("User not signup")
     else if (address != account) then throw("You're not the account owner")
     else {
         WriteSet([
