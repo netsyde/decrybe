@@ -97,7 +97,7 @@ export let createTask = async (item, expiration, data, nodeUrl) => {
  * @param nodeUrl - node url
  * @param type - user type (mod, registered, admin, etc)
  */
-export let signUp = async (data, nodeUrl, type) => {
+export let signUp = async (data, nodeUrl) => {
     let ts = await invokeScript({
         dApp: dAppAddress,
         call: {
@@ -105,10 +105,7 @@ export let signUp = async (data, nodeUrl, type) => {
             args: [
                 {
                     type: "string", value: JSON.stringify(data)
-                },
-                {
-                    type: "string", value: type
-                },
+                }
             ]
         },
         payment: [],

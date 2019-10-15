@@ -12,7 +12,9 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import Divider from '@material-ui/core/Divider';
 import List from '@material-ui/core/List';
 import { mainListItems, secondaryListItems } from './listItems';
-import mainLogo from'./logo.png';
+import mainLogo from './logo.png';
+
+import dLogo from '../img/favicon.svg'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -20,6 +22,8 @@ const useStyles = makeStyles(theme => ({
   },
   toolbar: {
     paddingRight: 24, // keep right padding when drawer closed
+    display: "flex",
+
   },
   toolbarIcon: {
     display: 'flex',
@@ -38,7 +42,7 @@ const useStyles = makeStyles(theme => ({
   },
   appBarShift: {
     marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth/2}px)`,
+    width: `calc(100% - ${drawerWidth}px)`,
     transition: theme.transitions.create(['width', 'margin'], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
@@ -95,12 +99,29 @@ const useStyles = makeStyles(theme => ({
     height: 240,
   },
   logo: {
-    height: 40,
+    width: 200,
+  },
+  head: {
+    display: "flex",
+    justifyContent: "space-between"
   }
 }));
 
 const drawerWidth = 240;
 
+function loginSwitcher (props) {
+  if (props.address != "Login") {
+    return (
+      <Typography component="h1" variant="h6" color="inherit">
+        {props.address}
+      </Typography>
+    )
+  } else {
+    return (
+      <Button color="inherit" onClick={() => { props.auth() }}>{props.address}</Button>
+    )
+  }
+}
 export default function NavBar(props) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
@@ -110,9 +131,8 @@ export default function NavBar(props) {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-
-  if (props.address != "Login") {
-    return (
+  console.log(props.address)
+  return (
       <div className={classes.root}>
         <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
           <Toolbar className={classes.toolbar}>
@@ -126,11 +146,9 @@ export default function NavBar(props) {
               <MenuIcon />
             </IconButton>
             <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-              decrybe.Dashboard {props.network.code == "T" ? "[Testnet]" : "[Mainnet]"}
+              <img src={mainLogo} className={classes.logo}></img>
             </Typography>
-            <Typography component="h1" variant="h6" color="inherit">
-              {props.address}
-            </Typography>
+          {loginSwitcher(props)}
           </Toolbar>
         </AppBar>
         <Drawer
@@ -152,44 +170,4 @@ export default function NavBar(props) {
       </Drawer>
     </div>
     );
-  } else {
-    return (
-      <div className={classes.root}>
-        <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
-          <Toolbar className={classes.toolbar}>
-            <IconButton
-              edge="start"
-              color="inherit"
-              aria-label="open drawer"
-              onClick={handleDrawerOpen}
-              className={clsx(classes.menuButton, open && classes.menuButtonHidden)}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-              <img src={mainLogo} className={classes.logo}></img>
-            </Typography>
-            <Button color="inherit" onClick={() => { props.auth() }}>{props.address}</Button>
-          </Toolbar>
-        </AppBar>
-        <Drawer
-          variant="permanent"
-          classes={{
-            paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
-          }}
-          open={open}
-        >
-        <div className={classes.toolbarIcon}>
-          <IconButton onClick={handleDrawerClose}>
-            <ChevronLeftIcon />
-          </IconButton>
-        </div>
-        <Divider />
-        <List component="nav">{mainListItems}</List>
-        <Divider />
-        <List component="nav">{secondaryListItems}</List>
-      </Drawer>
-    </div>
-    );
-  }
 }

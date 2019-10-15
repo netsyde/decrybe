@@ -9,6 +9,9 @@
 - ~~Ability to change user data~~
 - ~~Possibility to change the information about the task~~
 - ~~Ability to take tasks~~
+- Make function for report of tasks/users
+- add the function to create a feedback after performing the task
+
 - Development of the first version of the site with a simple interface for private testing
 ### Stage II
 - Search for freelancers, orders

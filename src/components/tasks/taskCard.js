@@ -13,6 +13,7 @@ import wavesLogo from '../../img/waves-ico.svg'
 const useStyles = makeStyles({
   card: {
     maxWidth: 345,
+    margin: 20,
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-between"
@@ -29,7 +30,8 @@ const useStyles = makeStyles({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    paddingRight: "8px"
+    paddingRight: 8,
+    margin: 0
   },
   wavesLogo: {
     paddingLeft: 7,

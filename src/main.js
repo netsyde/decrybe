@@ -45,7 +45,7 @@ const useStyles = makeStyles(theme => ({
   },
   appBarShift: {
     marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth/2}px)`,
+    width: `calc(100% - ${drawerWidth}px)`,
     padding: 40,
     transition: theme.transitions.create(['width', 'margin'], {
       easing: theme.transitions.easing.sharp,
@@ -164,6 +164,7 @@ class App extends React.Component {
 
   async authFunc () {
 	  if (WavesKeeper) {
+      console.log(WavesKeeper)
       const getPublicState = async () => {
         try {
           const state = await WavesKeeper.publicState();
@@ -175,8 +176,6 @@ class App extends React.Component {
 					} else {
 						console.log("GET NODE ERROR")
           }
-          let isReg = await nodeInt.checkReg(state.account.address, this.state.dAppAddress, this.state.nodeUrl)
-          if (isReg) {
             let balance = await nodeInt.getBalance(state.account.address, this.state.nodeUrl)
             this.setState({
               isAuth: true,
@@ -185,10 +184,6 @@ class App extends React.Component {
               balance: balance.balance/1e8
             })
             console.log(balance)
-          } else {
-            // func reg
-            
-          }
         } catch(error) {
     	    console.error(error);
   	    }

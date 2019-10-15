@@ -124,14 +124,14 @@ func createTask(item: String, expiration: Int, data: String) = {
 
 # add check user reg
 @Callable(i)
-func signUp(data: String, type: String) = {
+func signUp(data: String) = { 
     let account = toBase58String(i.caller.bytes)
     if (getValueUserBio(account) != NONE) then throw("User already exist")
     else {
         WriteSet([
             DataEntry(getKeyUserBio(account), data),
             DataEntry(getKeyUserBlock(account), height),
-            DataEntry(getKeyUserStatus(account), if (type == MOD) then MOD else REGISTERED)
+            DataEntry(getKeyUserStatus(account), REGISTERED)
         ])
     }
     

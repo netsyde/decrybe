@@ -34,7 +34,7 @@ function Main (props) {
     return (
         <div className={classes.content}>
             <div className={classes.appBarSpacer} />
-            <Grid container justify="center" className={classes.container}>
+            <Grid container justify="center" direction="row" alignItems="center" className={classes.container}>
                 <Grid item xs={12} sm={6} md={4} lg={3} className={classes.task}>
                     <TaskCard price="1.5" creator="Alexabnder" date="2019, 1 October"name="Country hearted be" image="https://picsum.photos/536/354" features="Him rendered may attended concerns jennings reserved now. Sympathize did now preference unpleasing mrs few. Mrs for hour game room want are fond dare. For detract charmed add talking age. Shy resolution instrument unreserved man few."></TaskCard>
                 </Grid>  
