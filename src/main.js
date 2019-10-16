@@ -12,12 +12,12 @@ import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
 import Balance from './components/balance';
 import TaskCreator from './components/taskCreator';
+import dAppInt from './modules/dAppInt'
 
 import Customers from './pages/Customers';
 //import Dashboard from './pages/Dashboard';
 //import Freelancers from './pages/Freelancers';
 import General from './pages/General';
-import blockchainInt from './modules/blockchainInt'
 
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 const drawerWidth = 240;
@@ -123,6 +123,7 @@ export default function Main (props) {
                     dAppAddress={props.dAppAddress}
                     nodeUrl={props.nodeUrl}
                     address={props.keeperData.address}
+                    wavesKeeper={props.wavesKeeper}
                   />
                 </Paper>
               </Grid>
@@ -181,7 +182,8 @@ class App extends React.Component {
               isAuth: true,
               keeperData: state.account,
               net: state.network,
-              balance: balance.balance/1e8
+              balance: balance.balance/1e8,
+              wavesKeeper: WavesKeeper
             })
             console.log(balance)
         } catch(error) {
@@ -203,6 +205,7 @@ class App extends React.Component {
             keeperData={this.state.keeperData}
             address={this.state.keeperData.name ? this.state.keeperData.name : (this.state.keeperData.address ? this.state.keeperData.address : "Login")}
             balance={this.state.balance ? this.state.balance : "Nan" }
+            wavesKeeper={this.state.wavesKeeper}
           />
     )
   }

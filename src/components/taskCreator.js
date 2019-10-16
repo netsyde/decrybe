@@ -3,8 +3,10 @@ import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 
+import * as dAppInt from '../modules/dAppInt'
 import * as nodeInt from '../modules/nodeInt';
 
+const uuid = require('uuid/v4');
 const seed = "melody eye stock ostrich camera talk unlock royal insane pipe step squeeze";
 
 const useStyles = makeStyles(theme => ({
@@ -39,31 +41,10 @@ const useStyles = makeStyles(theme => ({
 
 export default function TaskCreator(props) {
   const classes = useStyles();
-  let data;
-  if (props.address && props.dAppAddress && props.nodeUrl) {
+  let data = {};
+  data.expiration = 50000;
 
-    async function getTaskId() {
-      try {
-        let id = await nodeInt.taskIdGenerator(props.address, props.dAppAddress, props.nodeUrl)
-        console.log(id)
-        data.id = id;
-      } catch (e) {
-        console.log(e)
-      }
-    }
-    getTaskId();
-    data = {
-      type: "task",
-      title: "",
-      price: "",
-      description: "",
-      id: "", // add logic
-      customer: props.address,
-      freelancer: "",
-      status: "active", // active, closed, completed
-      version: 1 // version of task
-    }
-  }
+
   let changeField = (e, field) => {
     console.log(data.id);
     if (field == "title") {
@@ -78,9 +59,6 @@ export default function TaskCreator(props) {
     }
   }
 
-  let sendDataTx = (data, seed, nodeUrl) => {
-    nodeInt.dataTx(data, seed, nodeUrl);
-  }
   return (
     <div className={classes.main}>
       <form className={classes.containerFields} noValidate autoComplete="off">
@@ -114,7 +92,7 @@ export default function TaskCreator(props) {
           console.log(data.title)
           console.log(`${data.title}: ${data.price}: ${data.description}`)
           if (data.title && data.price && data.description) {
-            sendDataTx(data, seed, props.nodeUrl)
+            dAppInt.createTask(uuid(), data.expiration, data, props.wavesKeeper)
           } else {
             console.log("Err in sendDataTx (taskCreator)")
           }
