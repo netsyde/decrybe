@@ -10,6 +10,8 @@ import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
 import MenuItem from '@material-ui/core/MenuItem';
 
+import * as dAppInt from '../../modules/dAppInt'
+import Snackbars from '../../components/snackbar'
 const useStyles = makeStyles(theme => ({
   container: {
 		maxWidth: 480
@@ -56,9 +58,9 @@ export default function SignUp(props) {
 
 	const [values, setValues] = React.useState({
     name: '',
-    age: '',
-    multiline: '',
-    location: 'USA',
+    bio: '',
+    location: '',
+    telegram: ""
 	});
 	
   const handleClickOpen = () => {
@@ -74,15 +76,41 @@ export default function SignUp(props) {
     setValues({ ...values, [name]: event.target.value });
   };
 
+  function Snack () {
+    
+      return <Snackbars type="warning" message="You haven't filled out all the fields" />
+    
+  }
+  async function sign(values, wavesKeeper) {
+    console.log(`${values.name} ${values.bio} ${values.location} ${values.telegram}`)
+    if (values.name && values.bio && values.location && values.telegram) {
+      
+      let data = {
+        name: values.name,
+        bio: values.bio,
+        location: values.location,
+        socials: {
+          telegram: values.telegram
+        }
+      }
+      console.log(data)
+      let signTx = await dAppInt.signUp(data, wavesKeeper)
+      console.log(signTx)
+      handleClose()
+    } else {
+      
+    }
+  }
+
   return (
     <div>
+      <Snack />
       <Dialog
         open={open}
         TransitionComponent={Transition}
         keepMounted
         onClose={handleClose}
-				aria-labelledby="form-dialog-title"
-				
+				aria-labelledby="form-dialog-title"	
       >
         <DialogTitle id="form-dialog-title">{"Welcome. Sign up."}</DialogTitle>
         <DialogContent className={classes.container}>
@@ -90,13 +118,17 @@ export default function SignUp(props) {
             required
             id="standard-required"
             label="Name"
+            value={values.name}
+            onChange={handleChange('name')}
             placeholder="Elon Musk"
             className={classes.textField}
             margin="normal"
 					/>
 					<TextField
 						id="standard-name"
-						label="Bio"
+            label="Bio"
+            value={values.bio}
+            onChange={handleChange('bio')}
 						placeholder="Cat. Programmer."
 						className={classes.textField}
 						margin="normal"
@@ -127,8 +159,8 @@ export default function SignUp(props) {
 						id="standard-name"
 						label="Telegram"
 						className={classes.textField}
-						value={values.name}
-						onChange={handleChange('name')}
+						value={values.telegram}
+						onChange={handleChange('telegram')}
 						margin="normal"
 					/>
 				</DialogContent>
@@ -136,7 +168,7 @@ export default function SignUp(props) {
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleClose} color="primary">
+          <Button onClick={() => {sign(values, props.wavesKeeper)}} color="primary">
             Sign Up
           </Button>
         </DialogActions>

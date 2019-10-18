@@ -18,7 +18,7 @@ import Customers from './pages/Customers';
 //import Dashboard from './pages/Dashboard';
 //import Freelancers from './pages/Freelancers';
 import General from './pages/General';
-
+import SignUp from './components/signup/signupModal'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 const drawerWidth = 240;
 
@@ -102,12 +102,22 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function Main (props) {
+
+  function SignUpContainer (props) {
+    if (props.show) {
+      return <SignUp wavesKeeper={props.wavesKeeper} />
+    } else {
+      return null
+    }
+  }
+
 	const classes = useStyles();
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 	return (
 		<div className={classes.root}>
 		<CssBaseline />
-		<NavBar network={props.network} auth={props.auth} address={props.address ? props.address : "Login"}/>
+		<NavBar nodeUrl={props.nodeUrl} dAppAddress={props.dAppAddress} auth={props.auth} address={props.address ? props.address : "Login"}/>
+    <SignUpContainer show={props.signUpShow} wavesKeeper={props.wavesKeeper} />
     <Router>
       <Route exact path="/" component={General} className={classes.content}/>
       <Route path="/customers" component={Customers} className={classes.content}/>
@@ -158,7 +168,7 @@ class App extends React.Component {
       isAuth: false,
 			keeperData: {},
       balance: "",
-      dAppAddress: "3N67wqt9Xvvn1Qtgz6KvyEcdmr8AL7EVaQM"
+      dAppAddress: "3NBngsNecsVX8HzVFTyEQSVGbL9Xia8hBb4"
     }
     this.authFunc = this.authFunc.bind(this);
   }
@@ -185,6 +195,10 @@ class App extends React.Component {
               balance: balance.balance/1e8,
               wavesKeeper: WavesKeeper
             })
+            console.log(`${state.account.address} ${this.state.dAppAddress} ${this.state.nodeUrl}`)
+            if (!await nodeInt.checkReg(state.account.address, this.state.dAppAddress, this.state.nodeUrl)) {
+              this.setState({signUpShow: true})
+            }
             console.log(balance)
         } catch(error) {
     	    console.error(error);
@@ -206,6 +220,7 @@ class App extends React.Component {
             address={this.state.keeperData.name ? this.state.keeperData.name : (this.state.keeperData.address ? this.state.keeperData.address : "Login")}
             balance={this.state.balance ? this.state.balance : "Nan" }
             wavesKeeper={this.state.wavesKeeper}
+            signUpShow={this.state.signUpShow}
           />
     )
   }

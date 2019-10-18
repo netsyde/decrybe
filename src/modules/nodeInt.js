@@ -2,6 +2,8 @@ const {broadcast, data, nodeInteraction, seedUtils} =  require('@waves/waves-tra
 const {address} = require('@waves/ts-lib-crypto');
 const axios = require('axios');
 
+const dApp = "3NBngsNecsVX8HzVFTyEQSVGbL9Xia8hBb4"
+
 /**
  * Get user balance
  * @param address - user address
@@ -98,4 +100,4 @@ export let checkReg = async (address, dAppAddress, nodeUrl) => {
     }
 }
 
-//checkReg("3N9HxpGzNtqg7cnyi3YKqNWn3Pg455qhC1v", "3N9HxpGzNtqg7cnyi3YKqNWn3Pg455qhC1v", "https://testnodes.wavesnodes.com")
+//checkReg("3N9HPLR8Pyp8vREkHU1uvC6vrM7s1poKiUD", dApp, "https://testnodes.wavesnodes.com")

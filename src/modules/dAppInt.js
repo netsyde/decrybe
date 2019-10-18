@@ -27,6 +27,7 @@ export let signUp = async (data, wavesKeeper) => {
         }
    }).then((tx) => {
         console.log("Success!");
+        return (tx)
    }).catch((error) => {
         console.error("Error ", error);
    });

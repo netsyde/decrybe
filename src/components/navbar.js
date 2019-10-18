@@ -14,6 +14,8 @@ import List from '@material-ui/core/List';
 import { mainListItems, secondaryListItems } from './listItems';
 import mainLogo from './logo.png';
 
+import * as nodeInt from '../modules/nodeInt'
+
 import SignUp from "./signup/signupModal"
 
 const useStyles = makeStyles(theme => ({
@@ -111,16 +113,20 @@ const drawerWidth = 240;
 let openModal = false;
 function loginSwitcher (props) {
 
+   
   if (props.address != "Login") {
     return (
       <Typography component="h1" variant="h6" color="inherit">
         {props.address}
-        <SignUp open={false}/>
+      
       </Typography>
     )
   } else {
+    
     return (
-      <Button color="inherit" onClick={() => { props.auth()  }}>{props.address}</Button>
+      <Button color="inherit" onClick={() => {props.auth()}}>
+        {props.address}
+      </Button>
       
     )
   }
