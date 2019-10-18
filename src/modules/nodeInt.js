@@ -3,11 +3,13 @@ const {address} = require('@waves/ts-lib-crypto');
 const axios = require('axios');
 
 const dApp = "3NBngsNecsVX8HzVFTyEQSVGbL9Xia8hBb4"
+const nodeUrl = "https://testnodes.wavesnodes.com"
 
 /**
  * Get user balance
  * @param address - user address
  * @param nodeUrl - node url
+ * @returns {JSON}
  */
 export let getBalance = async (address, nodeUrl) => {
     try {
@@ -42,6 +44,7 @@ export let dataTx = async (info, seed, nodeUrl) => {
  * Get all dApp data from storage
  * @param address - dApp address
  * @param nodeUrl - node url
+ * @returns {JSON}
  */
 export let getAllData = async (address, nodeUrl) => {
     try {
@@ -57,6 +60,7 @@ export let getAllData = async (address, nodeUrl) => {
  * @param key - task id
  * @param dAppAddress - dApp address
  * @param nodeUrl - node url
+ * @returns {String}
  */
 export let getDataByKey = async (key, dAppAddress, nodeUrl) => {
     try {
@@ -64,7 +68,7 @@ export let getDataByKey = async (key, dAppAddress, nodeUrl) => {
         let data = await getAllData(dAppAddress, nodeUrl);
 		for (let i in data) {
 			if (data[i].key == key) {
-				console.log(data[i].value);
+				//console.log(data[i].value);
 				response = data[i].value;
 			} else {
 				if (!response) {
@@ -83,6 +87,7 @@ export let getDataByKey = async (key, dAppAddress, nodeUrl) => {
  * @param address - user address
  * @param dAppAddress - dApp address
  * @param nodeUrl - node url
+ * @returns {boolean}
  */
 export let checkReg = async (address, dAppAddress, nodeUrl) => {
     try {
@@ -96,8 +101,101 @@ export let checkReg = async (address, dAppAddress, nodeUrl) => {
             return false;
         }
     } catch (e) {
-        console.log(`ERROR in nodeInt.takeOrder! ${e.name}: ${e.message}\n${e.stack}`);
+        console.log(`ERROR in nodeInt.checkReg! ${e.name}: ${e.message}\n${e.stack}`);
     }
 }
 
 //checkReg("3N9HPLR8Pyp8vREkHU1uvC6vrM7s1poKiUD", dApp, "https://testnodes.wavesnodes.com")
+
+/**
+ * Return all projects
+ * @param dAppAddress - dApp address
+ * @param nodeUrl - node url
+ * @returns {Object}
+ */
+export let getAllTasks = async (dAppAddress, nodeUrl) => {
+    try {
+        let data = await getAllData(dAppAddress, nodeUrl);
+        let tasks = await Promise.all(
+            Object.keys(data)
+                .filter(key => /^author_/.test(key))
+                .map(key => key.replace(/^author_/, ''))
+        );
+
+        return tasks;
+    } catch (e) {
+        console.log(`ERROR in nodeInt.getAllTasks! ${e.name}: ${e.message}\n${e.stack}`);
+    }
+}
+
+/**
+ * Return all users
+ * @param dAppAddress - dApp address
+ * @param nodeUrl - node url
+ * @returns {Object}
+ */
+export let getAllUsers = async (dAppAddress, nodeUrl) => {
+    try {
+        let data = await getAllData(dAppAddress, nodeUrl);
+        let users = await Promise.all(
+            Object.keys(data)
+                .filter(key => /^user_sts_/.test(key))
+                .map(key => key.replace(/^user_sts_/, ''))
+        );
+        console.log(users)
+        return users;
+    } catch (e) {
+        console.log(`ERROR in nodeInt.getAllUsers! ${e.name}: ${e.message}\n${e.stack}`);
+    }
+}
+
+/**
+ * Return user data
+ * @param address - user address
+ * @param dAppAddress - dApp address
+ * @param nodeUrl - node url
+ * @returns {Object}
+ */
+export let getUserData = async (address, dAppAddress, nodeUrl) => {
+    try {
+        let userData = await getDataByKey("user_bio_" + address, dAppAddress, nodeUrl)
+        userData = JSON.parse(userData)
+        let balance = await getBalance(address, nodeUrl);
+        let userDataObj = {
+            name: userData.name,
+            address: userData.address,
+            socials: userData.socials,
+            bio: userData.description,
+            balance: balance.balance / 1e8,
+            status: userData.status,
+            createTime: userData.createTime,
+            tags: userData.tags,
+            avatar: userData.avatar
+        }
+        return userDataObj;
+    } catch (e) {
+        console.log(`ERROR in nodeInt.getUserData! ${e.name}: ${e.message}\n${e.stack}`);
+    }
+}
+
+//getUserData("3N67wqt9Xvvn1Qtgz6KvyEcdmr8AL7EVaQM", dApp, nodeUrl)
+
+/**
+ * Return task data
+ * @param id - task id
+ * @param dAppAddress - dApp address
+ * @param nodeUrl - node url
+ * @returns {Object}
+ */
+export let getTaskData = async (id, dAppAddress, nodeUrl) => {
+    try {
+        let taskData = await getDataByKey("datajson_" + id, dAppAddress, nodeUrl)
+        taskData = JSON.parse(taskData)
+        console.log(taskData)
+        return taskData;
+    } catch (e) {
+        console.log(`ERROR in nodeInt.getTaskData! ${e.name}: ${e.message}\n${e.stack}`);
+    }
+}
+
+//getTaskData("fbe2dd88-68bf-41d5-a60e-114c89b4371b", dApp, nodeUrl)

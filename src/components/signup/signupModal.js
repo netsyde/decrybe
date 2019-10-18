@@ -89,8 +89,14 @@ export default function SignUp(props) {
         name: values.name,
         bio: values.bio,
         location: values.location,
+        tags: [],
+        address: await wavesKeeper.publicState().account.address,
+        createTime: Date.now(),
+        status: "registered",
         socials: {
-          telegram: values.telegram
+          telegram: values.telegram,
+          twitter: "",
+          website: ""
         }
       }
       console.log(data)

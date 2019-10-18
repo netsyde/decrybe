@@ -175,7 +175,7 @@ class App extends React.Component {
 
   async authFunc () {
 	  if (WavesKeeper) {
-      console.log(WavesKeeper)
+      //console.log(WavesKeeper)
       const getPublicState = async () => {
         try {
           const state = await WavesKeeper.publicState();
