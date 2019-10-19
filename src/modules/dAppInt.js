@@ -76,7 +76,7 @@ export let createTask = async (item, expiration, data, wavesKeeper) => {
  * Updates the task
  * @param taskId - task UUID
  * @param data - object
- * @param wavesKeeper - сдфыы
+ * @param wavesKeeper - class
  * @param type - allow types: featured (default), inprogress, closed
  */
 export let taskUpdate = async (taskId, data, wavesKeeper, type = "featured") => {

@@ -105,7 +105,7 @@ export default function Main (props) {
 
   function SignUpContainer (props) {
     if (props.show) {
-      return <SignUp wavesKeeper={props.wavesKeeper} />
+      return <SignUp wavesKeeper={props.wavesKeeper} address={props.address} />
     } else {
       return null
     }
@@ -117,7 +117,7 @@ export default function Main (props) {
 		<div className={classes.root}>
 		<CssBaseline />
 		<NavBar nodeUrl={props.nodeUrl} dAppAddress={props.dAppAddress} auth={props.auth} address={props.address ? props.address : "Login"}/>
-    <SignUpContainer show={props.signUpShow} wavesKeeper={props.wavesKeeper} />
+    <SignUpContainer show={props.signUpShow} wavesKeeper={props.wavesKeeper} address={props.address}/>
     <Router>
       <Route exact path="/" component={General} className={classes.content}/>
       <Route path="/customers" component={Customers} className={classes.content}/>
@@ -217,7 +217,7 @@ class App extends React.Component {
             nodeUrl={this.state.nodeUrl}
             auth={this.authFunc}
             keeperData={this.state.keeperData}
-            address={this.state.keeperData.name ? this.state.keeperData.name : (this.state.keeperData.address ? this.state.keeperData.address : "Login")}
+            address={this.state.keeperData.address ? this.state.keeperData.address : "Login"}
             balance={this.state.balance ? this.state.balance : "Nan" }
             wavesKeeper={this.state.wavesKeeper}
             signUpShow={this.state.signUpShow}

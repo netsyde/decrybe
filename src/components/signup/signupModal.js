@@ -78,19 +78,19 @@ export default function SignUp(props) {
 
   function Snack () {
     
-      return <Snackbars type="warning" message="You haven't filled out all the fields" />
+      //return <Snackbars type="warning" message="You haven't filled out all the fields" />
+      return null
     
   }
-  async function sign(values, wavesKeeper) {
+  async function sign(values, wavesKeeper, address) {
     console.log(`${values.name} ${values.bio} ${values.location} ${values.telegram}`)
     if (values.name && values.bio && values.location && values.telegram) {
-      
       let data = {
         name: values.name,
         bio: values.bio,
         location: values.location,
         tags: [],
-        address: await wavesKeeper.publicState().account.address,
+        address: address,
         createTime: Date.now(),
         status: "registered",
         socials: {
@@ -174,7 +174,7 @@ export default function SignUp(props) {
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={() => {sign(values, props.wavesKeeper)}} color="primary">
+          <Button onClick={() => {sign(values, props.wavesKeeper, props.address)}} color="primary">
             Sign Up
           </Button>
         </DialogActions>
