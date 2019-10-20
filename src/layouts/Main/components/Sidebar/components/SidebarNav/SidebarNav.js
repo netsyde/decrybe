@@ -1,5 +1,5 @@
 import React, { forwardRef } from 'react';
-import { NavLink as RouterLink, BrowserRouter } from 'react-router-dom';
+import { NavLink as RouterLink } from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
@@ -43,9 +43,7 @@ const CustomRouterLink = forwardRef((props, ref) => (
     ref={ref}
     style={{ flexGrow: 1 }}
   >
-    <BrowserRouter>
       <RouterLink {...props} />
-    </BrowserRouter>
   </div>
 ));
 

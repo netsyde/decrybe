@@ -42,7 +42,6 @@ const Tasks = () => {
     }
     return (
         <div className={classes.content}>
-            <div className={classes.appBarSpacer} />
             <Grid container direction="row" className={classes.container}>                   
                 {arrayCard}
             </Grid>
