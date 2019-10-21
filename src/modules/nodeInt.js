@@ -191,10 +191,9 @@ export let getTaskData = async (id, dAppAddress, nodeUrl) => {
     try {
         let taskData = await getDataByKey("datajson_" + id, dAppAddress, nodeUrl)
         taskData = JSON.parse(taskData)
-        console.log(taskData)
         return taskData;
     } catch (e) {
-        console.log(`ERROR in nodeInt.getTaskData! ${e.name}: ${e.message}\n${e.stack}`);
+        return false;
     }
 }
 

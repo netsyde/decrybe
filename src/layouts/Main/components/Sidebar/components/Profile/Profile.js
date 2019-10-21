@@ -27,9 +27,9 @@ const Profile = props => {
   const classes = useStyles();
 
   const user = {
-    name: 'Sgoldik',
-    avatar: 'https://picsum.photos/356/354',
-    bio: 'CEO & Founder'
+    name: props.name ? props.name : 'Guest',
+    avatar: props.avatar ? props.avatar :'https://picsum.photos/356/354',
+    bio: props.status ? props.status :'Unregistered'
   };
 
   return (
