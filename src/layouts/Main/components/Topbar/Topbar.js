@@ -1,4 +1,4 @@
-import React, { useState, forwardRef, Fragment } from 'react';
+import React, { useState, forwardRef } from 'react';
 import { Link as RouterLink, BrowserRouter } from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
@@ -66,7 +66,6 @@ const Topbar = props => {
           >
             Create Task
           </Button>
-          <Login />
           <IconButton color="inherit">
             <Badge
               badgeContent={notifications.length}
@@ -76,12 +75,7 @@ const Topbar = props => {
               <NotificationsIcon />
             </Badge>
           </IconButton>
-          <IconButton
-            className={classes.signOutButton}
-            color="inherit"
-          >
-            <InputIcon />
-          </IconButton>
+          <Login />
         </Hidden>
         <Hidden lgUp>
           <IconButton

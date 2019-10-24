@@ -4,11 +4,12 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { Avatar, Typography } from '@material-ui/core';
+import { observer, inject } from 'mobx-react';
 
 const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
-    flexDirection: 'column',
+    flexDirection: 'column', 
     alignItems: 'center',
     minHeight: 'fit-content'
   },
@@ -21,21 +22,19 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Profile = props => {
-  const { className, ...rest } = props;
+const Profile = inject('userStore')(observer(({ userStore }) => {
 
   const classes = useStyles();
 
   const user = {
-    name: props.name ? props.name : 'Guest',
-    avatar: props.avatar ? props.avatar :'https://picsum.photos/356/354',
-    bio: props.status ? props.status :'Unregistered'
+    name: userStore.getUserName ? userStore.getUserName : 'Guest',
+    avatar: userStore.getUserAvatar ? userStore.getUserAvatar :'https://picsum.photos/356/354',
+    bio: userStore.getUserStatus ? userStore.getUserStatus :'Unregistered'
   };
 
   return (
     <div
-      {...rest}
-      className={clsx(classes.root, className)}
+      className={classes.root}
     >
       <Avatar
         alt="Person"
@@ -53,7 +52,7 @@ const Profile = props => {
       <Typography variant="body2">{user.bio}</Typography>
     </div>
   );
-};
+}));
 
 Profile.propTypes = {
   className: PropTypes.string

@@ -49,8 +49,10 @@ export let dataTx = async (info, seed, nodeUrl) => {
 export let getAllData = async (address, nodeUrl) => {
     try {
         let data = await nodeInteraction.accountData(address, nodeUrl);
+        //console.log(data)
         return data;
     } catch (e) {
+        return false
         console.log(`ERROR in nodeInt.getAllData! ${e.name}: ${e.message}\n${e.stack}`);
     }
 }
@@ -78,6 +80,7 @@ export let getDataByKey = async (key, dAppAddress, nodeUrl) => {
 		}
 		return response;
     } catch (e) {
+        return false
         console.log(`ERROR in nodeInt.getDataByKey! ${e.name}: ${e.message}\n${e.stack}`);
     }
 }
@@ -159,22 +162,26 @@ export let getAllUsers = async (dAppAddress, nodeUrl) => {
 export let getUserData = async (address, dAppAddress, nodeUrl) => {
     try {
         let userData = await getDataByKey("user_bio_" + address, dAppAddress, nodeUrl)
-        userData = JSON.parse(userData)
-        let balance = await getBalance(address, nodeUrl);
-        let userDataObj = {
-            name: userData.name,
-            address: userData.address,
-            socials: userData.socials,
-            bio: userData.description,
-            balance: balance.balance / 1e8,
-            status: userData.status,
-            createTime: userData.createTime,
-            tags: userData.tags,
-            avatar: userData.avatar
+        console.log(userData)
+        if (userData) {
+            userData = JSON.parse(userData)
+            console.log(userData)
+            let userDataObj = {
+                name: userData.name ? userData.name : "",
+                socials: userData.socials ? userData.socials : "",
+                bio: userData.description ? userData.description : "",
+                status: userData.status ? userData.status: "",
+                createTime: userData.createTime ? userData.createTime : "",
+                tags: userData.tags ? userData.tags : "",
+                avatar: userData.avatar ? userData.avatar : ""
+            }
+            return userDataObj;
+        } else {
+            return false
         }
-        return userDataObj;
     } catch (e) {
-        console.log(`ERROR in nodeInt.getUserData! ${e.name}: ${e.message}\n${e.stack}`);
+        return false
+        //console.log(`ERROR in nodeInt.getUserData! ${e.name}: ${e.message}\n${e.stack}`);
     }
 }
 
