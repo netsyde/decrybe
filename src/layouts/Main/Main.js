@@ -5,6 +5,9 @@ import { makeStyles, useTheme } from '@material-ui/core/styles';
 import { useMediaQuery } from '@material-ui/core';
 
 import { Sidebar, Topbar} from './components';
+import { Provider } from 'mobx-react';
+import userStore from '../../store/UserStore';
+const stores = { userStore };
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -44,22 +47,24 @@ const Main = props => {
   const shouldOpenSidebar = isDesktop ? true : openSidebar;
 
   return (
-    <div
-      className={clsx({
-        [classes.root]: true,
-        [classes.shiftContent]: isDesktop
-      })}
-    >
-      <Topbar onSidebarOpen={handleSidebarOpen} />
-      <Sidebar
-        onClose={handleSidebarClose}
-        open={shouldOpenSidebar}
-        variant={isDesktop ? 'persistent' : 'temporary'}
-      />
-      <main className={classes.content}>
-        {children}
-      </main>
-    </div>
+    <Provider { ...stores }>
+      <div
+        className={clsx({
+          [classes.root]: true,
+          [classes.shiftContent]: isDesktop
+        })}
+      >
+        <Topbar onSidebarOpen={handleSidebarOpen} />
+        <Sidebar
+          onClose={handleSidebarClose}
+          open={shouldOpenSidebar}
+          variant={isDesktop ? 'persistent' : 'temporary'}
+        />
+        <main className={classes.content}>
+          {children}
+        </main>
+      </div>
+    </Provider>
   );
 };
 

@@ -6,11 +6,9 @@ import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import DateFnsUtils from '@date-io/date-fns';
 import Button from '@material-ui/core/Button';
-import {
-  MuiPickersUtilsProvider,
-  KeyboardTimePicker,
-  KeyboardDatePicker,
-} from '@material-ui/pickers';
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
+import * as dAppInt from '../../modules/dAppInt'
+const uuid = require('uuid/v4');
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -24,14 +22,11 @@ const useStyles = makeStyles(theme => ({
 
 	},
 	textField: {
-    //marginLeft: theme.spacing(1),
-    //marginRight: theme.spacing(1),
 	},
 	actions: {
 		display: "flex",
 		justifyContent: "flex-end",
 		alignItems: "center",
-		//padding: theme.spacing(2),
 	},
 	textFieldBox: {
 		marginBottom: theme.spacing(1)
@@ -45,9 +40,6 @@ const TaskCreator = () => {
 		briefDescription: '',
 		description: '',
 		price: '',
-		deadline: new Date('2014-08-18T21:11:54'),
-    location: '',
-    telegram: ""
 	});
 
 	const [selectedDate, setSelectedDate] = React.useState(new Date('2019-10-22'));
@@ -58,7 +50,27 @@ const TaskCreator = () => {
 
 	const handleDateChange = date => {
     setSelectedDate(date);
-  };
+	};
+	
+	const compileAndSend = async (values) => {
+		try {
+			let data = {
+				title: values.title,
+				imageLink: values.imageLink,
+				briefDescription: values.briefDescription,
+				description: values.description,
+				price: values.price,
+				expireTime: (new Date(selectedDate).getTime() - Date.now()),
+				uuid: uuid(),
+				createTime: Date.now()
+
+			}
+
+			// dAppInt.createTask(data.uuid, data.expireTime, data, wavesKeeper)
+		} catch (e) {
+
+		}
+	}
 
 	
   const classes = useStyles();

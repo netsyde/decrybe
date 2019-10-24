@@ -9,6 +9,7 @@ import NotificationsIcon from '@material-ui/icons/NotificationsOutlined';
 import InputIcon from '@material-ui/icons/Input';
 import Button from '@material-ui/core/Button';
 
+import { Login } from './components'
 const useStyles = makeStyles(theme => ({
   root: {
     boxShadow: 'none',
@@ -65,6 +66,7 @@ const Topbar = props => {
           >
             Create Task
           </Button>
+          <Login />
           <IconButton color="inherit">
             <Badge
               badgeContent={notifications.length}

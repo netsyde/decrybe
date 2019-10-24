@@ -10,11 +10,11 @@ const browserHistory = createBrowserHistory();
 export default class App extends Component {
   render() {
     return (
-        <ThemeProvider theme={theme}>
-            <Router history={browserHistory}>
-                <Routes />
-            </Router>
-        </ThemeProvider>
+      <ThemeProvider theme={theme}>
+        <Router history={browserHistory}>
+          <Routes />
+        </Router>
+      </ThemeProvider>
     );
   }
 }

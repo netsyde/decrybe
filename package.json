@@ -6,6 +6,8 @@
         "watch": "webpack --watch"
     },
     "dependencies": {
+        "@babel/plugin-proposal-class-properties": "^7.5.5",
+        "@babel/plugin-proposal-decorators": "^7.6.0",
         "@babel/preset-env": "^7.5.5",
         "@babel/preset-react": "^7.0.0",
         "@babel/runtime": "^7.5.5",
@@ -21,8 +23,11 @@
         "clsx": "^1.0.4",
         "commonjs": "^0.0.1",
         "crypto-js": "^3.1.9-1",
+        "date-fns": "^2.0.0-beta.5",
         "express": "^4.17.1",
         "file-loader": "^4.2.0",
+        "mobx": "^5.14.2",
+        "mobx-react": "^6.1.4",
         "react": "^16.8.6",
         "react-dom": "^16.8.6",
         "react-router-dom": "^5.0.1",

@@ -8,7 +8,8 @@ import {
   Dashboard as DashboardView,
   Tasks as TaskListView,
   NotFound as NotFoundView,
-  TaskCreator as TaskCreatorView
+  TaskCreator as TaskCreatorView,
+  Account as AccountView
 } from './views';
 
 const Routes = () => {
@@ -36,6 +37,12 @@ const Routes = () => {
         exact
         layout={MainLayout}
         path="/create-task"
+      />
+      <RouteWithLayout
+        component={AccountView}
+        exact
+        layout={MainLayout}
+        path="/account"
       />
       <RouteWithLayout
         component={NotFoundView}
