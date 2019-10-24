@@ -8,7 +8,7 @@ import Slide from '@material-ui/core/Slide';
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
 import MenuItem from '@material-ui/core/MenuItem';
-
+import { observer, inject } from 'mobx-react';
 import * as dAppInt from '../../../../modules/dAppInt'
 
 const useStyles = makeStyles(theme => ({
@@ -51,7 +51,7 @@ const currencies = [
   },
 ];
 
-const Signup = (props) => {
+const Signup = inject('userStore')(observer(({ userStore }) => {
 	const classes = useStyles();
   const [open, setOpen] = React.useState(true);
 
@@ -61,10 +61,6 @@ const Signup = (props) => {
     location: '',
     telegram: ""
 	});
-	
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
 
   const handleClose = () => {
     console.log("Close")
@@ -75,13 +71,7 @@ const Signup = (props) => {
     setValues({ ...values, [name]: event.target.value });
   };
 
-  function Snack () {
-    
-      //return <Snackbars type="warning" message="You haven't filled out all the fields" />
-      return null
-    
-  }
-  async function sign(values, wavesKeeper, address) {
+  async function sign(values) {
     console.log(`${values.name} ${values.bio} ${values.location} ${values.telegram}`)
     if (values.name && values.bio && values.location && values.telegram) {
       let data = {
@@ -89,7 +79,7 @@ const Signup = (props) => {
         bio: values.bio,
         location: values.location,
         tags: [],
-        address: address,
+        address: userStore.getUserAddress,
         createTime: Date.now(),
         status: "registered",
         socials: {
@@ -99,7 +89,7 @@ const Signup = (props) => {
         }
       }
       console.log(data)
-      let signTx = await dAppInt.signUp(data, wavesKeeper)
+      let signTx = await dAppInt.signUp(data, userStore.getWavesKeeper)
       console.log(signTx)
       handleClose()
     } else {
@@ -109,7 +99,6 @@ const Signup = (props) => {
 
   return (
     <div>
-      <Snack />
       <Dialog
         open={open}
         TransitionComponent={Transition}
@@ -173,13 +162,13 @@ const Signup = (props) => {
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={() => {sign(values, props.wavesKeeper, props.address)}} color="primary">
+          <Button onClick={() => {sign(values)}} color="primary">
             Sign Up
           </Button>
         </DialogActions>
       </Dialog>
     </div>
   );
-}
+}))
 
 export default Signup;

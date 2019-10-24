@@ -7,7 +7,7 @@ class UserStore {
 	@observable balance = "";
 	@observable network = "";
 	@observable userData = "";
-	@observable isReg = false;
+	@observable isReg = "";
 	@observable name = "";
 	@observable socials = "";
 	@observable bio = "";
@@ -30,7 +30,6 @@ class UserStore {
 				this.network = state.network.server;
 				this.userData = state;
 				this.isReg = await nodeInt.checkReg(state.account.address, this.dapp, state.network.server);
-				this.isLogin = true;
 				if (this.isReg) {
 					let userDataFromDapp = await nodeInt.getUserData(state.account.address, this.dapp, state.network.server);
 					if (userDataFromDapp) {
@@ -60,7 +59,7 @@ class UserStore {
 		this.balance = "";
 		this.network = "";
 		this.userData = "";
-		this.isReg = false;
+		this.isReg = "";
 		this.name = ""
 		this.socials = ""
 		this.bio = ""

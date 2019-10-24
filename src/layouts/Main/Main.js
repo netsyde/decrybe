@@ -3,10 +3,11 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import { useMediaQuery } from '@material-ui/core';
-
 import { Sidebar, Topbar} from './components';
-import { Provider } from 'mobx-react';
+import { Provider, observer, inject } from 'mobx-react';
+import Signup  from './components/Signup'
 import userStore from '../../store/UserStore';
+
 const stores = { userStore };
 
 const useStyles = makeStyles(theme => ({
@@ -24,6 +25,15 @@ const useStyles = makeStyles(theme => ({
     height: '100%'
   }
 }));
+
+const RegisterModal = inject('userStore')(observer(({ userStore }) => {
+  console.log(userStore.isReg)
+  if (!userStore.isReg && userStore.isLogin) {
+    return <Signup />
+  } else {
+    return null
+  }
+}))
 
 const Main = props => {
   const { children } = props;
@@ -55,6 +65,7 @@ const Main = props => {
         })}
       >
         <Topbar onSidebarOpen={handleSidebarOpen} />
+        <RegisterModal isReg={userStore.isUserReg} isLogin={userStore.isUserLogin} />
         <Sidebar
           onClose={handleSidebarClose}
           open={shouldOpenSidebar}
