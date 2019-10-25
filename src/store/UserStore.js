@@ -17,6 +17,8 @@ class UserStore {
 	@observable avatar = "";
 	dapp = "3NBngsNecsVX8HzVFTyEQSVGbL9Xia8hBb4";
 	wavesKeeper = "";
+	@observable allTasksIds = []
+	@observable allTasksData = []
 	
 
 	@action('user login')
@@ -30,6 +32,7 @@ class UserStore {
 				this.network = state.network.server;
 				this.userData = state;
 				this.isReg = await nodeInt.checkReg(state.account.address, this.dapp, state.network.server);
+				await this.loadTasks()
 				if (this.isReg) {
 					let userDataFromDapp = await nodeInt.getUserData(state.account.address, this.dapp, state.network.server);
 					if (userDataFromDapp) {
@@ -128,6 +131,71 @@ class UserStore {
 	@computed get getUserAvatar() {
 		return this.avatar
 	}
+
+	async loadTasks() {
+		if (this.isLogin) {
+				this.allTasksIds = await nodeInt.getAllTasks(this.dapp, this.network)
+
+				for (let i = 0; i < this.allTasksIds.length; i++) {
+						let taskData = await nodeInt.getTaskData(this.allTasksIds[i], this.dapp, this.network)
+						if (taskData) {
+								this.allTasksData.push(taskData)
+						}
+				}
+						
+		}
+}
+
+	@computed get getTasks () {
+		//console.log(this.allTasksData)
+		let data = [
+		]
+		data = this.allTasksData
+		if (data > 0)
+		return data;
+	}
+
+	@computed get getAllTasksIds () {
+		if (this.allTasksIds.length > 0) 
+			return this.allTasksIds
+	}
+
+	@computed get getAllTasksLength () {
+		if (this.allTasksData.length > 0) 
+			return this.allTasksData.length
+	}
+
+	@action getTaskAuthor (i) {
+		if (this.allTasksData.length > 0)
+			return this.allTasksData[i].author;
+	}
+
+	@action getTaskTitle (i) {
+		if (this.allTasksData.length > 0)
+		return this.allTasksData[i].title;
+	}
+
+	@action getTaskContents (i) {
+		if (this.allTasksData.length > 0)
+		return this.allTasksData[i].contents;
+	}
+
+	@action getTaskCreateTime (i) {
+		if (this.allTasksData.length > 0)
+		return this.allTasksData[i].createTime;
+	}
+
+	@action getTaskPrice (i) {
+		if (this.allTasksData.length > 0)
+		return this.allTasksData[i].price;
+	}
+
+	@action getTaskDescription (i) {
+		if (this.allTasksData.length > 0)
+		return this.allTasksData[i].description;
+	}
+
+	
 }
 
 const userStore = new UserStore();

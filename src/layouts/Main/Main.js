@@ -7,8 +7,9 @@ import { Sidebar, Topbar} from './components';
 import { Provider, observer, inject } from 'mobx-react';
 import Signup  from './components/Signup'
 import userStore from '../../store/UserStore';
+import tasksStore from '../../store/TasksStore'
 
-const stores = { userStore };
+const stores = { userStore, tasksStore };
 
 const useStyles = makeStyles(theme => ({
   root: {

@@ -127,7 +127,9 @@ export let getAllTasks = async (dAppAddress, nodeUrl) => {
 
         return tasks;
     } catch (e) {
+
         console.log(`ERROR in nodeInt.getAllTasks! ${e.name}: ${e.message}\n${e.stack}`);
+        return false;
     }
 }
 
@@ -205,3 +207,27 @@ export let getTaskData = async (id, dAppAddress, nodeUrl) => {
 }
 
 //getTaskData("fbe2dd88-68bf-41d5-a60e-114c89b4371b", dApp, nodeUrl)
+
+/**
+ * Return task data
+ * @param id - task id
+ * @param dAppAddress - dApp address
+ * @param nodeUrl - node url
+ * @returns {Object}
+ */
+export let getTasksAllData = async (dAppAddress, nodeUrl) => {
+    try {
+        let allTasks = await getAllTasks(dAppAddress, nodeUrl)
+        let tasks = [];
+        for(let i = 0; i < allTasks.length; i++) {
+            let taskData = await getTaskData(allTasks[i], dAppAddress, nodeUrl)
+            tasks.push(taskData)
+        }
+        console.log(tasks)
+        return tasks;
+    } catch (e) {
+        console.log(`ERROR in nodeInt.getTasksAllData! ${e.name}: ${e.message}\n${e.stack}`);
+        return false;
+    }
+}
+//getTasksAllData(dApp, nodeUrl)

@@ -1,5 +1,5 @@
 export default {
     colorPrimary: {
-      backgroundColor: '#000000'
+      backgroundColor: '#282828'
     }
   };
