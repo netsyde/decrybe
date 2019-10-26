@@ -195,6 +195,11 @@ class UserStore {
 		return this.allTasksData[i].description;
 	}
 
+	@action getTaskImage (i) {
+		if (this.allTasksData.length > 0)
+		return this.allTasksData[i].image;
+	}
+
 	
 }
 

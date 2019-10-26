@@ -1,0 +1,9 @@
+{
+    "compilerOptions": {
+      "sourceMap": true,
+      "experimentalDecorators": true,
+      "jsx": "react",
+      "esModuleInterop": true
+    },
+    
+  }
