@@ -1,29 +1,43 @@
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import { useMediaQuery } from '@material-ui/core';
-import { Sidebar, Topbar} from './components';
+import { NavBar, Topbar} from './components';
 import { Provider, observer, inject } from 'mobx-react';
 import Signup  from './components/Signup'
 import userStore from '../../store/UserStore';
 import tasksStore from '../../store/TasksStore'
-
+import { LinearProgress } from '@material-ui/core';
 const stores = { userStore, tasksStore };
+import { renderRoutes } from 'react-router-config';
 
 const useStyles = makeStyles(theme => ({
   root: {
-    paddingTop: 56,
     height: '100%',
-    [theme.breakpoints.up('sm')]: {
-      paddingTop: 64
-    }
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    overflow: 'hidden'
   },
-  shiftContent: {
-    paddingLeft: 240
+  topBar: {
+    zIndex: 2,
+    position: 'relative'
+  },
+  container: {
+    display: 'flex',
+    flex: '1 1 auto',
+    overflow: 'hidden'
+  },
+  navBar: {
+    zIndex: 3,
+    width: 256,
+    minWidth: 256,
+    flex: '0 0 auto'
   },
   content: {
-    height: '100%'
+    overflowY: 'auto',
+    flex: '1 1 auto'
   }
 }));
 
@@ -37,45 +51,41 @@ const RegisterModal = inject('userStore')(observer(({ userStore }) => {
 }))
 
 const Main = props => {
-  const { children } = props;
+  const { route } = props; // children
 
   const classes = useStyles(1);
-  const theme = useTheme();
-  const isDesktop = useMediaQuery(theme.breakpoints.up('lg'), {
-    defaultMatches: true
-  });
 
-  const [openSidebar, setOpenSidebar] = useState(false);
+  const [openNavBarMobile, setOpenNavBarMobile] = useState(false);
 
-  const handleSidebarOpen = () => {
-    setOpenSidebar(true);
+  const handleNavBarMobileOpen = () => {
+    setOpenNavBarMobile(true);
   };
 
-  const handleSidebarClose = () => {
-    setOpenSidebar(false);
+  const handleNavBarMobileClose = () => {
+    setOpenNavBarMobile(false);
   };
-
-  const shouldOpenSidebar = isDesktop ? true : openSidebar;
 
   return (
     <Provider { ...stores }>
-      <div
-        className={clsx({
-          [classes.root]: true,
-          [classes.shiftContent]: isDesktop
-        })}
-      >
-        <Topbar onSidebarOpen={handleSidebarOpen} />
-        <RegisterModal isReg={userStore.isUserReg} isLogin={userStore.isUserLogin} />
-        <Sidebar
-          onClose={handleSidebarClose}
-          open={shouldOpenSidebar}
-          variant={isDesktop ? 'persistent' : 'temporary'}
+      <div className={classes.root}>
+      <Topbar
+        className={classes.topBar}
+        //onOpenNavBarMobile={handleNavBarMobileOpen}
+      />
+      <div className={classes.container}>
+        <NavBar
+          className={classes.navBar}
+          onMobileClose={handleNavBarMobileClose}
+          openMobile={openNavBarMobile}
         />
         <main className={classes.content}>
-          {children}
+          <Suspense fallback={<LinearProgress />}>
+            {/*children*/}
+            {renderRoutes(route.routes)}
+          </Suspense>
         </main>
       </div>
+    </div>
     </Provider>
   );
 };

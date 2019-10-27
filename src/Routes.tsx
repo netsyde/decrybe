@@ -1,58 +1,39 @@
-import React from 'react';
-import { Switch, Redirect } from 'react-router-dom';
-
-import { RouteWithLayout } from './components';
+/* eslint-disable react/no-multi-comp */
+/* eslint-disable react/display-name */
+import React, { lazy } from 'react';
+import { Redirect } from 'react-router-dom';
 import { Main as MainLayout } from './layouts';
 
-import {
-  Dashboard as DashboardView,
-  Tasks as TaskListView,
-  NotFound as NotFoundView,
-  TaskCreator as TaskCreatorView,
-  Account as AccountView
-} from './views';
+const routes = [
+  {
+    path: '/',
+    exact: true,
+    component: () => <Redirect to="/tasks" />
+  },
+  {
+    route: '*',
+    component: MainLayout,
+    routes: [
+      {
+        path: '/tasks/create',
+        exact: true,
+        component: lazy(() => import('./views/TaskCreate'))
+      },
+      {
+        path: '/tasks',
+        exact: true,
+        component: lazy(() => import('./views/TaskList'))
+      },
+      {
+        path: '/404',
+        exact: true,
+        component: lazy(() => import('./views/NotFound'))
+      },
+      {
+        component: () => <Redirect to="/404" />
+      }
+    ]
+  }
+];
 
-const Routes = () => {
-  return (
-    <Switch>
-      <Redirect
-        exact
-        from="/"
-        to="/dashboard"
-      />
-      <RouteWithLayout
-        component={DashboardView}
-        exact
-        layout={MainLayout}
-        path="/dashboard"
-      />
-      <RouteWithLayout
-        component={TaskListView}
-        exact
-        layout={MainLayout}
-        path="/tasks"
-      />
-      <RouteWithLayout
-        component={TaskCreatorView}
-        exact
-        layout={MainLayout}
-        path="/create-task"
-      />
-      <RouteWithLayout
-        component={AccountView}
-        exact
-        layout={MainLayout}
-        path="/account"
-      />
-      <RouteWithLayout
-        component={NotFoundView}
-        exact
-        layout={MainLayout}
-        path="/not-found"
-      />
-      <Redirect to="/not-found" />
-    </Switch>
-  );
-};
-
-export default Routes;
+export default routes;

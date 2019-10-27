@@ -24,7 +24,7 @@ module.exports = {
                 }
 			},
 			{
-				test: /\.(png|jpg|gif|svg)$/,
+				test: /\.(png|jpg|gif|svg|ico)$/,
 				use: [
 				  {
 					loader: 'file-loader',
@@ -36,6 +36,17 @@ module.exports = {
 				test: /(\.ts|\.tsx)$/, 
 				loaders: ["ts-loader"],
 				//include: [path.join(__dirname, "src"), path.join(__dirname, "data")] 
+			},
+			{
+				test: /\.s[ac]ss$/i,
+				use: [
+				  // Creates `style` nodes from JS strings
+				  'style-loader',
+				  // Translates CSS into CommonJS
+				  'css-loader',
+				  // Compiles Sass to CSS
+				  'sass-loader',
+				],
 			  },
 		]
 	}

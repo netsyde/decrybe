@@ -6,7 +6,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import { AppBar, Toolbar, Badge, Hidden, IconButton } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import NotificationsIcon from '@material-ui/icons/NotificationsOutlined';
-import InputIcon from '@material-ui/icons/Input';
 import Button from '@material-ui/core/Button';
 
 import { Login } from './components'
@@ -48,7 +47,7 @@ const Topbar = props => {
     >
       <Toolbar>
         <BrowserRouter>
-          <RouterLink to="/admin">
+          <RouterLink to="/">
             <img
               alt="Logo"
               src="./img/logo.svg"
@@ -62,7 +61,7 @@ const Topbar = props => {
             variant="contained"
             color="primary"
             component={CustomRouterLink}
-            to="/create-task"
+            to="/tasks/create"
           >
             Create Task
           </Button>

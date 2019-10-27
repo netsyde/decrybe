@@ -8,6 +8,7 @@ import DateFnsUtils from '@date-io/date-fns';
 import Button from '@material-ui/core/Button';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import * as dAppInt from '../../modules/dAppInt'
+import { observer, inject } from 'mobx-react';
 const uuid = require('uuid/v4');
 
 const useStyles = makeStyles(theme => ({
@@ -33,7 +34,7 @@ const useStyles = makeStyles(theme => ({
 	}
 }));
 
-const TaskCreator = (props) => {
+const TaskCreator = inject('userStore')(observer(({ userStore }) => {
 	const [values, setValues] = React.useState({
 		title: '',
 		imageLink: '',
@@ -57,24 +58,24 @@ const TaskCreator = (props) => {
 		try {
 			let data = {
 				title: values.title,
-				imageLink: values.imageLink,
+				image: values.imageLink,
 				briefDescription: values.briefDescription,
 				description: values.description,
 				price: values.price,
-				expireTime: (new Date(selectedDate).getTime() - Date.now()),
+				expireTime: new Date(selectedDate).getTime() - Date.now(),
 				uuid: uuid(),
-				createTime: Date.now()
-
+				createTime: Date.now(),
+				author: userStore.getUserAddress,
 			}
 
-			// dAppInt.createTask(data.uuid, data.expireTime, data, wavesKeeper)
+			dAppInt.createTask(data.uuid, data.expireTime, data, userStore.getWavesKeeper)
 		} catch (e) {
-
+			console.log(e)
 		}
 	}
 
 	
-  const classes = useStyles(props);
+  const classes = useStyles(1);
   return (
 		<div className={classes.root}>
 			<Paper className={classes.paper}>
@@ -183,13 +184,13 @@ const TaskCreator = (props) => {
 					</Grid>
 				</div>
 				<div className={classes.actions}>
-					<Button onClick={() => {}} variant="contained" color="primary">
+					<Button onClick={() => {compileAndSend(values)}} variant="contained" color="primary">
 							Create
 					</Button>
 				</div>
 			</Paper>
 		</div>
   )
-}
+}))
 
 export default TaskCreator;
