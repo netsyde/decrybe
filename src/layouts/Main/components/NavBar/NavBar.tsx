@@ -44,7 +44,7 @@ const NavBar = props => {
 
   const classes = useStyles(1);
   const router = useRouter();
-
+  /*
   useEffect(() => {
     if (openMobile) {
       onMobileClose && onMobileClose();
@@ -52,7 +52,7 @@ const NavBar = props => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.location.pathname]);
-
+  */
   const navbarContent = (
     <div className={classes.content}>
       <div className={classes.profile}>
