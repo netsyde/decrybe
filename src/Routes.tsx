@@ -4,9 +4,6 @@ import React, { lazy } from 'react';
 import { Redirect } from 'react-router-dom';
 import { Main as MainLayout } from './layouts';
 
-import {
-  TaskDetails as TaskDetailsView
-} from './views'
 const routes = [
   {
     path: '/',

@@ -6,6 +6,9 @@ import theme from './theme';
 import routes from './Routes';
 import './assets/scss/index.scss';
 import { renderRoutes } from 'react-router-config';
+
+//import './mixins/prismjs';
+
 const browserHistory = createBrowserHistory();
 import {
   ScrollReset,
