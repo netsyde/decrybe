@@ -4,6 +4,9 @@ import React, { lazy } from 'react';
 import { Redirect } from 'react-router-dom';
 import { Main as MainLayout } from './layouts';
 
+import {
+  TaskDetails as TaskDetailsView
+} from './views'
 const routes = [
   {
     path: '/',
@@ -24,6 +27,18 @@ const routes = [
         exact: true,
         component: lazy(() => import('./views/TaskList'))
       },
+      {
+        path: '/tasks/:id',
+        exact: true,
+        component: lazy(() => import('./views/TaskDetails'))
+      },
+      
+      {
+        path: '/tasks/:id/:tab',
+        exact: true,
+        component: lazy(() => import('./views/TaskDetails'))
+      },
+      
       {
         path: '/404',
         exact: true,

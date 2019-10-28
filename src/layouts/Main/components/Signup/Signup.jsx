@@ -28,10 +28,6 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
-
 const currencies = [
   {
     value: 'USA',
@@ -54,7 +50,9 @@ const currencies = [
 const Signup = inject('userStore')(observer(({ userStore }) => {
 	const classes = useStyles(1);
   const [open, setOpen] = React.useState(true);
-
+  const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
+  });
 	const [values, setValues] = React.useState({
     name: '',
     bio: '',

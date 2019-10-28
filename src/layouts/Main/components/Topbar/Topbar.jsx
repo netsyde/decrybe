@@ -34,7 +34,7 @@ const CustomRouterLink = forwardRef((props, ref) => (
 ));
 
 const Topbar = props => {
-  const { className, onSidebarOpen, ...rest } = props;
+  const { className, onOpenNavBarMobile, ...rest } = props;
 
   const classes = useStyles(1);
 
@@ -50,7 +50,7 @@ const Topbar = props => {
           <RouterLink to="/">
             <img
               alt="Logo"
-              src="./img/logo.svg"
+              src="/img/logo.svg"
               className={classes.logo}
             />
           </RouterLink>
@@ -79,7 +79,7 @@ const Topbar = props => {
         <Hidden lgUp>
           <IconButton
             color="inherit"
-            onClick={onSidebarOpen}
+            onClick={onOpenNavBarMobile}
           >
             <MenuIcon />
           </IconButton>

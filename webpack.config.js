@@ -4,15 +4,18 @@ module.exports = {
 	],
 	mode: "development",
 	output: {
-		//path: path.resolve(__dirname, 'dist'),
+		//path: __dirname + "/dist",
+		path: __dirname + "/dist",
 		filename: 'build.js',
-		publicPath: '/'
+		publicPath: __dirname + '/'
 	},
 	resolve: {
 		extensions: ['.js', '.jsx', '.ts', '.tsx']
 	  },
 	devServer: {
-		historyApiFallback: true
+		historyApiFallback: true,
+		//contentBase: './',
+   		hot: false
 	},
 	module: {
 		rules: [

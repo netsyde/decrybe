@@ -13,12 +13,10 @@ import {
   Typography
 } from '@material-ui/core';
 import { DatePicker } from '@material-ui/pickers';
-import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
+import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import AddIcon from '@material-ui/icons/Add';
 import CloseIcon from '@material-ui/icons/Close';
 import DateFnsUtils from '@date-io/date-fns';
-
-import { Alert } from '../../../../components';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -138,10 +136,6 @@ const AboutTask = props => {
       <CardHeader title="About this task" />
       <CardContent>
         <form>
-          <Alert
-            className={classes.alert}
-            message="Once you choose the task name you can’t change it unless you contact customer support."
-          />
           <div className={classes.formGroup}>
             <TextField
               fullWidth

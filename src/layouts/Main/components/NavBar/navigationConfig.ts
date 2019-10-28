@@ -90,7 +90,7 @@ export default [
       },
       {
         title: 'Tasks',
-        href: '/projects',
+        href: '/tasks',
         icon: FolderIcon,
         children: [
           {

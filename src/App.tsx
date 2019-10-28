@@ -7,12 +7,15 @@ import routes from './Routes';
 import './assets/scss/index.scss';
 import { renderRoutes } from 'react-router-config';
 const browserHistory = createBrowserHistory();
-
+import {
+  ScrollReset,
+} from './components';
 export default class App extends Component {
   render() {
     return (
       <ThemeProvider theme={theme}>
         <Router history={browserHistory}>
+        <ScrollReset />
           {renderRoutes(routes)}
         </Router>
       </ThemeProvider>
