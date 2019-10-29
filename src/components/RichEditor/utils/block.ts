@@ -15,10 +15,10 @@ export function setBlockData(editorState, data) {
 
 const newBlockRenderMap = Map({
   unstyled: {
-    element: Typography
+    element: 'div'
   },
   paragraph: {
-    element: Typography
+    element: 'div'
   }
 });
 

@@ -1,34 +1,6 @@
 ![](https://decrybe.com/img/decrybe-logo-without-bg.png)
 
 **Decrybe** - is a decentralized freelancing exchange. The exchange is based on Web3 technologies, each user decides what information to disclose. The platform is completely Autonomous, it does not need centralized persons, because its work can be supported by any user with a certain rating. In addition, the work of the exchange is based on a smart contract, which means that all actions related to the platform are strictly described by a certain script, which can be read by any user. All data is stored in a blockchain-a decentralized database. Payment is carried out using cryptocurrencies.
-## Stage of development
-### Stage I
-- ~~Authorization via Waves Keeper~~
-- ~~Ability to register user~~
-- ~~Ability to create tasks~~
-- ~~Ability to change user data~~
-- ~~Possibility to change the information about the task~~
-- ~~Ability to take tasks~~
-- Make function for report of tasks/users
-- add the function to create a feedback after performing the task
-
-- Development of the first version of the site with a simple interface for private testing
-### Stage II
-- Search for freelancers, orders
-- Ability to add to the job a few freelancers
-- Development of feedback system
-- Ability to evaluate users
-- Improve the functions of the smart contract
-- Adding a function responsible for the referendum and counting of votes
-- Other enhancements
-- Site design improvements
-### Stage III
-- Development of user-friendly API
-- Implementation of a small functional
-- Open beta testing
-### Stage IV
-- Release
-- Development of mobile applications
 
 ## API (blockchainInt.js)
 ### createTask

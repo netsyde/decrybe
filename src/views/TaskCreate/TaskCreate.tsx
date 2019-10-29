@@ -1,13 +1,12 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
+import { Page } from '../../components'
 
 import {
   Header,
-  // AboutAuthor,
   AboutTask,
   Preferences,
-  TaskCover,
   TaskDetails
 } from './components';
 
@@ -42,8 +41,9 @@ const TaskCreate = () => {
   const classes = useStyles(1);
 
   return (
-    <div
+    <Page
       className={classes.root}
+      title="Create Task"
     >
       <Header />
       <AboutTask className={classes.aboutProject} />
@@ -53,11 +53,12 @@ const TaskCreate = () => {
         <Button
           color="primary"
           variant="contained"
+          onClick={() => {}}
         >
           Create task
         </Button>
       </div>
-    </div>
+    </Page>
   );
 };
 
