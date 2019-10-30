@@ -90,7 +90,7 @@ const TaskDetails = props => {
   return (
     <Page
       className={classes.root}
-      title="Task Details"
+      title={`Task Details ${id}`}
     >
      <Header project={data} />
      

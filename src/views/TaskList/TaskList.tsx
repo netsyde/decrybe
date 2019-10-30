@@ -1,6 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-
+import { Page } from '../../components'
 import { Header, Filter, Results } from './components';
 
 const useStyles = makeStyles(theme => ({
@@ -25,13 +25,14 @@ const TaskList = () => {
   const classes = useStyles(1);
 
   return (
-    <div
+    <Page
       className={classes.root}
+      title="Tasks List"
     >
       <Header className={classes.header} />
       <Filter className={classes.filter} />
       <Results className={classes.results} />
-    </div>
+    </Page>
   );
 };
 
