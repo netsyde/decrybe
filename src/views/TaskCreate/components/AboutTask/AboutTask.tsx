@@ -17,6 +17,8 @@ import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import AddIcon from '@material-ui/icons/Add';
 import CloseIcon from '@material-ui/icons/Close';
 import DateFnsUtils from '@date-io/date-fns';
+import { RichEditor } from '../../../../components';
+import MenuItem from '@material-ui/core/MenuItem';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -52,8 +54,45 @@ const useStyles = makeStyles(theme => ({
   },
   addIcon: {
 
-  }
+  },
+  menu: {
+    width: 227,
+  },
+  textField: {
+    marginRight: theme.spacing(1),
+    width: 227,
+  },
 }));
+const categories = [
+  {
+    value: 1,
+    label: 'Websites, IT & Software',
+  },
+  {
+    value: 2,
+    label: 'Design & Media',
+  },
+  {
+    value: 3,
+    label: 'Product Sourcing',
+  },
+  {
+    value: 4,
+    label: 'Sales & Marketing',
+  },
+  {
+    value: 5,
+    label: 'Translation & Languages',
+  },
+  {
+    value: 6,
+    label: 'Local Jobs & Services',
+  },
+  {
+    value: 7,
+    label: 'Other',
+  },
+];
 
 const AboutTask = props => {
   const { className, ...rest } = props;
@@ -70,6 +109,11 @@ const AboutTask = props => {
 
   const [values, setValues] = useState({ ...initialValues });
   const [calendarTrigger, setCalendarTrigger] = useState(null);
+  const [currency, setCurrency] = React.useState('EUR');
+
+  const handleChange = event => {
+    setCurrency(event.target.value);
+  };
 
   const handleFieldChange = (event, field, value) => {
     event.persist && event.persist();
@@ -89,7 +133,7 @@ const AboutTask = props => {
       }
 
       newValues.tag = '';
-
+      console.log(values.tags)
       return newValues;
     });
   };
@@ -106,6 +150,7 @@ const AboutTask = props => {
 
   const handleCalendarOpen = trigger => {
     setCalendarTrigger(trigger);
+    console.log(values.startDate)
   };
 
   const handleCalendarChange = () => {};
@@ -189,14 +234,29 @@ const AboutTask = props => {
           </div>
           <div className={classes.formGroup}>
             <div className={classes.fieldGroup}>
+
               <TextField
-                className={classes.dateField}
-                label="Start Date"
-                name="startDate"
-                onClick={() => handleCalendarOpen('startDate')}
-                value={moment(values.startDate).format('DD/MM/YYYY')}
+                id="category"
+                select
+                label="Category"
+                className={classes.textField}
+                value={currency}
+                onChange={handleChange}
+                SelectProps={{
+                  //native: true,
+                  MenuProps: {
+                    className: classes.menu,
+                  },
+                }}
+                margin="normal"
                 variant="outlined"
-              />
+              >
+                {categories.map(option => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                </MenuItem>
+                ))}
+              </TextField>
               <TextField
                 className={classes.dateField}
                 label="End Date"
@@ -205,9 +265,11 @@ const AboutTask = props => {
                 value={moment(values.endDate).format('DD/MM/YYYY')}
                 variant="outlined"
               />
+
             </div>
           </div>
         </form>
+        <RichEditor placeholder={"Say something about the task..."} />
       </CardContent>
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <DatePicker

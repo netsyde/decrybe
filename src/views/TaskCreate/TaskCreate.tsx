@@ -47,7 +47,6 @@ const TaskCreate = () => {
     >
       <Header />
       <AboutTask className={classes.aboutProject} />
-      <TaskDetails className={classes.projectDetails} />
       <Preferences className={classes.preferences} />
       <div className={classes.actions}>
         <Button
