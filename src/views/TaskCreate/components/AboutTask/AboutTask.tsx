@@ -19,6 +19,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import DateFnsUtils from '@date-io/date-fns';
 import { RichEditor } from '../../../../components';
 import MenuItem from '@material-ui/core/MenuItem';
+import Grid from '@material-ui/core/Grid';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -47,7 +48,8 @@ const useStyles = makeStyles(theme => ({
   dateField: {
     '& + &': {
       marginLeft: theme.spacing(2)
-    }
+    },
+    marginBottom: theme.spacing(3),
   },
   addButton: {
 
@@ -60,7 +62,7 @@ const useStyles = makeStyles(theme => ({
   },
   textField: {
     marginRight: theme.spacing(1),
-    width: 227,
+    marginBottom: theme.spacing(3),
   },
 }));
 const categories = [
@@ -101,8 +103,9 @@ const AboutTask = props => {
 
   const initialValues = {
     name: '',
+    briefDescription: '',
     tag: '',
-    tags: ['Full-Time', 'ReactJS'],
+    tags: ['Decrybe', 'ReactJS'],
     startDate: moment(),
     endDate: moment().add(1, 'day')
   };
@@ -181,15 +184,65 @@ const AboutTask = props => {
       <CardHeader title="About this task" />
       <CardContent>
         <form>
-          <div className={classes.formGroup}>
+        <Grid container spacing={3}>
+          <Grid item lg={4} md={6} sm={12} xs={12}>
             <TextField
               fullWidth
               label="Task Name"
               name="name"
+              className={classes.textField}
               onChange={event =>
                 handleFieldChange(event, 'name', event.target.value)
               }
               value={values.name}
+              variant="outlined"
+            />
+          </Grid>
+          <Grid item lg={4} md={6} sm={12} xs={12}>
+            <TextField
+            fullWidth
+              id="category"
+              select
+              label="Category"
+              className={classes.textField}
+              value={currency}
+              onChange={handleChange}
+              SelectProps={{
+                MenuProps: {
+                  className: classes.menu,
+                },
+              }}
+              margin="normal"
+              variant="outlined"
+            >
+              {categories.map(option => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Grid>
+          <Grid item lg={4} md={12} sm={12} xs={12}>
+            <TextField
+            fullWidth
+              className={classes.dateField}
+              label="End Date"
+              name="endDate"
+              onClick={() => handleCalendarOpen('endDate')}
+              value={moment(values.endDate).format('DD/MM/YYYY')}
+              variant="outlined"
+            />
+          </Grid>
+          </Grid>
+          <div className={classes.formGroup}>
+            <TextField
+              fullWidth
+              label="Brief description"
+              name="briefDescription"
+              onChange={event =>
+                handleFieldChange(event, 'briefDescription', event.target.value)
+              }
+              value={values.briefDescription}
               variant="outlined"
             />
           </div>
@@ -230,42 +283,6 @@ const AboutTask = props => {
                   onDelete={() => handleTagDelete(tag)}
                 />
               ))}
-            </div>
-          </div>
-          <div className={classes.formGroup}>
-            <div className={classes.fieldGroup}>
-
-              <TextField
-                id="category"
-                select
-                label="Category"
-                className={classes.textField}
-                value={currency}
-                onChange={handleChange}
-                SelectProps={{
-                  //native: true,
-                  MenuProps: {
-                    className: classes.menu,
-                  },
-                }}
-                margin="normal"
-                variant="outlined"
-              >
-                {categories.map(option => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                </MenuItem>
-                ))}
-              </TextField>
-              <TextField
-                className={classes.dateField}
-                label="End Date"
-                name="endDate"
-                onClick={() => handleCalendarOpen('endDate')}
-                value={moment(values.endDate).format('DD/MM/YYYY')}
-                variant="outlined"
-              />
-
             </div>
           </div>
         </form>

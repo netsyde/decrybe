@@ -6,8 +6,6 @@ import { Page } from '../../components'
 import {
   Header,
   AboutTask,
-  Preferences,
-  TaskDetails
 } from './components';
 
 const useStyles = makeStyles(theme => ({
@@ -47,7 +45,6 @@ const TaskCreate = () => {
     >
       <Header />
       <AboutTask className={classes.aboutProject} />
-      <Preferences className={classes.preferences} />
       <div className={classes.actions}>
         <Button
           color="primary"
