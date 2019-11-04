@@ -9,6 +9,7 @@ import { Hidden } from '@material-ui/core';
 import useRouter from '../../../../utils/useRouter';
 import { Navigation } from '../../../../components';
 import navigationConfig from './navigationConfig';
+import { observer, inject } from 'mobx-react';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -39,6 +40,27 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+const User = inject('rootStore')(observer(({ rootStore }) => {
+  const classes = useStyles(1);
+  return (
+    <div className={classes.profile}>
+    <Avatar
+      alt="Person"
+      className={classes.avatar}
+      component={RouterLink}
+      src={rootStore.user.avatar}
+      to={`/profile/${rootStore.user.id}`}
+    />
+    <Typography
+      className={classes.name}
+      variant="h4"
+    >
+      {rootStore.user.name}
+    </Typography>
+    <Typography variant="body2">{rootStore.user.bio}</Typography>
+  </div>
+  )
+}))
 const NavBar = props => {
   const { openMobile, onMobileClose, className, ...rest } = props;
 
@@ -55,22 +77,7 @@ const NavBar = props => {
   
   const navbarContent = (
     <div className={classes.content}>
-      <div className={classes.profile}>
-        <Avatar
-          alt="Person"
-          className={classes.avatar}
-          component={RouterLink}
-          src="https://i.pinimg.com/736x/7f/5f/6c/7f5f6ca3aa5b6dee07a156c411246d63.jpg"
-          to="/profile/1/timeline"
-        />
-        <Typography
-          className={classes.name}
-          variant="h4"
-        >
-          Rick Sanchez
-        </Typography>
-        <Typography variant="body2">Programmer</Typography>
-      </div>
+      <User />
       <Divider className={classes.divider} />
       <nav className={classes.navigation}>
         {navigationConfig.map(list => (

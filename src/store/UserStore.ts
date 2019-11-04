@@ -27,13 +27,15 @@ class UserStore {
 		if (WavesKeeper) {
 			this.wavesKeeper = WavesKeeper;
 			const state = await WavesKeeper.publicState();
-			this.isLogin = true;
+			
 			this.address = state.account.address;
 			this.balance = state.account.balance.available;
 			this.network = state.network.server;
 			this.userData = state;
+			this.isLogin = true;
 			this.isReg = await nodeInt.checkReg(state.account.address, this.dapp, state.network.server);
 			await this.root.tasks.loadTasks(this.isLogin, this.dapp, this.network)
+			
 			if (this.isReg) {
 				let userDataFromDapp = await nodeInt.getUserData(state.account.address, this.dapp, state.network.server);
 				if (userDataFromDapp) {

@@ -34,7 +34,7 @@ const Overview = props => {
         xl={9}
         xs={12}
       >
-        <Brief brief={project.brief} />
+        <Brief brief={project.description ? project.description : "undefined"} />
         <Deliverables className={classes.deliverables} />
       </Grid>
       <Grid
@@ -46,16 +46,11 @@ const Overview = props => {
         <Holder project={project} />
         <Members
           className={classes.members}
-          members={project.members}
+          members={project.members ? project.members : ""}
         />
       </Grid>
     </Grid>
   );
-};
-
-Overview.propTypes = {
-  className: PropTypes.string,
-  project: PropTypes.object.isRequired
 };
 
 export default Overview;

@@ -5,9 +5,11 @@ import {RootStore} from './RootStore'
 class TasksStore {
 	@observable allTasksIds
 	@observable allTasksData = []
+	@observable taskData
+	@observable currentTask
 		
 	constructor(public root: RootStore) {
-		
+		this.root = root
 	}
 
 	async loadTasks(isLogin, dapp, network) {
@@ -22,8 +24,23 @@ class TasksStore {
 		}
 	}
 
+	@action
+	async getTaskData (id) {
+		if (this.root.user.isLogin) {
+			console.log(`${id} ${this.root.user.getDapp} ${this.root.user.getUserNetwork}`)
+			let task = await nodeInt.getTaskData(id, this.root.user.getDapp, this.root.user.getUserNetwork)
+			return task
+		} else {
+			return false
+		}
+	}
+
+	@action
+	setCurrentTaskId = id => {
+	  this.currentTask = id;
+	};
+
 	@computed get getTasks () {
-		//console.log(this.allTasksData)
 		let data = [
 		]
 		data = this.allTasksData

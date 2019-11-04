@@ -41,54 +41,53 @@ const Members = props => {
   const { members, className, ...rest } = props;
 
   const classes = useStyles(1);
+  if (members) {
+    return (
+      <Card
+        {...rest}
+        className={clsx(classes.root, className)}
+      >
+        <CardHeader
+          className={classes.header}
+          title="Project members"
+          titleTypographyProps={{
+            variant: 'overline'
+          }}
+        />
+        <CardContent className={classes.content}>
+          <List>
 
-  return (
-    <Card
-      {...rest}
-      className={clsx(classes.root, className)}
-    >
-      <CardHeader
-        className={classes.header}
-        title="Project members"
-        titleTypographyProps={{
-          variant: 'overline'
-        }}
-      />
-      <CardContent className={classes.content}>
-        <List>
-          {members.map(member => (
-            <ListItem
-              disableGutters
-              key={member.id}
-            >
-              <ListItemAvatar>
-                <Avatar
-                  alt="Author"
-                  className={classes.avatar}
-                  src={member.avatar}
-                >
-                  {getInitials(member.name)}
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText
-                primary={member.name}
-                primaryTypographyProps={{ variant: 'h6' }}
-                secondary={member.bio}
-              />
-            </ListItem>
-          ))}
-        </List>
-      </CardContent>
-      <CardActions className={classes.actions}>
-        <Button className={classes.manageButton}>Manage users</Button>
-      </CardActions>
-    </Card>
-  );
-};
-
-Members.propTypes = {
-  className: PropTypes.string,
-  members: PropTypes.array.isRequired
+            {members.map(member => (
+              <ListItem
+                disableGutters
+                key={member.id ? member.id : member}
+              >
+                <ListItemAvatar>
+                  <Avatar
+                    alt="Author"
+                    className={classes.avatar}
+                    src={member.avatar ? member.avatar : ""}
+                  >
+                    {getInitials(member.name ? member.name : "Undefined")}
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText
+                  primary={member.name ? member.name : "Undefined"}
+                  primaryTypographyProps={{ variant: 'h6' }}
+                  secondary={member.bio ? member.bio : "Undefined"}
+                />
+              </ListItem>
+            ))}
+          </List>
+        </CardContent>
+        <CardActions className={classes.actions}>
+          <Button className={classes.manageButton}>Manage users</Button>
+        </CardActions>
+      </Card>
+    )
+  } else {
+    return null
+  }
 };
 
 export default Members;

@@ -121,13 +121,13 @@ const Application = props => {
             <Avatar
               alt="Author"
               className={classes.avatar}
-              src={author.avatar}
+              src={author.avatar ? author.avatar : ""}
             >
-              {author.name}
+              {author.name ? author.name : ""}
             </Avatar>
             <div>
-              <Typography variant="h3">{author.name}</Typography>
-              <Typography variant="subtitle2">{author.bio}</Typography>
+              <Typography variant="h3">{author.name ? author.name : "Undefined"}</Typography>
+              <Typography variant="subtitle2">{author.bio ? author.bio : "Undefined"}</Typography>
             </div>
           </div>
         </div>
@@ -143,14 +143,6 @@ const Application = props => {
       </div>
     </Dialog>
   );
-};
-
-Application.propTypes = {
-  author: PropTypes.object.isRequired,
-  className: PropTypes.string,
-  onApply: PropTypes.func,
-  onClose: PropTypes.func,
-  open: PropTypes.bool.isRequired
 };
 
 export default Application;

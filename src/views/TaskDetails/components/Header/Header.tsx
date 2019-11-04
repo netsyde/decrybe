@@ -67,14 +67,14 @@ const Header = props => {
             gutterBottom
             variant="h3"
           >
-            {project.title}
+            {project.title ? project.title : "Undefined"}
           </Typography>
           <Label
             className={classes.label}
             color={colors.green[600]}
             variant="outlined"
           >
-            Active project
+            {project.status ? project.status : "undefined"}
           </Label>
         </Grid>
         <Grid item>
@@ -95,18 +95,13 @@ const Header = props => {
         </Grid>
       </Grid>
       <Application
-        author={project.author}
+        author={project.author ? project.author : "Undefined"}
         onApply={handleApplicationClose}
         onClose={handleApplicationClose}
         open={openApplication}
       />
     </div>
   );
-};
-
-Header.propTypes = {
-  className: PropTypes.string,
-  project: PropTypes.object.isRequired
 };
 
 Header.defaultProps = {};
