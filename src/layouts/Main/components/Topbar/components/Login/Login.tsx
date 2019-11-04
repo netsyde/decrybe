@@ -11,16 +11,16 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const Login = inject('userStore')(observer(({ userStore }) => {
+const Login = inject('rootStore')(observer(({ rootStore }) => {
   const classes = useStyles(1);
-  console.log(userStore)
-  if (!userStore.isUserLogin) {
+  console.log(rootStore)
+  if (!rootStore.user.isUserLogin) {
     return (
-      <Button onClick={() => userStore.login()} variant="contained" color="primary">Sign In</Button>
+      <Button onClick={() => rootStore.user.login()} variant="contained" color="primary">Sign In</Button>
     )
   } else {
     return (
-      <IconButton color="inherit" onClick={() => userStore.signOut()}>
+      <IconButton color="inherit" onClick={() => rootStore.user.signOut()}>
         <InputIcon />
       </IconButton>
     )

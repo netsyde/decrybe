@@ -857,6 +857,10 @@
     "@waves/ts-lib-crypto" "^1.1.0"
     axios "^0.19.0"
 
+"@waves/waveskeeper-types@^0.0.4":
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/@waves/waveskeeper-types/-/waveskeeper-types-0.0.4.tgz#77ceb5b2efb80394dd6c18286e55766125b37e0e"
+
 "@webassemblyjs/ast@1.8.5":
   version "1.8.5"
   resolved "https://registry.yarnpkg.com/@webassemblyjs/ast/-/ast-1.8.5.tgz#51b1c5fe6576a34953bf4b253df9f0d490d9e359"

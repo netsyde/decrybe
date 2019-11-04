@@ -6,8 +6,9 @@ import { Provider, observer, inject } from 'mobx-react';
 import Signup  from './components/Signup'
 import userStore from '../../store/UserStore';
 import tasksStore from '../../store/TasksStore'
+import rootStore from '../../store/RootStore'
 import { LinearProgress } from '@material-ui/core';
-const stores = { userStore, tasksStore };
+const stores = { /*userStore, tasksStore, */rootStore };
 import { renderRoutes } from 'react-router-config';
 
 const useStyles = makeStyles(theme => ({
