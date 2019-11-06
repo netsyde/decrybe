@@ -152,8 +152,8 @@ const ProjectCard = props => {
               <Typography variant="body2">Location</Typography>
             </Grid>
             <Grid item>
-              <Typography variant="h5">{project.type}</Typography>
-              <Typography variant="body2">Type</Typography>
+              <Typography variant="h5">{project.category}</Typography>
+              <Typography variant="body2">Category</Typography>
             </Grid>
             <Grid item>
               {liked ? (

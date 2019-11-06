@@ -55,13 +55,11 @@ let data = {
 }
 
 const Task = props => {
-  //const { match, history } = props;
   const classes = useStyles(1);
   const { id, tab } = props.match.params;
   const [openAlert, setOpenAlert] = useState(true);
   const [project, setProject] = useState(null);
 
-  //setProject(data);
   useEffect(() => {
     async function getTask () {
       console.log(props.rootStore.user.getUserNetwork)
@@ -99,7 +97,6 @@ const Task = props => {
   if (!project) {
     return null;
   }
-  //console.log(props.task)
   
   return (
     <Page

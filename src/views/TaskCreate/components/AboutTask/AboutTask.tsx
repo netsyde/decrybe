@@ -106,6 +106,7 @@ const AboutTask = props => {
     briefDescription: '',
     tag: '',
     tags: ['Decrybe', 'ReactJS'],
+    price: 1,
     startDate: moment(),
     endDate: moment().add(1, 'day')
   };
@@ -185,9 +186,10 @@ const AboutTask = props => {
       <CardContent>
         <form>
         <Grid container spacing={3}>
-          <Grid item lg={4} md={6} sm={12} xs={12}>
+          <Grid item lg={8} md={6} sm={12} xs={12}>
             <TextField
               fullWidth
+              required
               label="Task Name"
               name="name"
               className={classes.textField}
@@ -200,7 +202,23 @@ const AboutTask = props => {
           </Grid>
           <Grid item lg={4} md={6} sm={12} xs={12}>
             <TextField
-            fullWidth
+              fullWidth
+              required
+              type="number"
+              label="Price"
+              name="price"
+              className={classes.textField}
+              onChange={event =>
+                handleFieldChange(event, 'price', event.target.value)
+              }
+              value={values.price}
+              variant="outlined"
+            />
+          </Grid>
+          <Grid item lg={4} md={6} sm={12} xs={12}>
+            <TextField
+              fullWidth
+              required
               id="category"
               select
               label="Category"
@@ -224,7 +242,8 @@ const AboutTask = props => {
           </Grid>
           <Grid item lg={4} md={12} sm={12} xs={12}>
             <TextField
-            fullWidth
+              fullWidth
+              required
               className={classes.dateField}
               label="End Date"
               name="endDate"
@@ -237,6 +256,7 @@ const AboutTask = props => {
           <div className={classes.formGroup}>
             <TextField
               fullWidth
+              required
               label="Brief description"
               name="briefDescription"
               onChange={event =>
