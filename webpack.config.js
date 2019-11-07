@@ -1,10 +1,12 @@
+const TerserPlugin = require('terser-webpack-plugin');
+const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 module.exports = {
 	entry: [
 		'./src/index.tsx'
 	],
-	mode: "development",
+	mode: 'production',
+	//mode: "development",
 	output: {
-		//path: __dirname + "/dist",
 		path: __dirname + "/dist",
 		filename: 'build.js',
 		publicPath: __dirname + '/'
@@ -14,8 +16,15 @@ module.exports = {
 	  },
 	devServer: {
 		historyApiFallback: true,
-		//contentBase: './',
    		hot: false
+	},
+	optimization: {
+		minimize: true,
+		minimizer: [
+		  new TerserPlugin({
+			cache: true,
+		  }),
+		],
 	},
 	module: {
 		rules: [
@@ -38,19 +47,18 @@ module.exports = {
 			{
 				test: /(\.ts|\.tsx)$/, 
 				loaders: ["ts-loader"],
-				//include: [path.join(__dirname, "src"), path.join(__dirname, "data")] 
 			},
 			{
 				test: /\.s[ac]ss$/i,
 				use: [
-				  // Creates `style` nodes from JS strings
 				  'style-loader',
-				  // Translates CSS into CommonJS
 				  'css-loader',
-				  // Compiles Sass to CSS
 				  'sass-loader',
 				],
 			  },
 		]
-	}
+	},
+	plugins: [
+		new HardSourceWebpackPlugin()
+	]
 };

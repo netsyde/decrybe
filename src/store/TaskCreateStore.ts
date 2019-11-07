@@ -2,14 +2,14 @@ import { observable, action, computed} from "mobx"
 import {RootStore} from './RootStore'
 
 class TaskCreateStore {
-	@observable title: String;
-	@observable category: String;
+	@observable title: String = "";
+	@observable category: String = "";
 	@observable createTime: Number;
-	@observable endDate: Number;
-	@observable briefDescription: String;
-	@observable tags: Array<String>;
-	@observable description: String;
-	@observable price: Number;
+	@observable endDate: Number = Date.now() + 864000000;
+	@observable briefDescription: String = "";
+	@observable tags: Array<String> = ['Decrybe', 'ReactJS'];
+	@observable description: String = "";
+	@observable price: number;
 	@observable currency: String = "Waves";
 	@observable author: String = this.root.user.address;
 	@observable updatedAt: Number = this.createTime;
@@ -22,15 +22,27 @@ class TaskCreateStore {
 		this.root = root
 	}
 	
-	@action("set task title")
+	//@action("set task title")
 	setTitle (title: String) {
-		if (title) {
-			this.title = title;
-		}
+      	this.title = title
+
 	}
 
 	@computed get getTitle() {
+		//console.log(this.title)
+		//if (this.title.length > 0)
 		return this.title
+	}
+
+	@action("set task price")
+	setPrice (price: number) {
+		if (price) {
+			this.price = price;
+		}
+	}
+
+	getPrice() {
+		return this.price
 	}
 
 	@action("set task category")
@@ -74,7 +86,7 @@ class TaskCreateStore {
 	}
 
 	@computed get getTags() {
-		return this.briefDescription
+		return this.tags
 	}
 
 	@action("set task description")
@@ -86,17 +98,6 @@ class TaskCreateStore {
 
 	@computed get getDescription() {
 		return this.description
-	}
-		
-	@action("set task price")
-	setPrice (price: Number) {
-		if (price) {
-			this.price = price;
-		}
-	}
-
-	@computed get getPrice() {
-		return this.price
 	}
 
 	@action("set task currency")

@@ -20,7 +20,7 @@ import DateFnsUtils from '@date-io/date-fns';
 import { RichEditor } from '../../../../components';
 import MenuItem from '@material-ui/core/MenuItem';
 import Grid from '@material-ui/core/Grid';
-
+import { observer, inject } from 'mobx-react';
 const useStyles = makeStyles(theme => ({
   root: {},
   alert: {
@@ -95,9 +95,9 @@ const categories = [
     label: 'Other',
   },
 ];
-
-const AboutTask = props => {
-  const { className, ...rest } = props;
+const AboutTask = observer((props) => {
+//const AboutTask = props => {
+  const { className, rootStore, ...rest } = props;
 
   const classes = useStyles(1);
 
@@ -177,6 +177,15 @@ const AboutTask = props => {
       : moment(values.startDate).add(1, 'day');
   const calendarValue = values[calendarTrigger];
 
+  let onChange = e => {
+    rootStore.taskCreate.setTitle(e.target.value)
+    e.preventDefault();
+  }
+
+  let getValue = () => {
+    let tesr = rootStore.taskCreate.getTitle
+    return tesr
+  }
   return (
     <Card
       {...rest}
@@ -194,9 +203,9 @@ const AboutTask = props => {
               name="name"
               className={classes.textField}
               onChange={event =>
-                handleFieldChange(event, 'name', event.target.value)
+                rootStore.taskCreate.setTitle(event.target.value)
               }
-              value={values.name}
+              value={rootStore.taskCreate.getTitle}
               variant="outlined"
             />
           </Grid>
@@ -209,9 +218,10 @@ const AboutTask = props => {
               name="price"
               className={classes.textField}
               onChange={event =>
-                handleFieldChange(event, 'price', event.target.value)
+                rootStore.taskCreate.price = (event.target.value)
+                //handleFieldChange(event, 'price', event.target.value)
               }
-              value={values.price}
+              value={rootStore.taskCreate.price}
               variant="outlined"
             />
           </Grid>
@@ -322,10 +332,5 @@ const AboutTask = props => {
       </MuiPickersUtilsProvider>
     </Card>
   );
-};
-
-AboutTask.propTypes = {
-  className: PropTypes.string
-};
-
+});
 export default AboutTask;

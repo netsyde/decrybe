@@ -2,6 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
 import { Page } from '../../components'
+import { observer, inject } from 'mobx-react';
 
 import {
   Header,
@@ -35,27 +36,35 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const TaskCreate = () => {
+const TaskCreate = inject('rootStore')(observer(({ rootStore }) => {
   const classes = useStyles(1);
-
-  return (
+  if (rootStore.user.isUserLogin) {
+    return (
+      <Page
+        className={classes.root}
+        title="Create Task"
+      >
+        <Header />
+        <AboutTask className={classes.aboutProject} rootStore={rootStore}/>
+        <div className={classes.actions}>
+          <Button
+            color="primary"
+            variant="contained"
+            onClick={() => {}}
+          >
+            Create task
+          </Button>
+        </div>
+      </Page>
+    );
+  } else {
     <Page
-      className={classes.root}
-      title="Create Task"
-    >
-      <Header />
-      <AboutTask className={classes.aboutProject} />
-      <div className={classes.actions}>
-        <Button
-          color="primary"
-          variant="contained"
-          onClick={() => {}}
-        >
-          Create task
-        </Button>
-      </div>
+        className={classes.root}
+        title="Create Task"
+      >
+    <p>Please log in</p>
     </Page>
-  );
-};
+  }
+}));
 
 export default TaskCreate;
