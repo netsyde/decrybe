@@ -1,5 +1,5 @@
-import React, { useState, useRef } from 'react';
-import PropTypes from 'prop-types';
+import React, { useState, useRef, useEffect } from 'react';
+import { observer } from 'mobx-react';
 import clsx from 'clsx';
 import {
   Editor,
@@ -13,6 +13,9 @@ import { Paper, Divider } from '@material-ui/core';
 
 import { EditorToolbar } from './components';
 import { blockRenderMap } from './utils';
+
+import { stateFromMarkdown } from 'draft-js-import-markdown';
+import { stateToMarkdown } from "draft-js-export-markdown";
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -82,19 +85,20 @@ const useStyles = makeStyles(theme => ({
 
 const capitalize = string => string.charAt(0).toUpperCase() + string.slice(1);
 
-const RichEditor = props => {
-  const { className, ...rest } = props;
+const RichEditor = observer((props) => {
+  const { className, rootStore, ...rest } = props;
 
   const classes = useStyles(1);
 
   const editorRef = useRef(null);
 
-  const [editorState, setEditorState] = useState(EditorState.createEmpty());
+  const [editorState, setEditorState] = useState(
+    EditorState.createWithContent(stateFromMarkdown(rootStore.taskCreate.getDescription))
+  );
 
   const handleContainerClick = () => {
     editorRef.current.focus();
   };
-
   const handleToolbarToggle = (type, value) => {
     if (type === 'blockType') {
       if (['left', 'center', 'right', 'justify'].includes(value)) {
@@ -121,6 +125,11 @@ const RichEditor = props => {
   };
 
   const handleEditorChange = editorState => {
+    const markdown = stateToMarkdown(
+      editorState.getCurrentContent()
+    )
+    console.log(markdown)
+    rootStore.taskCreate.setDescription(markdown)
     setEditorState(editorState);
   };
 
@@ -160,7 +169,6 @@ const RichEditor = props => {
 
     return '';
   }
-
   return (
     <Paper
       {...rest}
@@ -189,6 +197,6 @@ const RichEditor = props => {
       </div>
     </Paper>
   );
-};
+});
 
 export default RichEditor;

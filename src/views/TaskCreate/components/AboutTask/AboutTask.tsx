@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import moment from 'moment';
 import { makeStyles } from '@material-ui/core/styles';
@@ -20,7 +19,7 @@ import DateFnsUtils from '@date-io/date-fns';
 import { RichEditor } from '../../../../components';
 import MenuItem from '@material-ui/core/MenuItem';
 import Grid from '@material-ui/core/Grid';
-import { observer, inject } from 'mobx-react';
+import { observer } from 'mobx-react';
 const useStyles = makeStyles(theme => ({
   root: {},
   alert: {
@@ -39,7 +38,7 @@ const useStyles = makeStyles(theme => ({
   tags: {
     marginTop: theme.spacing(1),
     '& > * + *': {
-      marginLeft: theme.spacing(1)
+      margin: theme.spacing(1)
     }
   },
   flexGrow: {
@@ -96,7 +95,6 @@ const categories = [
   },
 ];
 const AboutTask = observer((props) => {
-//const AboutTask = props => {
   const { className, rootStore, ...rest } = props;
 
   const classes = useStyles(1);
@@ -113,43 +111,18 @@ const AboutTask = observer((props) => {
 
   const [values, setValues] = useState({ ...initialValues });
   const [calendarTrigger, setCalendarTrigger] = useState(null);
-  const [currency, setCurrency] = React.useState('EUR');
-
-  const handleChange = event => {
-    setCurrency(event.target.value);
-  };
-
-  const handleFieldChange = (event, field, value) => {
-    event.persist && event.persist();
-    setValues(values => ({
-      ...values,
-      [field]: value
-    }));
-  };
 
   const handleTagAdd = () => {
-    setValues(values => {
-      const newValues = { ...values };
-
-      if (newValues.tag && !newValues.tags.includes(newValues.tag)) {
-        newValues.tags = [...newValues.tags];
-        newValues.tags.push(newValues.tag);
+      if (rootStore.taskCreate.getTag && !rootStore.taskCreate.getTags.includes(rootStore.taskCreate.getTag)) {
+        rootStore.taskCreate.tags = [...rootStore.taskCreate.tags];
+        rootStore.taskCreate.tags.push(rootStore.taskCreate.getTag);
       }
 
-      newValues.tag = '';
-      console.log(values.tags)
-      return newValues;
-    });
+      rootStore.taskCreate.setTag("");
   };
 
   const handleTagDelete = tag => {
-    setValues(values => {
-      const newValues = { ...values };
-
-      newValues.tags = newValues.tags.filter(t => t !== tag);
-
-      return newValues;
-    });
+      rootStore.taskCreate.tags = rootStore.taskCreate.tags.filter(t => t !== tag);
   };
 
   const handleCalendarOpen = trigger => {
@@ -158,13 +131,6 @@ const AboutTask = observer((props) => {
   };
 
   const handleCalendarChange = () => {};
-
-  const handleCalendarAccept = date => {
-    setValues(values => ({
-      ...values,
-      [calendarTrigger]: date
-    }));
-  };
 
   const handleCalendarClose = () => {
     setCalendarTrigger(false);
@@ -218,10 +184,9 @@ const AboutTask = observer((props) => {
               name="price"
               className={classes.textField}
               onChange={event =>
-                rootStore.taskCreate.price = (event.target.value)
-                //handleFieldChange(event, 'price', event.target.value)
+                rootStore.taskCreate.setPrice(event.target.value)
               }
-              value={rootStore.taskCreate.price}
+              value={rootStore.taskCreate.getPrice}
               variant="outlined"
             />
           </Grid>
@@ -233,8 +198,10 @@ const AboutTask = observer((props) => {
               select
               label="Category"
               className={classes.textField}
-              value={currency}
-              onChange={handleChange}
+              value={rootStore.taskCreate.getCategory}
+              onChange={event =>
+                rootStore.taskCreate.setCategory(event.target.value)
+              }
               SelectProps={{
                 MenuProps: {
                   className: classes.menu,
@@ -258,7 +225,7 @@ const AboutTask = observer((props) => {
               label="End Date"
               name="endDate"
               onClick={() => handleCalendarOpen('endDate')}
-              value={moment(values.endDate).format('DD/MM/YYYY')}
+              value={moment(rootStore.taskCreate.getEndDate).format('DD/MM/YYYY')}
               variant="outlined"
             />
           </Grid>
@@ -270,9 +237,9 @@ const AboutTask = observer((props) => {
               label="Brief description"
               name="briefDescription"
               onChange={event =>
-                handleFieldChange(event, 'briefDescription', event.target.value)
+                rootStore.taskCreate.setBriefDescription(event.target.value)
               }
-              value={values.briefDescription}
+              value={rootStore.taskCreate.getBriefDescription}
               variant="outlined"
             />
           </div>
@@ -283,9 +250,9 @@ const AboutTask = observer((props) => {
                 label="Task Tags"
                 name="tag"
                 onChange={event =>
-                  handleFieldChange(event, 'tag', event.target.value)
+                  rootStore.taskCreate.setTag(event.target.value)
                 }
-                value={values.tag}
+                value={rootStore.taskCreate.getTag}
                 variant="outlined"
               />
               <Button
@@ -305,7 +272,7 @@ const AboutTask = observer((props) => {
               recognises.
             </Typography>
             <div className={classes.tags}>
-              {values.tags.map(tag => (
+              {rootStore.taskCreate.getTags.map(tag => (
                 <Chip
                   deleteIcon={<CloseIcon />}
                   key={tag}
@@ -316,17 +283,17 @@ const AboutTask = observer((props) => {
             </div>
           </div>
         </form>
-        <RichEditor placeholder={"Say something about the task..."} />
+        <RichEditor placeholder={"Say something about the task..."} rootStore={rootStore} />
       </CardContent>
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <DatePicker
         minDate={calendarMinDate}
-        onAccept={handleCalendarAccept}
+        onAccept={date => rootStore.taskCreate.setEndDate(date)}
         onChange={handleCalendarChange}
         onClose={handleCalendarClose}
         open={calendarOpen}
         style={{ display: 'none' }} // Temporal fix to hide the input element
-        value={calendarValue}
+        value={rootStore.taskCreate.getEndDate}
         variant="dialog"
       />
       </MuiPickersUtilsProvider>

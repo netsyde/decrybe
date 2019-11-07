@@ -5,43 +5,45 @@ class TaskCreateStore {
 	@observable title: String = "";
 	@observable category: String = "";
 	@observable createTime: Number;
-	@observable endDate: Number = Date.now() + 864000000;
+	@observable endDate: Number = Date.now() + 84000 * 1000;
 	@observable briefDescription: String = "";
 	@observable tags: Array<String> = ['Decrybe', 'ReactJS'];
+	@observable tag: String = ""
 	@observable description: String = "";
-	@observable price: number;
+	@observable price: Number = 1;
 	@observable currency: String = "Waves";
 	@observable author: String = this.root.user.address;
 	@observable updatedAt: Number = this.createTime;
 	@observable members: Array<String> = [];
 	@observable freelancers: Array<String> = [];
 	@observable status: String = "featured";
-
 	@observable uuid: String
+
 	constructor(public root: RootStore) {
 		this.root = root
 	}
 	
-	//@action("set task title")
+	@action("set task title")
 	setTitle (title: String) {
-      	this.title = title
-
+		if (title) {
+		  	this.title = title
+		}
 	}
 
 	@computed get getTitle() {
-		//console.log(this.title)
-		//if (this.title.length > 0)
 		return this.title
 	}
 
 	@action("set task price")
-	setPrice (price: number) {
-		if (price) {
+	setPrice (price: Number) {
+		if (price <= 0) {
+			this.price = 0.1
+		} else {
 			this.price = price;
 		}
 	}
 
-	getPrice() {
+	@computed get getPrice() {
 		return this.price
 	}
 
@@ -57,9 +59,10 @@ class TaskCreateStore {
 	}
 
 	@action("set task end date")
-	setEndDate (date: Number) {
+	setEndDate (date: Date) {
+		console.log(date)
 		if (date) {
-			this.endDate = date;
+			this.endDate = date.getTime();
 		}
 	}
 
@@ -87,6 +90,15 @@ class TaskCreateStore {
 
 	@computed get getTags() {
 		return this.tags
+	}
+
+	@action("set task tag")
+	setTag (tag: String) {
+		this.tag = tag;
+	}
+
+	@computed get getTag() {
+		return this.tag
 	}
 
 	@action("set task description")
