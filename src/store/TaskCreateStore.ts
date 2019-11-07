@@ -12,8 +12,8 @@ class TaskCreateStore {
 	@observable description: String = "";
 	@observable price: Number = 1;
 	@observable currency: String = "Waves";
-	@observable author: String = this.root.user.address;
-	@observable updatedAt: Number = this.createTime;
+	@observable author: String = this.root.user.getUserAddress;
+	@observable updatedAt: Number;
 	@observable members: Array<String> = [];
 	@observable freelancers: Array<String> = [];
 	@observable status: String = "featured";
@@ -25,9 +25,7 @@ class TaskCreateStore {
 	
 	@action("set task title")
 	setTitle (title: String) {
-		if (title) {
-		  	this.title = title
-		}
+		this.title = title
 	}
 
 	@computed get getTitle() {
@@ -72,9 +70,7 @@ class TaskCreateStore {
 
 	@action("set task brief description")
 	setBriefDescription (briefDescription: String) {
-		if (briefDescription) {
-			this.briefDescription = briefDescription;
-		}
+		this.briefDescription = briefDescription;
 	}
 
 	@computed get getBriefDescription() {
@@ -103,9 +99,7 @@ class TaskCreateStore {
 
 	@action("set task description")
 	setDescription (description: String) {
-		if (description) {
-			this.description = description;
-		}
+		this.description = description;
 	}
 
 	@computed get getDescription() {

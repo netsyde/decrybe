@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import moment from 'moment';
 import { makeStyles } from '@material-ui/core/styles';
@@ -13,10 +12,10 @@ import {
   ListItem,
   Typography
 } from '@material-ui/core';
-
+import * as nodeInt from '../../../../../../modules/nodeInt'
 import getInitials from '../../../../../../utils/getInitials';
 import { Label } from '../../../../../../components';
-
+import { observer, inject } from 'mobx-react';
 const useStyles = makeStyles(theme => ({
   root: {},
   header: {
@@ -34,10 +33,23 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Holder = props => {
-  const { project, className, ...rest } = props;
+const HolderContainer = props => {
+  const { project, className, rootStore, ...rest } = props;
 
   const classes = useStyles(1);
+  const [user, setUser] = useState("");
+
+  useEffect(() => {
+    
+    async function getAuthorData () {
+      let userData = await nodeInt.getUserData(project.author, rootStore.user.getDapp, rootStore.user.getUserNetwork)
+      if (userData) {
+        setUser(userData)
+      }
+    }
+    getAuthorData()
+
+  }, []);
 
   return (
     <Card
@@ -50,10 +62,10 @@ const Holder = props => {
             alt="Author"
             className={classes.avatar}
             component={RouterLink}
-            src={project.author.avatar ? project.author.avatar : ""}
-            to="/profile/1/timeline"
+            src={user.avatar ? user.avatar : ""}
+            to={`/profile/${user.address ? user.address : "undefined"}`}
           >
-            {project.author.name ? getInitials(project.author.name) : "Undefined"}
+            {user.name ? getInitials(user.name) : "Undefined"}
           </Avatar>
         }
         className={classes.header}
@@ -61,10 +73,10 @@ const Holder = props => {
         subheader={
           <Typography
             component={RouterLink}
-            to="/profile/1/timeline"
+            to={`/profile/${user.address ? user.address : "undefined"}`}
             variant="h5"
           >
-            {project.author.name ? project.author.name : "Undefined"}
+            {user.name}
           </Typography>
         }
         title={
@@ -85,7 +97,7 @@ const Holder = props => {
           >
             <Typography variant="subtitle2">Deadline</Typography>
             <Typography variant="h6">
-              {(project.createTime + project.expireTime) ? moment(project.createTime + project.expireTime).format('DD MMM YYYY') : "undefined"}
+              {(project.expireTime) ? moment(project.expireTime).format('DD MMM YYYY') : "undefined"}
             </Typography>
           </ListItem>
           <ListItem
@@ -104,7 +116,7 @@ const Holder = props => {
             divider
           >
             <Typography variant="subtitle2">Main Technology</Typography>
-            <Label color={project.tags ? project.tags[0].color : "#fff"}>{project.tags ? project.tags[0].text : "Undefined"}</Label>
+            <Label color={"#e74c3c"}>{project.tags ? project.tags[0] : "Undefined"}</Label>
           </ListItem>
           <ListItem
             className={classes.listItem}
@@ -113,7 +125,7 @@ const Holder = props => {
           >
             <Typography variant="subtitle2">Last Update</Typography>
             <Typography variant="h6">
-              {project.updated_at ? moment(project.updated_at).format('DD MMM YYYY') : "Undefined"}
+              {project.updatedAt ? moment(project.updatedAt).format('DD MMM YYYY') : "Undefined"}
             </Typography>
           </ListItem>
         </List>
@@ -121,5 +133,19 @@ const Holder = props => {
     </Card>
   );
 };
+
+@inject("rootStore")
+@observer
+class Holder extends React.Component {
+  constructor(props) {
+    super(props)
+  }
+
+  render() {
+    return (
+      <HolderContainer rootStore={this.props.rootStore} project={this.props.project}/>
+    )
+  }
+}
 
 export default Holder;

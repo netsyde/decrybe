@@ -175,7 +175,8 @@ export let getUserData = async (address: String, dAppAddress: String, nodeUrl: S
                 status: userData.status ? userData.status: "",
                 createTime: userData.createTime ? userData.createTime : "",
                 tags: userData.tags ? userData.tags : "",
-                avatar: userData.avatar ? userData.avatar : ""
+                avatar: userData.avatar ? userData.avatar : "",
+                address: address
             }
             return userDataObj;
         } else {
