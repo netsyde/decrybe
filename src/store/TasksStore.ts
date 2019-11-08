@@ -4,7 +4,7 @@ import {RootStore} from './RootStore'
 
 class TasksStore {
 	@observable allTasksIds
-	@observable allTasksData = []
+	@observable allTasksData
 	@observable taskData
 	@observable currentTask
 		
@@ -14,13 +14,15 @@ class TasksStore {
 
 	async loadTasks(isLogin, dapp, network) {
 		if (isLogin) {
-			this.allTasksIds = await nodeInt.getAllTasks(dapp, network)
-			for (let i = 0; i < this.allTasksIds.length; i++) {
-				let taskData = await nodeInt.getTaskData(this.allTasksIds[i], dapp, network)
-				if (taskData) {
-					this.allTasksData.push(taskData)
-				}
+			let allTasksData = await nodeInt.getTasksAllData(dapp, network)
+			if (allTasksData) {
+				this.allTasksData = allTasksData
+			} else {
+				console.log('allTasksData is false')
 			}
+			
+		} else {
+			console.log('user not login')
 		}
 	}
 
@@ -41,11 +43,7 @@ class TasksStore {
 	};
 
 	@computed get getTasks () {
-		let data = [
-		]
-		data = this.allTasksData
-		if (data.length > 0)
-		return data;
+		return this.allTasksData;
 	}
 
 	@computed get getAllTasksIds () {

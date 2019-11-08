@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
@@ -24,6 +24,7 @@ import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 
 import getInitials from '../../utils/getInitials';
 import { Label } from '../';
+import * as nodeInt from '../../modules/nodeInt'
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -59,13 +60,20 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+function getRandomArbitary(min, max) {
+  let rand = Math.random() * (max - min) + min;
+  return rand.toFixed(0)
+}
+
+let color = ["#1abc9c", "#2ecc71", "#3498db", "#9b59b6", "#34495e", "#16a085",
+"#27ae60", "#2980b9", "#8e44ad", "#2c3e50", "#e67e22", "#e74c3c"]
+
 const ProjectCard = props => {
-  const { project, className, ...rest } = props;
+  const { project, rootStore, className, ...rest } = props;
 
   const classes = useStyles(1);
 
   const [liked, setLiked] = useState(project.liked);
-
   const handleLike = () => {
     setLiked(true);
   };
@@ -83,9 +91,9 @@ const ProjectCard = props => {
         avatar={
           <Avatar
             alt="Author"
-            src={project.author.avatar}
+            src={project.author ? project.author.avatar : ""}
           >
-            {getInitials(project.author.name)}
+            {project.author ? getInitials(project.author.name) : ""}
           </Avatar>
         }
         className={classes.header}
@@ -96,22 +104,22 @@ const ProjectCard = props => {
             <Link
               color="textPrimary"
               component={RouterLink}
-              to="/profile/1/timeline"
+              to={`/profile/${project.author ? project.author.address : "undefined"}`}
               variant="h6"
             >
-              {project.author.name}
+              {project.author ? project.author.name : ""}
             </Link>{' '}
-            | Updated: {moment(project.updated_at).fromNow()}
+            | Updated: {project.updatedAt ? moment(project.updatedAt).fromNow() : "undefined"}
           </Typography>
         }
         title={
           <Link
             color="textPrimary"
             component={RouterLink}
-            to="/projects/1/overview"
+            to={`/profile/${project.author ? project.author.address : "undefined"}`}
             variant="h5"
           >
-            {project.title}
+            {project.title ? project.title : "undefined"}
           </Link>
         }
       />
@@ -121,19 +129,18 @@ const ProjectCard = props => {
             color="textSecondary"
             variant="subtitle2"
           >
-            We're looking for experienced Developers and Product Designers to
-            come aboard and help us build succesful businesses through softare.
+            {project.brief ? project.brief.substr(0, 100) + "..." : "undefined"}
           </Typography>
         </div>
         <div className={classes.tags}>
-          {project.tags.map(tag => (
+          {project.tags ? (project.tags.map(tag => (
             <Label
-              color={tag.color}
-              key={tag.text}
+              color={color[getRandomArbitary(0, color.length - 1)]}
+              key={tag}
             >
-              {tag.text}
+              {tag}
             </Label>
-          ))}
+          ))) : ""}
         </div>
         <Divider />
         <div className={classes.details}>
@@ -144,15 +151,15 @@ const ProjectCard = props => {
             spacing={3}
           >
             <Grid item>
-              <Typography variant="h5">${project.price}</Typography>
+              <Typography variant="h5">${project.price ? project.price : "undefined"}</Typography>
               <Typography variant="body2">Per Task</Typography>
             </Grid>
             <Grid item>
-              <Typography variant="h5">{project.location}</Typography>
-              <Typography variant="body2">Location</Typography>
+              <Typography variant="h5">{project.status ? project.status : "undefined"}</Typography>
+              <Typography variant="body2">Status</Typography>
             </Grid>
             <Grid item>
-              <Typography variant="h5">{project.category}</Typography>
+              <Typography variant="h5">{project.category ? project.category : "undefined"}</Typography>
               <Typography variant="body2">Category</Typography>
             </Grid>
             <Grid item>
@@ -188,7 +195,7 @@ const ProjectCard = props => {
                 className={classes.learnMoreButton}
                 component={RouterLink}
                 size="small"
-                to="/projects/1/overview"
+                to={`/tasks/${project.uuid ? project.uuid : "undefined"}/overview`}
               >
                 Learn more
               </Button>
@@ -198,11 +205,6 @@ const ProjectCard = props => {
       </CardContent>
     </Card>
   );
-};
-
-ProjectCard.propTypes = {
-  className: PropTypes.string,
-  project: PropTypes.object.isRequired
 };
 
 export default ProjectCard;

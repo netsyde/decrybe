@@ -19,6 +19,7 @@
         "@types/node": "^12.7.11",
         "@waves/waves-transactions": "^3.14.3",
         "@waves/waveskeeper-types": "^0.0.4",
+        "add": "^2.0.6",
         "axios": "^0.19.0",
         "babel": "^6.23.0",
         "babel-core": "^6.26.3",
@@ -28,8 +29,7 @@
         "css-loader": "^3.2.0",
         "date-fns": "^2.0.0-beta.5",
         "draft-js": "^0.11.1",
-        "draft-js-export-markdown": "^1.4.0",
-        "draft-js-import-markdown": "^1.4.0",
+        "draftjs-md-converter": "^1.2.0",
         "express": "^4.17.1",
         "file-loader": "^4.2.0",
         "history": "^4.10.1",
@@ -52,7 +52,8 @@
         "style-loader": "^1.0.0",
         "terser-webpack-plugin": "^2.2.1",
         "uuid": "^3.3.3",
-        "ws": "^7.1.1"
+        "ws": "^7.1.1",
+        "yarn": "^1.19.1"
     },
     "devDependencies": {
         "@babel/core": "^7.1.2",

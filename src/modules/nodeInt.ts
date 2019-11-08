@@ -164,10 +164,8 @@ export let getAllUsers = async (dAppAddress: String, nodeUrl: String) => {
 export let getUserData = async (address: String, dAppAddress: String, nodeUrl: String) => {
     try {
         let userData = await getDataByKey("user_bio_" + address, dAppAddress, nodeUrl)
-        console.log(userData)
         if (userData) {
             userData = JSON.parse(userData)
-            console.log(userData)
             let userDataObj = {
                 name: userData.name ? userData.name : "",
                 socials: userData.socials ? userData.socials : "",
@@ -201,6 +199,12 @@ export let getTaskData = async (id: String, dAppAddress: String, nodeUrl: String
     try {
         let taskData = await getDataByKey("datajson_" + id, dAppAddress, nodeUrl)
         taskData = JSON.parse(taskData)
+        let userData = await getUserData(taskData.author, dAppAddress, nodeUrl)
+        taskData.author = {
+            address: taskData.author,
+            name: userData ? userData.name : "",
+            avatar: userData ? userData.avatar : ""
+        }
         return taskData;
     } catch (e) {
         return false;

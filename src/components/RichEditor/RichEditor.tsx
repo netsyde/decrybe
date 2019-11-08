@@ -6,7 +6,9 @@ import {
   EditorState,
   RichUtils,
   Modifier,
-  getDefaultKeyBinding
+  getDefaultKeyBinding,
+  convertToRaw,
+  convertFromRaw
 } from 'draft-js';
 import { makeStyles } from '@material-ui/core/styles';
 import { Paper, Divider } from '@material-ui/core';
@@ -14,8 +16,7 @@ import { Paper, Divider } from '@material-ui/core';
 import { EditorToolbar } from './components';
 import { blockRenderMap } from './utils';
 
-import { stateFromMarkdown } from 'draft-js-import-markdown';
-import { stateToMarkdown } from "draft-js-export-markdown";
+import { mdToDraftjs, draftjsToMd } from 'draftjs-md-converter';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -93,7 +94,7 @@ const RichEditor = observer((props) => {
   const editorRef = useRef(null);
 
   const [editorState, setEditorState] = useState(
-    EditorState.createWithContent(stateFromMarkdown(rootStore.taskCreate.getDescription))
+    EditorState.createWithContent(convertFromRaw(mdToDraftjs(rootStore.taskCreate.getDescription)))
   );
 
   const handleContainerClick = () => {
@@ -125,10 +126,12 @@ const RichEditor = observer((props) => {
   };
 
   const handleEditorChange = editorState => {
-    const markdown = stateToMarkdown(
-      editorState.getCurrentContent()
+    let markdown = draftjsToMd(
+      convertToRaw(editorState.getCurrentContent())
     )
-    console.log(markdown)
+
+    console.log(JSON.stringify(markdown))
+
     rootStore.taskCreate.setDescription(markdown)
     setEditorState(editorState);
   };

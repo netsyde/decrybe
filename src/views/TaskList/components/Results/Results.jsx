@@ -14,6 +14,7 @@ import { ToggleButtonGroup, ToggleButton } from '@material-ui/lab';
 import ViewModuleIcon from '@material-ui/icons/ViewModule';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import { ProjectCard, Paginate } from '../../../../components';
+import { observer, inject } from 'mobx-react';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -51,9 +52,8 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'center'
   }
 }));
-
-const Projects = props => {
-  const { className, ...rest } = props;
+const ProjectsContainer = observer((props) => {
+  const { className, rootStore, ...rest } = props;
 
   const classes = useStyles(1);
   const sortRef = useRef(null);
@@ -64,52 +64,20 @@ const Projects = props => {
 
   useEffect(() => {
 
-    const fetchProjects = () => {
-      let val = [{
-        title: "Test Task",
-        author: {
-          avatar: "https://www.nastol.com.ua/pic/201309/1920x1080/nastol.com.ua-58850.jpg",
-          name: "Sgoldik"
-        },
-        updated_at: 1572116022788,
-        tags: [{text: "decrybe", color: "#9b59b6"}, {text: "nigers", color: "#27ae60"}],
-        price: 12,
-        location: "Europe",
-        type: "Task",
-        id: 1
+    let loadTasks = async () => {
+      console.log(`${rootStore.user.isUserLogin} ${rootStore.user.getDapp} ${rootStore.user.getUserNetwork}`)
+      await rootStore.tasks.loadTasks(rootStore.user.isUserLogin, rootStore.user.getDapp, rootStore.user.getUserNetwork)
+      if (rootStore.tasks.getTasks) {
+        setProjects(rootStore.tasks.getTasks);
+      }
+    }
 
-      }, {
-        title: "Find a blockchain developer",
-        author: {
-          avatar: "https://www.nairaland.com/attachments/2487007_hjn_jpeg769b4e52d457ec2323c00f87b02fb417",
-          name: "Stygian"
-        },
-        updated_at: 1572116980691,
-        tags: [{text: "blockchain", color: "#c0392b"}],
-        price: 120,
-        location: "USA",
-        type: "Task",
-        id: 2
-
-      }, {
-        title: "Need a site design",
-        author: {
-          avatar: "https://i.pinimg.com/736x/7f/5f/6c/7f5f6ca3aa5b6dee07a156c411246d63.jpg",
-          name: "Rick Sanchez"
-        },
-        updated_at: 1572117221448,
-        tags: [{text: "Site", color: "#9b59b6"}],
-        price: 50,
-        location: "Russia",
-        type: "Design",
-        id: 3
-
-      }]
-      setProjects(val);
-    };
-
-    fetchProjects();
-
+    if (!rootStore.tasks.getTasks) {
+      loadTasks()
+    } else {
+      setProjects(rootStore.tasks.getTasks);
+    }
+    
   }, []);
 
   const handleSortOpen = () => {
@@ -169,12 +137,12 @@ const Projects = props => {
         {projects.map(project => (
           <Grid
             item
-            key={project.id}
+            key={project ? project.uuid : 1}
             md={mode === 'grid' ? 4 : 12}
             sm={mode === 'grid' ? 6 : 12}
             xs={12}
           >
-            <ProjectCard project={project} />
+            <ProjectCard project={project ? project : ""} rootStore={rootStore} />
           </Grid>
         ))}
       </Grid>
@@ -199,6 +167,26 @@ const Projects = props => {
       </Menu>
     </div>
   );
-};
+});
+
+@inject("rootStore")
+@observer
+class Projects extends React.Component {
+  constructor(props) {
+    super(props)
+  }
+
+  render() {
+    if (this.props.rootStore.user.isUserLogin) {
+      return (
+        <ProjectsContainer rootStore={this.props.rootStore} />
+      )
+    } else {
+      return (
+        <p>Please Log In</p>
+      )
+    }
+  }
+}
 
 export default Projects;
