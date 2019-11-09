@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import { NavBar, Topbar} from './components';
 import { Provider, observer, inject } from 'mobx-react';
-import SignUp  from './components/SignUp'
+import Signup  from './components/Signup'
 import rootStore from '../../store/RootStore'
 import { LinearProgress } from '@material-ui/core';
 const stores = { rootStore };
@@ -39,8 +39,14 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const RegisterModal = inject('rootStore')(observer(({ rootStore }) => {
-  if (!rootStore.user.isUserReg && rootStore.user.isUserLogin) {
-    return <SignUp rootStore={rootStore}/>
+  if (rootStore.user.isUserLogin) {
+    if (rootStore.user.isUserReg == false) {
+      return <Signup rootStore={rootStore}/>
+    } else if (rootStore.user.isUserReg == undefined) {
+      return <LinearProgress />
+    } else {
+      return null
+    }
   } else {
     return null
   }

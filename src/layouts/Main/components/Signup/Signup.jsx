@@ -46,7 +46,7 @@ const currencies = [
   },
 ];
 
-const SignUp = props => {
+const Signup = props => {
   const { className, rootStore } = props;
 	const classes = useStyles(1);
   const [open, setOpen] = React.useState(true);
@@ -175,4 +175,4 @@ const SignUp = props => {
   );
 }
 
-export default SignUp;
+export default Signup;
