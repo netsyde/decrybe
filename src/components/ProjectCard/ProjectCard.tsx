@@ -116,7 +116,7 @@ const ProjectCard = props => {
           <Link
             color="textPrimary"
             component={RouterLink}
-            to={`/profile/${project.author ? project.author.address : "undefined"}`}
+            to={`/tasks/${project.uuid ? project.uuid : "undefined"}`}
             variant="h5"
           >
             {project.title ? project.title : "undefined"}

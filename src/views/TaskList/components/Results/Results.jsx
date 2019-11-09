@@ -102,19 +102,6 @@ const ProjectsContainer = observer((props) => {
   const [mode, setMode] = useState('grid');
   const [projects, setProjects] = useState([]);
 
-  useEffect(() => {
-/*
-    let loadTasks = async () => {
-      console.log(`${rootStore.user.isUserLogin} ${rootStore.user.getDapp} ${rootStore.user.getUserNetwork}`)
-      if (rootStore.tasks.getTasks) {
-        setProjects(rootStore.tasks.getTasks);
-      }
-    }
-
-    loadTasks()
-    */
-  }, []);
-
   const handleSortOpen = () => {
     setOpenSort(true);
   };
@@ -142,7 +129,7 @@ const ProjectsContainer = observer((props) => {
           className={classes.title}
           variant="h5"
         >
-          Showing {projects.length} tasks
+          Showing {rootStore.tasks.allTasksData ? rootStore.tasks.allTasksData.length : 0} tasks
         </Typography>
         <div className={classes.actions}>
           <Button

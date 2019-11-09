@@ -1,5 +1,6 @@
-const dAppAddress = "3NBngsNecsVX8HzVFTyEQSVGbL9Xia8hBb4";
+const dAppAddress = "3N9kox62MPg67TokQMTTZJKTYQBPwtJL2Tk";
 let CryptoJS = require("crypto-js");
+const {nodeInteraction} =  require('@waves/waves-transactions');
 
 /**
  * User registration
@@ -7,30 +8,42 @@ let CryptoJS = require("crypto-js");
  * @param wavesKeeper - class
  */
 export let signUp = async (data, wavesKeeper) => {
-    wavesKeeper.signAndPublishTransaction({
-        type: 16,
-        data: {
-             fee: {
-                 "tokens": "0.05",
-                 "assetId": "WAVES"
-             },
-             dApp: dAppAddress,
-             call: {
-             	function: 'signUp',
-             	args: [
-                    {
-                        type: "string", value: JSON.stringify(data)
-                    }
-                ]
-            }, 
-            payment: []
+    const state = await wavesKeeper.publicState();
+    try {
+        let tx = await wavesKeeper.signAndPublishTransaction({
+            type: 16,
+            data: {
+                 fee: {
+                     "tokens": "0.05",
+                     "assetId": "WAVES"
+                 },
+                 dApp: dAppAddress,
+                 call: {
+                 	function: 'signUp',
+                 	args: [
+                        {
+                            type: "string", value: JSON.stringify(data)
+                        }
+                    ]
+                }, 
+                payment: []
+            }
+       })
+
+        tx = JSON.parse(tx)
+        if (tx) {
+            console.log(tx.id)
+            let wait = await nodeInteraction.waitForTx(tx.id, {apiBase: state.network.server})
+            if (wait) {
+                return true
+            }
+        } else {
+            return false
         }
-   }).then((tx) => {
-        console.log("Success!");
-        return (tx)
-   }).catch((error) => {
+    } catch(error) {
         console.error("Error ", error);
-   });
+        return false
+   }
 }
 
 /**

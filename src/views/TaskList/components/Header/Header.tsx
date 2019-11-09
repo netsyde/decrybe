@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography, Grid, Button } from '@material-ui/core';
@@ -41,14 +40,14 @@ const Header = props => {
             component="h1"
             variant="h3"
           >
-            See the latest opportunities
+            See the latest tasks
           </Typography>
         </Grid>
         <Grid item>
           <Button
             color="primary"
             component={RouterLink}
-            to="/projects/create"
+            to="/tasks/create"
             variant="contained"
           >
             <AddIcon className={classes.addIcon} />

@@ -73,7 +73,8 @@ const TaskCreate = inject('rootStore')(observer(({ rootStore }) => {
             members: store.getMembers,
             freelancers: store.getFreelancers,
             status: store.getStatus,
-            description: store.getDescription
+            description: store.getDescription,
+            category: store.getCategory
           }
           dAppInt.createTask(taskId, expiration, data, rootStore.user.getWavesKeeper)
         /*} else {

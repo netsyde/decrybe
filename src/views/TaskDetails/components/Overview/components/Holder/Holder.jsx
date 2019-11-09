@@ -39,18 +39,6 @@ const HolderContainer = props => {
   const classes = useStyles(1);
   const [user, setUser] = useState("");
 
-  useEffect(() => {
-    
-    async function getAuthorData () {
-      let userData = await nodeInt.getUserData(project.author, rootStore.user.getDapp, rootStore.user.getUserNetwork)
-      if (userData) {
-        setUser(userData)
-      }
-    }
-    getAuthorData()
-
-  }, []);
-
   return (
     <Card
       {...rest}
@@ -62,10 +50,10 @@ const HolderContainer = props => {
             alt="Author"
             className={classes.avatar}
             component={RouterLink}
-            src={user.avatar ? user.avatar : ""}
-            to={`/profile/${user.address ? user.address : "undefined"}`}
+            src={project.author ? project.author.avatar : ""}
+            to={`/profile/${project.author ? project.author.address : "undefined"}`}
           >
-            {user.name ? getInitials(user.name) : "Undefined"}
+            {project.author.name ? getInitials(project.author.name) : "Undefined"}
           </Avatar>
         }
         className={classes.header}
@@ -73,10 +61,10 @@ const HolderContainer = props => {
         subheader={
           <Typography
             component={RouterLink}
-            to={`/profile/${user.address ? user.address : "undefined"}`}
+            to={`/profile/${project.author ? project.author.address : "undefined"}`}
             variant="h5"
           >
-            {user.name}
+            {project.author.name}
           </Typography>
         }
         title={

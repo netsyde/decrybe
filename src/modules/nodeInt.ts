@@ -2,7 +2,7 @@ const {broadcast, data, nodeInteraction, seedUtils} =  require('@waves/waves-tra
 const {address} = require('@waves/ts-lib-crypto');
 const axios = require('axios');
 
-const dApp = "3NBngsNecsVX8HzVFTyEQSVGbL9Xia8hBb4"
+const dApp = "3N9kox62MPg67TokQMTTZJKTYQBPwtJL2Tk"
 const nodeUrl = "https://testnodes.wavesnodes.com"
 
 /**
@@ -29,7 +29,7 @@ export let dataTx = async (info, seed: String, nodeUrl: String) => {
     try {
         broadcast( data( {data: [ { key: `${info.customer}_${info.type}_${info.id}_${info.version}`, value: JSON.stringify(info) } ], fee: 100000}, seed), nodeUrl ).then( (v) => {
             if (v.id) {
-                console.log(`Data transaction id: ${v.id}`);
+                //console.log(`Data transaction id: ${v.id}`);
                 return true;
             } else {
                 return false;
@@ -97,10 +97,10 @@ export let checkReg = async (address: String, dAppAddress: String, nodeUrl: Stri
         let fAddress = `user_sts_${address}`
         let data = await getDataByKey(fAddress, dAppAddress, nodeUrl)
         if (data) {
-            console.log(true)
+            //console.log(true)
             return true;
         } else {
-            console.log(false)
+            //console.log(false)
             return false;
         }
     } catch (e) {
@@ -147,7 +147,7 @@ export let getAllUsers = async (dAppAddress: String, nodeUrl: String) => {
                 .filter(key => /^user_sts_/.test(key))
                 .map(key => key.replace(/^user_sts_/, ''))
         );
-        console.log(users)
+        //console.log(users)
         return users;
     } catch (e) {
         console.log(`ERROR in nodeInt.getAllUsers! ${e.name}: ${e.message}\n${e.stack}`);
@@ -230,7 +230,7 @@ export let getTasksAllData = async (dAppAddress: String, nodeUrl: String) => {
                 let taskData = await getTaskData(allTasks[i], dAppAddress, nodeUrl)
                 tasks.push(taskData)
             }
-            console.log(tasks)
+            //console.log(tasks)
             return tasks;
         } else {
             return false;

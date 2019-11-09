@@ -16,7 +16,7 @@ class UserStore {
 	@observable createTime = "";
 	@observable tags = "";
 	@observable avatar = "";
-	dapp = "3NBngsNecsVX8HzVFTyEQSVGbL9Xia8hBb4";
+	dapp = "3N9kox62MPg67TokQMTTZJKTYQBPwtJL2Tk";
 	wavesKeeper;
 	
 	constructor(public root: RootStore) {
@@ -34,7 +34,7 @@ class UserStore {
 			this.userData = state;
 			this.isLogin = true;
 			this.isReg = await nodeInt.checkReg(state.account.address, this.dapp, state.network.server);
-			
+			console.log(this.isReg)
 			if (this.isReg) {
 				let userDataFromDapp = await nodeInt.getUserData(state.account.address, this.dapp, state.network.server);
 				if (userDataFromDapp) {
@@ -45,7 +45,7 @@ class UserStore {
 					this.createTime = userDataFromDapp.createTime;
 					this.tags = userDataFromDapp.tags;
 					this.avatar = userDataFromDapp.avatar
-					console.log("userData norm")
+					console.log("userData success")
 				} else {
 					console.log('userData kick')
 				}
@@ -101,6 +101,11 @@ class UserStore {
 
 	@computed get isUserReg() {
 		return this.isReg
+	}
+
+	@action("set user register")
+	setUserReg () {
+		this.isReg = true;
 	}
 
 	@computed get getDapp() {

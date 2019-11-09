@@ -3,12 +3,10 @@ import PropTypes from 'prop-types';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import { NavBar, Topbar} from './components';
 import { Provider, observer, inject } from 'mobx-react';
-import Signup  from './components/Signup'
-import userStore from '../../store/UserStore';
-import tasksStore from '../../store/TasksStore'
+import SignUp  from './components/SignUp'
 import rootStore from '../../store/RootStore'
 import { LinearProgress } from '@material-ui/core';
-const stores = { /*userStore, tasksStore, */rootStore };
+const stores = { rootStore };
 import { renderRoutes } from 'react-router-config';
 
 const useStyles = makeStyles(theme => ({
@@ -40,10 +38,9 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const RegisterModal = inject('userStore')(observer(({ userStore }) => {
-  console.log(userStore.isReg)
-  if (!userStore.isReg && userStore.isLogin) {
-    return <Signup />
+const RegisterModal = inject('rootStore')(observer(({ rootStore }) => {
+  if (!rootStore.user.isUserReg && rootStore.user.isUserLogin) {
+    return <SignUp rootStore={rootStore}/>
   } else {
     return null
   }
@@ -71,6 +68,7 @@ const Main = props => {
         className={classes.topBar}
         onOpenNavBarMobile={handleNavBarMobileOpen}
       />
+      <RegisterModal />
       <div className={classes.container}>
         <NavBar
           className={classes.navBar}

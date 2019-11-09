@@ -8,7 +8,6 @@ import Slide from '@material-ui/core/Slide';
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
 import MenuItem from '@material-ui/core/MenuItem';
-import { observer, inject } from 'mobx-react';
 import * as dAppInt from '../../../../modules/dAppInt'
 
 const useStyles = makeStyles(theme => ({
@@ -47,17 +46,17 @@ const currencies = [
   },
 ];
 
-const Signup = inject('userStore')(observer(({ userStore }) => {
+const SignUp = props => {
+  const { className, rootStore } = props;
 	const classes = useStyles(1);
   const [open, setOpen] = React.useState(true);
-  const Transition = React.forwardRef(function Transition(props, ref) {
-    return <Slide direction="up" ref={ref} {...props} />;
-  });
+
 	const [values, setValues] = React.useState({
     name: '',
     bio: '',
     location: '',
-    telegram: ""
+    telegram: "",
+    avatar: ""
 	});
 
   const handleClose = () => {
@@ -68,27 +67,32 @@ const Signup = inject('userStore')(observer(({ userStore }) => {
 	const handleChange = name => event => {
     setValues({ ...values, [name]: event.target.value });
   };
-
   async function sign(values) {
     console.log(`${values.name} ${values.bio} ${values.location} ${values.telegram}`)
-    if (values.name && values.bio && values.location && values.telegram) {
+    if (values.name && values.bio && values.location && values.avatar) {
       let data = {
         name: values.name,
         bio: values.bio,
         location: values.location,
         tags: [],
-        address: userStore.getUserAddress,
+        address: rootStore.user.getUserAddress,
         createTime: Date.now(),
         status: "registered",
         socials: {
-          telegram: values.telegram,
+          telegram: "",
           twitter: "",
           website: ""
-        }
+        },
+        avatar: values.avatar
       }
       console.log(data)
-      let signTx = await dAppInt.signUp(data, userStore.getWavesKeeper)
+      let signTx = await dAppInt.signUp(data, rootStore.user.getWavesKeeper)
       console.log(signTx)
+      if (signTx) {
+        rootStore.user.login()
+      } else {
+        console.log('oleg')
+      }
       handleClose()
     } else {
       
@@ -99,7 +103,6 @@ const Signup = inject('userStore')(observer(({ userStore }) => {
     <div>
       <Dialog
         open={open}
-        TransitionComponent={Transition}
         keepMounted
         onClose={handleClose}
 				aria-labelledby="form-dialog-title"	
@@ -108,7 +111,7 @@ const Signup = inject('userStore')(observer(({ userStore }) => {
         <DialogContent className={classes.container}>
           <TextField
             required
-            id="standard-required"
+            id="name"
             label="Name"
             value={values.name}
             onChange={handleChange('name')}
@@ -117,6 +120,7 @@ const Signup = inject('userStore')(observer(({ userStore }) => {
             margin="normal"
 					/>
 					<TextField
+            required
 						id="standard-name"
             label="Bio"
             value={values.bio}
@@ -127,7 +131,8 @@ const Signup = inject('userStore')(observer(({ userStore }) => {
 					/>
 					
 					<TextField
-						id="standard-select-currency"
+            required
+						id="location"
 						select
 						label="Location"
 						className={classes.textField}
@@ -148,11 +153,12 @@ const Signup = inject('userStore')(observer(({ userStore }) => {
 						))}
 					</TextField>
 					<TextField
-						id="standard-name"
-						label="Telegram"
+            required
+						id="avatar"
+						label="Avatar"
 						className={classes.textField}
-						value={values.telegram}
-						onChange={handleChange('telegram')}
+						value={values.avatar}
+						onChange={handleChange('avatar')}
 						margin="normal"
 					/>
 				</DialogContent>
@@ -167,6 +173,6 @@ const Signup = inject('userStore')(observer(({ userStore }) => {
       </Dialog>
     </div>
   );
-}))
+}
 
-export default Signup;
+export default SignUp;
