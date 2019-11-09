@@ -34,7 +34,6 @@ class UserStore {
 			this.userData = state;
 			this.isLogin = true;
 			this.isReg = await nodeInt.checkReg(state.account.address, this.dapp, state.network.server);
-			await this.root.tasks.loadTasks(this.isLogin, this.dapp, this.network)
 			
 			if (this.isReg) {
 				let userDataFromDapp = await nodeInt.getUserData(state.account.address, this.dapp, state.network.server);
@@ -53,6 +52,7 @@ class UserStore {
 			} else {
 				console.log('User not signup')
 			}
+			await this.root.tasks.loadTasks(this.isUserLogin, this.getDapp, this.getUserNetwork)
 		} else {
 			alert("To Auth WavesKeeper should be installed.");
 		}

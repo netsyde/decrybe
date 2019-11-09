@@ -48,8 +48,8 @@ const User = inject('rootStore')(observer(({ rootStore }) => {
       alt="Person"
       className={classes.avatar}
       component={RouterLink}
-      src={rootStore.user.avatar}
-      to={`/profile/${rootStore.user.id}`}
+      src={rootStore.user.getUserAvatar}
+      to={`/profile/${rootStore.user.getUserAddress}`}
     />
     <Typography
       className={classes.name}
@@ -57,7 +57,7 @@ const User = inject('rootStore')(observer(({ rootStore }) => {
     >
       {rootStore.user.name}
     </Typography>
-    <Typography variant="body2">{rootStore.user.bio}</Typography>
+    <Typography variant="body2">{rootStore.user.getUserBio}</Typography>
   </div>
   )
 }))
@@ -72,7 +72,6 @@ const NavBar = props => {
       onMobileClose && onMobileClose();
     }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.location.pathname]);
   
   const navbarContent = (
@@ -121,12 +120,6 @@ const NavBar = props => {
       </Hidden>
     </Fragment>
   );
-};
-
-NavBar.propTypes = {
-  className: PropTypes.string,
-  onMobileClose: PropTypes.func,
-  openMobile: PropTypes.bool
 };
 
 export default NavBar;

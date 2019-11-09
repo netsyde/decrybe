@@ -129,7 +129,7 @@ const ProjectCard = props => {
             color="textSecondary"
             variant="subtitle2"
           >
-            {project.brief ? project.brief.substr(0, 100) + "..." : "undefined"}
+            {project.brief ? (project.brief.length > 150 ? (project.brief.substr(0, 150) + "...") : project.brief) : "undefined"}
           </Typography>
         </div>
         <div className={classes.tags}>

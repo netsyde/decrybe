@@ -100,10 +100,6 @@ export default [
           {
             title: 'Create',
             href: '/tasks/create'
-          },
-          {
-            title: 'Overview',
-            href: '/tasks/1/overview'
           }
         ]
       },

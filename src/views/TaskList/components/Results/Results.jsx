@@ -15,6 +15,7 @@ import ViewModuleIcon from '@material-ui/icons/ViewModule';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import { ProjectCard, Paginate } from '../../../../components';
 import { observer, inject } from 'mobx-react';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -50,8 +51,47 @@ const useStyles = makeStyles(theme => ({
     marginTop: theme.spacing(3),
     display: 'flex',
     justifyContent: 'center'
+  },
+  progress: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center"
   }
 }));
+function getRandomArbitary(min, max) {
+  let rand = Math.random() * (max - min) + min;
+  return rand.toFixed(0)
+}
+
+const ProjectsGrig = (props) => {
+  const { rootStore, mode, classes, projects, ...rest } = props;
+  if (rootStore.tasks.getTasks) {
+    return (
+      <Grid
+      container
+      spacing={3}
+      >
+        {projects.map(project => (
+          <Grid
+            item
+            key={project ? project.uuid : getRandomArbitary(100, 666)}
+            md={mode === 'grid' ? 4 : 12}
+            sm={mode === 'grid' ? 6 : 12}
+            xs={12}
+          >
+            <ProjectCard project={project ? project : ""} rootStore={rootStore} />
+          </Grid>
+        ))}
+      </Grid>
+    )
+  } else {
+    return (
+      <div className={classes.progress}>
+        <CircularProgress />
+      </div>
+    )
+  }
+}
 const ProjectsContainer = observer((props) => {
   const { className, rootStore, ...rest } = props;
 
@@ -63,21 +103,16 @@ const ProjectsContainer = observer((props) => {
   const [projects, setProjects] = useState([]);
 
   useEffect(() => {
-
+/*
     let loadTasks = async () => {
       console.log(`${rootStore.user.isUserLogin} ${rootStore.user.getDapp} ${rootStore.user.getUserNetwork}`)
-      await rootStore.tasks.loadTasks(rootStore.user.isUserLogin, rootStore.user.getDapp, rootStore.user.getUserNetwork)
       if (rootStore.tasks.getTasks) {
         setProjects(rootStore.tasks.getTasks);
       }
     }
 
-    if (!rootStore.tasks.getTasks) {
-      loadTasks()
-    } else {
-      setProjects(rootStore.tasks.getTasks);
-    }
-    
+    loadTasks()
+    */
   }, []);
 
   const handleSortOpen = () => {
@@ -130,22 +165,7 @@ const ProjectsContainer = observer((props) => {
           </ToggleButtonGroup>
         </div>
       </div>
-      <Grid
-        container
-        spacing={3}
-      >
-        {projects.map(project => (
-          <Grid
-            item
-            key={project ? project.uuid : 1}
-            md={mode === 'grid' ? 4 : 12}
-            sm={mode === 'grid' ? 6 : 12}
-            xs={12}
-          >
-            <ProjectCard project={project ? project : ""} rootStore={rootStore} />
-          </Grid>
-        ))}
-      </Grid>
+      <ProjectsGrig classes={classes} mode={mode} projects={rootStore.tasks.getTasks} rootStore={rootStore}/>
       <div className={classes.paginate}>
         <Paginate pageCount={3} />
       </div>
