@@ -28,7 +28,9 @@ class UserStore {
 		let address = this.cookies.get("address")
 		let nodeUrl = this.cookies.get("network")
 		this.setUserNetwork(nodeUrl)
+		this.setUserAddress(address)
 		console.log('restore session')
+		this.wavesKeeper = WavesKeeper;
 		this.isLogin = true;
 		this.isReg = await nodeInt.checkReg(address, this.dapp, nodeUrl);
 		if (this.isReg) {
@@ -123,6 +125,11 @@ class UserStore {
 	
 	@computed get getUserAddress() {
 		return this.address
+	}
+
+	@action("set network")
+	setUserAddress (address) {
+		this.address = address;
 	}
 	
 	@computed get getUserBalance() {

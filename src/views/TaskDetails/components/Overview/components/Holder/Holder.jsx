@@ -38,7 +38,7 @@ const HolderContainer = props => {
 
   const classes = useStyles(1);
   const [user, setUser] = useState("");
-
+  const handleBrokenImage = e => (e.target.src = "/img/gag.png");
   return (
     <Card
       {...rest}
@@ -50,7 +50,8 @@ const HolderContainer = props => {
             alt="Author"
             className={classes.avatar}
             component={RouterLink}
-            src={project.author ? project.author.avatar : ""}
+            src={project.author.avatar || "/img/gag.png"}
+            imgProps={{ onError: handleBrokenImage }}
             to={`/profile/${project.author ? project.author.address : "undefined"}`}
           >
             {project.author.name ? getInitials(project.author.name) : "Undefined"}

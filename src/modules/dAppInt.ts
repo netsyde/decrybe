@@ -54,35 +54,47 @@ export let signUp = async (data, wavesKeeper) => {
  * @param wavesKeeper - class
  */
 export let createTask = async (item, expiration, data, wavesKeeper) => {
-    wavesKeeper.signAndPublishTransaction({
-        type: 16,
-        data: {
-             fee: {
-                 "tokens": "0.05",
-                 "assetId": "WAVES"
-             },
-             dApp: dAppAddress,
-             call: {
-             	function: 'createTask',
-             	args: [
-                    {
-                        type: "string", value: item
-                    },
-                    {
-                        type: "integer", value: expiration
-                    },
-                    {
-                        type: "string", value: JSON.stringify(data)
-                    }
-                ]
-            },
-            payment: [{assetId: "WAVES", tokens: 1}]
+    const state = await wavesKeeper.publicState();
+    try {
+        let tx = await wavesKeeper.signAndPublishTransaction({
+            type: 16,
+            data: {
+                fee: {
+                    "tokens": "0.05",
+                    "assetId": "WAVES"
+                },
+                dApp: dAppAddress,
+                call: {
+                	function: 'createTask',
+                 	args: [
+                        {
+                            type: "string", value: item
+                        },
+                        {
+                            type: "integer", value: expiration
+                        },
+                        {
+                            type: "string", value: JSON.stringify(data)
+                        }
+                    ]
+                },
+                payment: [{assetId: "WAVES", tokens: 1}]
+            }
+        })
+        tx = JSON.parse(tx)
+        if (tx) {
+            console.log(tx.id)
+            let wait = await nodeInteraction.waitForTx(tx.id, {apiBase: state.network.server})
+            if (wait) {
+                return true
+            }
+        } else {
+            return false
         }
-   }).then((tx) => {
-        console.log("Success!");
-   }).catch((error) => {
-        console.error("Error ", error);
-   });
+    } catch (e) {
+        console.error("Error ", e);
+        return false
+    }
 }
 
 /**

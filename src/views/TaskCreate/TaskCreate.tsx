@@ -47,7 +47,7 @@ const TaskCreate = inject('rootStore')(observer(({ rootStore }) => {
       return false
     }
   }
-  const createTask = () => {
+  const createTask = async () => {
       let store = rootStore.taskCreate;
       console.log(`${store.getTitle}\n${store.getPrice}\n${store.getCategory}`)
       console.log(`${store.getEndDate}\n${store.getBriefDescription}\n${store.getTags}`)
@@ -76,7 +76,16 @@ const TaskCreate = inject('rootStore')(observer(({ rootStore }) => {
             description: store.getDescription,
             category: store.getCategory
           }
-          dAppInt.createTask(taskId, expiration, data, rootStore.user.getWavesKeeper)
+          let tx = await dAppInt.createTask(taskId, expiration, data, rootStore.user.getWavesKeeper)
+          
+          if (tx) {
+            data.author = {
+              address: rootStore.user.getUserAddress,
+              avatar: rootStore.user.getUserAvatar,
+              name: rootStore.user.getUserName,
+            }
+            rootStore.tasks.addTask(data)
+          }
         /*} else {
           console.log('field not filled')
         } */

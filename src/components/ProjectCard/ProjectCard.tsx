@@ -126,10 +126,10 @@ const ProjectCard = props => {
             <Link
               color="textPrimary"
               component={RouterLink}
-              to={`/profile/${project.author ? project.author.address : "undefined"}`}
+              to={`/profile/${project.author ? (project.author.address ? project.author.address: "") : "undefined"}`}
               variant="h6"
             >
-              {project.author ? project.author.name : ""}
+              {project.author ? (project.author.name ? project.author.name: "undefined") : "undefined"}
             </Link>{' '}
             | Updated: {project.updatedAt ? moment(project.updatedAt).fromNow() : "undefined"}
           </Typography>

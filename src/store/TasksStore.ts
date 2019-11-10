@@ -25,7 +25,11 @@ class TasksStore {
 			console.log('user not login')
 		}
 	}
-
+	@action
+	addTask(data: Object) {
+		this.allTasksData.push(data)
+		console.log('pushing!')
+	}
 	@action
 	async getTaskData (id) {
 		if (this.root.user.isLogin) {

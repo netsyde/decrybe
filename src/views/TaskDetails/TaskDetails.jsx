@@ -34,7 +34,7 @@ const Task = props => {
   const classes = useStyles(1);
   const { id, tab } = props.match.params;
   const [openAlert, setOpenAlert] = useState(true);
-  const [project, setProject] = useState(null);
+  const [project, setProject] = useState(false);
 
   useEffect(() => {
     async function getTask () {
