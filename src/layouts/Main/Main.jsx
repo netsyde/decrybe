@@ -66,7 +66,6 @@ const Main = props => {
   const handleNavBarMobileClose = () => {
     setOpenNavBarMobile(false);
   };
-
   return (
     <Provider { ...stores }>
       <div className={classes.root}>

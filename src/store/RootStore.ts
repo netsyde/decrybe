@@ -1,6 +1,7 @@
 import { UserStore } from './UserStore';
 import { TasksStore } from './TasksStore';
 import { TaskCreateStore } from './TaskCreateStore'
+import { autorun } from "mobx"
 
 class RootStore {
   public user: UserStore;
@@ -15,5 +16,12 @@ class RootStore {
 }
 
 let rootStore = new RootStore()
+
+autorun(() => {
+	if (rootStore.user.checkSession()) {
+    rootStore.user.restoreSession()
+  }
+});
+
 export default rootStore;
 export { RootStore }

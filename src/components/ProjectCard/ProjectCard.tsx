@@ -65,6 +65,25 @@ function getRandomArbitary(min, max) {
   return rand.toFixed(0)
 }
 
+function wordCount(str) {
+  var m = str.match(/[^\s]+/g)
+  return m ? m.length : 0;
+}
+
+function validate (str, trim) {
+  if (str) {
+    if (wordCount(str) == 1) {
+      return str.substr(0, 25) + "..."
+    } else {
+      if(str.length > trim) {
+        return str.substr(0, trim) + "..."
+      } else {
+        return str
+      }
+    }
+  }
+  
+}
 let color = ["#1abc9c", "#2ecc71", "#3498db", "#9b59b6", "#34495e", "#16a085",
 "#27ae60", "#2980b9", "#8e44ad", "#2c3e50", "#e67e22", "#e74c3c"]
 
@@ -82,6 +101,8 @@ const ProjectCard = props => {
     setLiked(false);
   }; 
 
+  const handleBrokenImage = e => (e.target.src = "/img/gag.png");
+
   return (
     <Card
       {...rest}
@@ -91,7 +112,8 @@ const ProjectCard = props => {
         avatar={
           <Avatar
             alt="Author"
-            src={project.author ? project.author.avatar : ""}
+            src={project.author.avatar || "/img/gag.png"}
+            imgProps={{ onError: handleBrokenImage }}
           >
             {project.author ? getInitials(project.author.name) : ""}
           </Avatar>
@@ -119,7 +141,7 @@ const ProjectCard = props => {
             to={`/tasks/${project.uuid ? project.uuid : "undefined"}`}
             variant="h5"
           >
-            {project.title ? project.title : "undefined"}
+            {project.title ? validate(project.title, 25) : "undefined"}
           </Link>
         }
       />
@@ -129,7 +151,7 @@ const ProjectCard = props => {
             color="textSecondary"
             variant="subtitle2"
           >
-            {project.brief ? (project.brief.length > 150 ? (project.brief.substr(0, 150) + "...") : project.brief) : "undefined"}
+            {project.title ? validate(project.title, 150) : "undefined"}
           </Typography>
         </div>
         <div className={classes.tags}>
@@ -138,7 +160,7 @@ const ProjectCard = props => {
               color={color[getRandomArbitary(0, color.length - 1)]}
               key={tag}
             >
-              {tag}
+              {tag ? (tag.length > 10 ? (project.brief.substr(0, 10)) : tag) : "undefined"}
             </Label>
           ))) : ""}
         </div>

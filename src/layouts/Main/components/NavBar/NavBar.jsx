@@ -41,6 +41,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const User = inject('rootStore')(observer(({ rootStore }) => {
+  const handleBrokenImage = e => (e.target.src = "/img/gag.png");
   const classes = useStyles(1);
   return (
     <div className={classes.profile}>
@@ -48,16 +49,17 @@ const User = inject('rootStore')(observer(({ rootStore }) => {
       alt="Person"
       className={classes.avatar}
       component={RouterLink}
-      src={rootStore.user.getUserAvatar}
+      src={rootStore.user.getUserAvatar || "/img/gag.png"}
+      imgProps={{ onError: handleBrokenImage }}
       to={`/profile/${rootStore.user.getUserAddress}`}
     />
     <Typography
       className={classes.name}
       variant="h4"
     >
-      {rootStore.user.name}
+      {rootStore.user.name || "Guest"}
     </Typography>
-    <Typography variant="body2">{rootStore.user.getUserBio}</Typography>
+    <Typography variant="body2">{rootStore.user.getUserBio || "Stranger"}</Typography>
   </div>
   )
 }))

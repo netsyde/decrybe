@@ -1,7 +1,7 @@
-import { observable, action, computed } from "mobx"
+import { observable, action, computed, autorun } from "mobx"
 import * as nodeInt from '../modules/nodeInt'
 import {RootStore} from './RootStore'
-
+import Cookies from 'universal-cookie';
 class UserStore {
 	@observable isLogin = false;
 	@observable address = "";
@@ -18,10 +18,48 @@ class UserStore {
 	@observable avatar = "";
 	dapp = "3N9kox62MPg67TokQMTTZJKTYQBPwtJL2Tk";
 	wavesKeeper;
-	
+	cookies = new Cookies()
 	constructor(public root: RootStore) {
 		this.root = root
+	}	
+
+	@action('restore session')
+	async restoreSession() {
+		let address = this.cookies.get("address")
+		let nodeUrl = this.cookies.get("network")
+		this.setUserNetwork(nodeUrl)
+		console.log('restore session')
+		this.isLogin = true;
+		this.isReg = await nodeInt.checkReg(address, this.dapp, nodeUrl);
+		if (this.isReg) {
+			let userDataFromDapp = await nodeInt.getUserData(address, this.dapp, nodeUrl);
+			if (userDataFromDapp) {
+				this.name = userDataFromDapp.name;
+				this.socials = userDataFromDapp.socials;
+				this.bio = userDataFromDapp.bio;
+				this.status = userDataFromDapp.status;
+				this.createTime = userDataFromDapp.createTime;
+				this.tags = userDataFromDapp.tags;
+				this.avatar = userDataFromDapp.avatar
+				console.log("userData success")
+			} else {
+				console.log('userData kick')
+			}
+		}
+		await this.root.tasks.loadTasks(this.isUserLogin, this.getDapp, nodeUrl)
 	}
+
+	checkSession() {
+		let address = this.cookies.get("address")
+		let nodeUrl = this.cookies.get("network")
+		console.log('checkSession')
+		if (address && nodeUrl) {
+			return true
+		} else {
+			return false
+		}
+	}
+
 	@action("login")
 	async login () {
 		if (WavesKeeper) {
@@ -36,6 +74,8 @@ class UserStore {
 			this.isReg = await nodeInt.checkReg(state.account.address, this.dapp, state.network.server);
 			console.log(this.isReg)
 			if (this.isReg) {
+				this.cookies.set('address', this.getUserAddress, { path: '/' });
+				this.cookies.set('network', this.getUserNetwork, { path: '/' });
 				let userDataFromDapp = await nodeInt.getUserData(state.account.address, this.dapp, state.network.server);
 				if (userDataFromDapp) {
 					this.name = userDataFromDapp.name;
@@ -73,6 +113,8 @@ class UserStore {
 		this.createTime = ""
 		this.tags = ""
 		this.avatar = ""
+		this.cookies.remove('address')
+		this.cookies.remove('network')
 	}
 
 	@computed get isUserLogin() {
@@ -89,6 +131,11 @@ class UserStore {
 
 	@computed get getUserNetwork() {
 		return this.network
+	}
+
+	@action("set network")
+	setUserNetwork (network) {
+		this.network = network;
 	}
 	
 	@computed get getUserData() {
@@ -141,5 +188,7 @@ class UserStore {
 	}
 	
 }
+
+
 
 export { UserStore };
