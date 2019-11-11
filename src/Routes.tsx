@@ -35,7 +35,16 @@ const routes = [
         exact: true,
         component: lazy(() => import('./views/TaskDetails'))
       },
-      
+      {
+        path: '/settings',
+        exact: true,
+        component: lazy(() => import('./views/Settings'))
+      },
+      {
+        path: '/settings/:tab',
+        exact: true,
+        component: lazy(() => import('./views/Settings'))
+      },
       {
         path: '/404',
         exact: true,
