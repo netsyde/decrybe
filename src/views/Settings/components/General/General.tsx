@@ -5,13 +5,13 @@ import { makeStyles } from '@material-ui/styles';
 import { Grid } from '@material-ui/core';
 
 import { ProfileDetails, GeneralSettings } from './components';
-
+import { observer, inject } from 'mobx-react';
 const useStyles = makeStyles(() => ({
   root: {}
 }));
 
-const General = props => {
-  const { className, ...rest } = props;
+const General = observer((props) => {
+  const { className, rootStore, ...rest } = props;
 
   const classes = useStyles(props);
   const [profile, setProfile] = useState(null);
@@ -20,11 +20,11 @@ const General = props => {
     let mounted = true;
 
    let data = {
-      avatar: '/img/gag.png',
+      avatar: rootStore.user.getUserAvatar,
       canHire: false,
-      country: 'USA',
+      country: rootStore.user.getUserLocation,
       email: 'shen.zhi@devias.io',
-      firstName: 'Shen',
+      name: rootStore.user.getUserName,
       isPublic: true,
       lastName: 'Zhi',
       phone: '+40 777666555',
@@ -53,7 +53,7 @@ const General = props => {
         xl={3}
         xs={12}
       >
-        <ProfileDetails profile={profile} />
+        <ProfileDetails profile={rootStore.user.getUserFullData} />
       </Grid>
       <Grid
         item
@@ -62,10 +62,10 @@ const General = props => {
         xl={9}
         xs={12}
       >
-        <GeneralSettings profile={profile} />
+        <GeneralSettings profile={rootStore.user.getUserFullData} />
       </Grid>
     </Grid>
   );
-};
+});
 
 export default General;

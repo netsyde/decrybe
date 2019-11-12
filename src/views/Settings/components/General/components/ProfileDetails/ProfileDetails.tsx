@@ -10,6 +10,7 @@ import {
   Typography,
   Button
 } from '@material-ui/core';
+import { observer, inject } from 'mobx-react';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -31,7 +32,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const ProfileDetails = props => {
+const ProfileDetails = (props) => {
   const { profile, className, ...rest } = props;
 
   const classes = useStyles(props);
@@ -44,26 +45,26 @@ const ProfileDetails = props => {
       <CardContent className={classes.content}>
         <Avatar
           className={classes.avatar}
-          src={profile.avatar}
+          src={profile.avatar ? profile.avatar : ""}
         />
         <Typography
           className={classes.name}
           gutterBottom
           variant="h3"
         >
-          {profile.firstName} {profile.lastName}
+          {profile.name ? profile.name : ""}
         </Typography>
         <Typography
           color="textSecondary"
           variant="body1"
         >
-          {profile.state}, {profile.country}
+          {profile.bio ? profile.bio : ""}
         </Typography>
         <Typography
           color="textSecondary"
           variant="body2"
         >
-          {profile.timezone}
+          {profile.timezone ? profile.timezone : ""}
         </Typography>
       </CardContent>
       <CardActions>

@@ -7,7 +7,7 @@ import { Header, Overview } from './components';
 import { observer, inject } from 'mobx-react';
 
 import { Page } from '../../components'
-
+import Error401 from '../Error401'
 import * as nodeInt from '../../modules/nodeInt'
 const useStyles = makeStyles(theme => ({
   root: {
@@ -119,7 +119,7 @@ class TaskDetails extends React.Component {
       )
     } else {
       return (
-        <p>Please Log In</p>
+        <Error401 />
       )
     }
   }

@@ -169,7 +169,7 @@ export let getUserData = async (address: String, dAppAddress: String, nodeUrl: S
             let userDataObj = {
                 name: userData.name ? userData.name : "",
                 socials: userData.socials ? userData.socials : "",
-                bio: userData.description ? userData.description : "",
+                bio: userData.bio ? userData.bio : "",
                 status: userData.status ? userData.status: "",
                 createTime: userData.createTime ? userData.createTime : "",
                 tags: userData.tags ? userData.tags : "",

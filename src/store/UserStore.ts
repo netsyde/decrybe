@@ -193,6 +193,22 @@ class UserStore {
 	@computed get getUserAvatar() {
 		return this.avatar
 	}
+
+	@computed get getUserFullData() {
+		let data = {
+			name: this.name,
+			avatar: this.avatar,
+			bio: this.bio,
+			balance: this.getUserBalance,
+			tags: this.getUserTags,
+			status: this.getUserStatus,
+			createTime: this.getUserCreateTime,
+			network: this.getUserNetwork,
+			socials: this.getUserSocials,
+			//location: this.getUser
+		}
+		return data
+	}
 	
 }
 

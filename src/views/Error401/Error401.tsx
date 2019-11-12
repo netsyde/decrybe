@@ -64,8 +64,8 @@ const Error401 = inject('rootStore')(observer(({ rootStore }) => {
         <Button
           color="primary"
           component={RouterLink}
-          to="/"
           variant="outlined"
+          to="/"
           onClick={() => rootStore.user.login()}
         >
           Sign In

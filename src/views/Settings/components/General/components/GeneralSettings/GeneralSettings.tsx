@@ -35,14 +35,14 @@ const GeneralSettings = props => {
   const classes = useStyles(props);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [values, setValues] = useState({
-    name: profile.firstName,
-    lastName: profile.lastName,
-    email: profile.email,
-    phone: profile.phone,
-    state: profile.state,
-    country: profile.country,
-    isPublic: profile.isPublic,
-    canHire: profile.canHire
+    name: "",
+    lastName: "profile.lastName",
+    email: "profile.email",
+    phone: "profile.phone",
+    state: "profile.state",
+    country: "profile.country",
+    isPublic: true,
+    canHire: false
   });
 
   const handleChange = event => {
@@ -93,7 +93,7 @@ const GeneralSettings = props => {
                 name="name"
                 onChange={handleChange}
                 required
-                value={values.name}
+                value={profile.name ? profile.name : ""}
                 variant="outlined"
               />
             </Grid>

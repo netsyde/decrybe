@@ -74,7 +74,7 @@ const SettingsContainer = props => {
       </Tabs>
       <Divider className={classes.divider} />
       <div className={classes.content}>
-        {tab === 'general' && <General />}
+        {tab === 'general' && <General rootStore={rootStore} />}
         {tab === 'other' && <Other />}
       </div>
     </Page>
