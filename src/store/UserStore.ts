@@ -107,7 +107,7 @@ class UserStore {
 		this.balance = "";
 		this.network = "";
 		this.userData = "";
-		this.isReg = "";
+		this.isReg = undefined;
 		this.name = ""
 		this.socials = ""
 		this.bio = ""

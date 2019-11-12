@@ -35,7 +35,7 @@ const GeneralSettings = props => {
   const classes = useStyles(props);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [values, setValues] = useState({
-    firstName: profile.firstName,
+    name: profile.firstName,
     lastName: profile.lastName,
     email: profile.email,
     phone: profile.phone,
@@ -88,12 +88,12 @@ const GeneralSettings = props => {
             >
               <TextField
                 fullWidth
-                helperText="Please specify the first name"
-                label="First name"
-                name="firstName"
+                helperText="Please specify the name"
+                label="Name"
+                name="name"
                 onChange={handleChange}
                 required
-                value={values.firstName}
+                value={values.name}
                 variant="outlined"
               />
             </Grid>

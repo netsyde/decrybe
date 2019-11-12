@@ -22,6 +22,10 @@ const Login = inject('rootStore')(observer(({ rootStore }) => {
           <InputIcon />
         </IconButton>
       )
+    } else {
+      return (
+        <Button onClick={() => rootStore.user.login()} variant="contained" color="primary">Sign In</Button>
+      )
     }
   }
 }))

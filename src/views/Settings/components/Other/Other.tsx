@@ -31,7 +31,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Notifications = props => {
+const Other = props => {
   const { className, ...rest } = props;
 
   const classes = useStyles(props);
@@ -41,7 +41,7 @@ const Notifications = props => {
       {...rest}
       className={clsx(classes.root, className)}
     >
-      <CardHeader title="Notifications" />
+      <CardHeader title="Other" />
       <Divider />
       <CardContent>
         <form>
@@ -162,8 +162,4 @@ const Notifications = props => {
   );
 };
 
-Notifications.propTypes = {
-  className: PropTypes.string
-};
-
-export default Notifications;
+export default Other;

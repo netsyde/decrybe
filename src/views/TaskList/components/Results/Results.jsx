@@ -16,6 +16,7 @@ import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import { ProjectCard, Paginate } from '../../../../components';
 import { observer, inject } from 'mobx-react';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Error401 from '../../../Error401'
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -190,7 +191,7 @@ class Projects extends React.Component {
       )
     } else {
       return (
-        <p>Please Log In</p>
+        <Error401 />
       )
     }
   }

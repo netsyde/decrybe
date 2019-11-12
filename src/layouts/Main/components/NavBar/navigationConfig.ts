@@ -113,12 +113,8 @@ export default [
             href: '/settings/general'
           },
           {
-            title: 'Notifications',
-            href: '/settings/notifications'
-          },
-          {
-            title: 'Security',
-            href: '/settings/security'
+            title: 'Other',
+            href: '/settings/other'
           }
         ]
       },

@@ -2,7 +2,8 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Page } from '../../components'
 import { Header, Filter, Results } from './components';
-
+import Error401 from '../Error401'
+import { observer, inject } from 'mobx-react';
 const useStyles = makeStyles(theme => ({
   root: {
     width: theme.breakpoints.values.lg,
@@ -21,19 +22,24 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const TaskList = () => {
+const TaskList = inject('rootStore')(observer(({ rootStore }) => {
   const classes = useStyles(1);
-
-  return (
-    <Page
-      className={classes.root}
-      title="Tasks List"
-    >
-      <Header className={classes.header} />
-      <Filter className={classes.filter} />
-      <Results className={classes.results} />
-    </Page>
-  );
-};
+  if (rootStore.user.isUserLogin) {
+    return (
+      <Page
+        className={classes.root}
+        title="Tasks List"
+      >
+        <Header className={classes.header} />
+        <Filter className={classes.filter} />
+        <Results className={classes.results} />
+      </Page>
+    );
+  } else {
+    return (
+      <Error401 />
+    )
+  }
+}));
 
 export default TaskList;

@@ -8,6 +8,7 @@ import {
   Header,
   AboutTask,
 } from './components';
+import Error401 from '../Error401'
 const uuid = require('uuid/v4');
 
 const useStyles = makeStyles(theme => ({
@@ -90,7 +91,7 @@ const TaskCreate = inject('rootStore')(observer(({ rootStore }) => {
           console.log('field not filled')
         } */
   }
-  if (rootStore.user.isUserLogin) {
+  if (rootStore.user.isUserLogin && rootStore.user.isUserReg) {
     return (
       <Page
         className={classes.root}
@@ -110,12 +111,9 @@ const TaskCreate = inject('rootStore')(observer(({ rootStore }) => {
       </Page>
     );
   } else {
-    <Page
-        className={classes.root}
-        title="Create Task"
-      >
-    <p>Please log in</p>
-    </Page>
+    return (
+      <Error401 />
+    )
   }
 }));
 

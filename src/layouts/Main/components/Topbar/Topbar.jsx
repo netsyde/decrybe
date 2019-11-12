@@ -89,9 +89,4 @@ const Topbar = props => {
   );
 };
 
-Topbar.propTypes = {
-  className: PropTypes.string,
-  onSidebarOpen: PropTypes.func
-};
-
 export default Topbar;

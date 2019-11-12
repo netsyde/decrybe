@@ -1,15 +1,15 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { Tabs, Tab, Divider, colors } from '@material-ui/core';
-
+import { observer, inject } from 'mobx-react';
 import { Page } from '../../components';
 import {
   Header,
   General,
-  Notifications,
+  Other,
 } from './components';
+import Error401 from '../Error401'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -29,8 +29,8 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Settings = props => {
-  const { match, history } = props;
+const SettingsContainer = props => {
+  const { match, rootStore, history } = props;
   const classes = useStyles(props);
   const { tab } = match.params;
 
@@ -40,7 +40,7 @@ const Settings = props => {
 
   const tabs = [
     { value: 'general', label: 'General' },
-    { value: 'notifications', label: 'Notifications' },
+    { value: 'other', label: 'Other' },
   ];
 
   if (!tab) {
@@ -75,9 +75,32 @@ const Settings = props => {
       <Divider className={classes.divider} />
       <div className={classes.content}>
         {tab === 'general' && <General />}
-        {tab === 'notifications' && <Notifications />}
+        {tab === 'other' && <Other />}
       </div>
     </Page>
   );
 };
+
+
+@inject("rootStore")
+@observer
+class Settings extends React.Component {
+  constructor(props) {
+    super(props)
+    console.log(this.props.rootStore.user.isUserLogin)
+  }
+  
+  render() {
+    if (this.props.rootStore.user.isUserLogin) {
+      return (
+        <SettingsContainer rootStore={this.props.rootStore} match={this.props.match} history={this.props.history}/>
+      )
+    } else {
+      return (
+        <Error401 />
+      )
+    }
+  }
+}
+
 export default Settings;
