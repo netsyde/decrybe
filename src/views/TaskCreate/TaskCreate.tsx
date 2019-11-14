@@ -48,6 +48,27 @@ const TaskCreate = inject('rootStore')(observer(({ rootStore }) => {
       return false
     }
   }
+
+  const handleSubmit = event => {
+    event.preventDefault();
+    let store = rootStore.taskCreate;
+    if (len(store.getTitle) && store.getPrice > 0 && store.getCategory && 
+        len(store.getBriefDescription) && len(store.getTags) &&
+        len(store.getDescription) && store.getCurrency &&
+        len(store.getStatus) && store.getEndDate) {
+          console.log(`title: ${len(store.getTitle)}; price: ${store.getPrice}; category: ${store.getCategory}
+      endDate: ${store.getEndDate}; brief: ${len(store.getBriefDescription)}; tags: ${len(store.getTags)}; desc: ${len(store.getDescription)};
+      currency: ${len(store.getCurrency)}; author: ${len(store.getAuthor)}; status: ${len(store.getStatus)}`)
+      createTask()
+    } else {
+      console.log(`title: ${len(store.getTitle)}; price: ${store.getPrice}; category: ${store.getCategory}
+      endDate: ${store.getEndDate}; brief: ${len(store.getBriefDescription)}; tags: ${len(store.getTags)}; desc: ${len(store.getDescription)};
+      currency: ${len(store.getCurrency)}; author: ${len(store.getAuthor)}; status: ${len(store.getStatus)}`)
+      
+    }
+  
+  };
+
   const createTask = async () => {
       let store = rootStore.taskCreate;
       console.log(`${store.getTitle}\n${store.getPrice}\n${store.getCategory}`)
@@ -97,17 +118,21 @@ const TaskCreate = inject('rootStore')(observer(({ rootStore }) => {
         className={classes.root}
         title="Create Task"
       >
+
         <Header />
-        <AboutTask className={classes.aboutProject} rootStore={rootStore}/>
-        <div className={classes.actions}>
-          <Button
-            color="primary"
-            variant="contained"
-            onClick={() => {createTask()}}
-          >
-            Create task
-          </Button>
-        </div>
+        <form onSubmit={handleSubmit}>
+          <AboutTask className={classes.aboutProject} rootStore={rootStore}/>
+          <div className={classes.actions}>
+            <Button
+              color="primary"
+              variant="contained"
+              //onClick={() => {createTask()}}
+              type="submit"
+            >
+              Create task
+            </Button>
+          </div>
+        </form>
       </Page>
     );
   } else {

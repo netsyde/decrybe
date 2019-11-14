@@ -30,7 +30,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const GeneralSettings = props => {
-  const { profile, className, ...rest } = props;
+  const { profile, rootStore, className, ...rest } = props;
 
   const classes = useStyles(props);
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -91,9 +91,9 @@ const GeneralSettings = props => {
                 helperText="Please specify the name"
                 label="Name"
                 name="name"
-                onChange={handleChange}
+                onChange={event => rootStore.settings.setName(event.target.value)}
                 required
-                value={profile.name ? profile.name : ""}
+                value={rootStore.settings.name}
                 variant="outlined"
               />
             </Grid>

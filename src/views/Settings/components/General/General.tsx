@@ -19,7 +19,7 @@ const General = observer((props) => {
   useEffect(() => {
     let mounted = true;
 
-   let data = {
+    let data = {
       avatar: rootStore.user.getUserAvatar,
       canHire: false,
       country: rootStore.user.getUserLocation,
@@ -62,7 +62,7 @@ const General = observer((props) => {
         xl={9}
         xs={12}
       >
-        <GeneralSettings profile={rootStore.user.getUserFullData} />
+        <GeneralSettings profile={rootStore.settings.getData} rootStore={rootStore}/>
       </Grid>
     </Grid>
   );

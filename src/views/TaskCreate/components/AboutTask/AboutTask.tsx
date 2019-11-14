@@ -152,6 +152,10 @@ const AboutTask = observer((props) => {
     let tesr = rootStore.taskCreate.getTitle
     return tesr
   }
+
+  const handleSubmit = event => {
+    console.log('send')
+  };
   return (
     <Card
       {...rest}
@@ -159,7 +163,6 @@ const AboutTask = observer((props) => {
     >
       <CardHeader title="About this task" />
       <CardContent>
-        <form>
         <Grid container spacing={3}>
           <Grid item lg={8} md={6} sm={12} xs={12}>
             <TextField
@@ -282,7 +285,6 @@ const AboutTask = observer((props) => {
               ))}
             </div>
           </div>
-        </form>
         <RichEditor placeholder={"Say something about the task..."} rootStore={rootStore} />
       </CardContent>
       <MuiPickersUtilsProvider utils={DateFnsUtils}>

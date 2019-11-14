@@ -95,18 +95,24 @@ const Signup = props => {
       }
       handleClose()
     } else {
-      
+      console.log('sign err')
     }
   }
+  const handleSubmit = event => {
+    console.log('handle')
+    event.preventDefault();
+    sign(values)
+  };
 
   return (
-    <div>
+    
       <Dialog
         open={open}
         keepMounted
         onClose={handleClose}
 				aria-labelledby="form-dialog-title"	
       >
+        <form onSubmit={handleSubmit}>
         <DialogTitle id="form-dialog-title">{"Welcome. Sign up."}</DialogTitle>
         <DialogContent className={classes.container}>
           <TextField
@@ -166,12 +172,13 @@ const Signup = props => {
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={() => {sign(values)}} color="primary">
+          <Button color="primary" type="submit">
             Sign Up
           </Button>
         </DialogActions>
+        </form>
       </Dialog>
-    </div>
+    
   );
 }
 

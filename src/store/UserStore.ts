@@ -102,6 +102,7 @@ class UserStore {
 
 	@action("sign out")
 	signOut() {
+		console.log('sign out')
 		this.isLogin = false;
 		this.address = "";
 		this.balance = "";
@@ -115,8 +116,13 @@ class UserStore {
 		this.createTime = ""
 		this.tags = ""
 		this.avatar = ""
+		// firefox fix
+		this.cookies.set('address', '', { path: '/' });
+		this.cookies.set('network', '', { path: '/' });
+		// 
 		this.cookies.remove('address')
 		this.cookies.remove('network')
+		
 	}
 
 	@computed get isUserLogin() {
