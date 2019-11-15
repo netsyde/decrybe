@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import {
@@ -13,6 +12,7 @@ import {
 } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import SearchIcon from '@material-ui/icons/Search';
+import { observer, inject } from 'mobx-react';
 
 import { MultiSelect } from './components';
 
@@ -24,7 +24,6 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center'
   },
   searchIcon: {
-    //color: theme.palette.icon,
     marginRight: theme.spacing(2)
   },
   chips: {
@@ -74,8 +73,8 @@ const selects = [
   }
 ];
 
-const Filter = props => {
-  const { className, ...rest } = props;
+const Filter = observer((props) => {
+  const { className, rootStore,  ...rest } = props;
 
   const classes = useStyles(1);
 
@@ -92,6 +91,11 @@ const Filter = props => {
   const handleInputChange = event => {
     event.persist();
     setInputValue(event.target.value);
+    const matchesFilter = new RegExp(event.target.value, "i")
+
+    let tasks = rootStore.tasks.allTasksData.filter( task  => !event.target.value || matchesFilter.test(task.title))
+    rootStore.tasks.setFilteredTasks(tasks)
+  
   };
 
   const handleInputKeyup = event => {
@@ -123,8 +127,8 @@ const Filter = props => {
         <Input
           disableUnderline
           onChange={handleInputChange}
-          onKeyUp={handleInputKeyup}
-          placeholder="Enter a keyword"
+          //onKeyUp={handleInputKeyup}
+          placeholder="Search a task"
           value={inputValue}
         />
       </div>
@@ -164,6 +168,6 @@ const Filter = props => {
       </div>
     </Card>
   );
-};
+});
 
 export default Filter;

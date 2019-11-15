@@ -7,6 +7,7 @@ class TasksStore {
 	@observable allTasksData
 	@observable taskData
 	@observable currentTask
+	@observable filteredTasks
 		
 	constructor(public root: RootStore) {
 		this.root = root
@@ -44,6 +45,25 @@ class TasksStore {
 	@action
 	setCurrentTaskId = id => {
 	  this.currentTask = id;
+	};
+
+	@action
+	setFilteredTasks = tasks => {
+		this.filteredTasks = tasks;
+	};
+
+	@computed get getFilteredTasks () {
+		if (this.filteredTasks) {
+			return this.filteredTasks;
+		} else {
+			return this.allTasksData;
+		}
+	}
+
+
+	@action
+	setTasks = (tasks) => {
+	  this.allTasksData = tasks;
 	};
 
 	@computed get getTasks () {

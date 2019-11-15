@@ -50,7 +50,7 @@ class UserStore {
 				this.avatar = userDataFromDapp.avatar
 				this.root.settings.setAvatar(this.avatar)
 				this.location = userDataFromDapp.location
-				this.root.settings.setAvatar(this.location)
+				this.root.settings.setLocation(this.location)
 				console.log("userData success")
 			} else {
 				console.log('userData kick')
@@ -101,7 +101,7 @@ class UserStore {
 					this.avatar = userDataFromDapp.avatar
 					this.root.settings.setAvatar(this.avatar)
 					this.location = userDataFromDapp.location
-					this.root.settings.setAvatar(this.location)
+					this.root.settings.setLocation(this.location)
 					console.log("userData success")
 				} else {
 					console.log('userData kick')
@@ -214,6 +214,15 @@ class UserStore {
 
 	@computed get getUserAvatar() {
 		return this.avatar
+	}
+
+	@computed get getUserLocation() {
+		return this.location
+	}
+
+	@action("set location")
+	setUserLocation (location) {
+		this.location = location;
 	}
 
 	@computed get getUserFullData() {

@@ -129,7 +129,7 @@ const ProjectsContainer = observer((props) => {
           className={classes.title}
           variant="h5"
         >
-          Showing {rootStore.tasks.allTasksData ? rootStore.tasks.allTasksData.length : 0} tasks
+          Showing {rootStore.tasks.getFilteredTasks ? rootStore.tasks.getFilteredTasks.length : 0} tasks
         </Typography>
         <div className={classes.actions}>
           <Button
@@ -152,9 +152,9 @@ const ProjectsContainer = observer((props) => {
           </ToggleButtonGroup>
         </div>
       </div>
-      <ProjectsGrig classes={classes} mode={mode} projects={rootStore.tasks.getTasks} rootStore={rootStore}/>
+      <ProjectsGrig classes={classes} mode={mode} projects={rootStore.tasks.getFilteredTasks} rootStore={rootStore}/>
       <div className={classes.paginate}>
-        <Paginate pageCount={3} />
+        {/*<Paginate pageCount={3} />*/}
       </div>
       <Menu
         anchorEl={sortRef.current}

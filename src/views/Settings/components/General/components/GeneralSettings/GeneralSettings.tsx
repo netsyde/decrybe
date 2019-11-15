@@ -105,11 +105,11 @@ const GeneralSettings = observer((props) => {
             >
               <TextField
                 fullWidth
-                label="Last name"
-                name="lastName"
-                onChange={handleChange}
+                label="Avatar"
+                name="avatar"
+                onChange={event => rootStore.settings.setAvatar(event.target.value)}
                 required
-                value={values.lastName}
+                value={rootStore.settings.getAvatar}
                 variant="outlined"
               />
             </Grid>
@@ -120,11 +120,11 @@ const GeneralSettings = observer((props) => {
             >
               <TextField
                 fullWidth
-                label="Email Address"
-                name="email"
-                onChange={handleChange}
+                label="Location"
+                name="location"
+                onChange={event => rootStore.settings.setLocation(event.target.value)}
                 required
-                value={values.email}
+                value={rootStore.settings.getLocation}
                 variant="outlined"
               />
             </Grid>
@@ -135,52 +135,56 @@ const GeneralSettings = observer((props) => {
             >
               <TextField
                 fullWidth
-                label="Phone Number"
-                name="phone"
-                onChange={handleChange}
+                label="Bio"
+                name="bio"
+                onChange={event => rootStore.settings.setBio(event.target.value)}
                 type="text"
-                value={values.phone}
+                value={rootStore.settings.getBio}
                 variant="outlined"
               />
             </Grid>
             <Grid
               item
-              md={6}
+              md={4}
               xs={12}
             >
               <TextField
                 fullWidth
-                label="Select State"
-                name="state"
-                onChange={handleChange}
-                select
-                // eslint-disable-next-line react/jsx-sort-props
-                SelectProps={{ native: true }}
-                value={values.state}
+                label="Telegram"
+                name="telegram"
+                onChange={event => rootStore.settings.setTelegram(event.target.value)}
+                type="text"
+                value={rootStore.settings.getTelegram}
                 variant="outlined"
-              >
-                {states.map(state => (
-                  <option
-                    key={state}
-                    value={state}
-                  >
-                    {state}
-                  </option>
-                ))}
-              </TextField>
+              />
             </Grid>
             <Grid
               item
-              md={6}
+              md={4}
               xs={12}
             >
               <TextField
                 fullWidth
-                label="Country"
-                name="country"
-                onChange={handleChange}
-                required
-                value={values.country}
+                label="Twitter"
+                name="twitter"
+                onChange={event => rootStore.settings.setTwitter(event.target.value)}
+                type="text"
+                value={rootStore.settings.getTwitter}
+                variant="outlined"
+              />
+              </Grid>
+              <Grid
+                item
+                md={4}
+                xs={12}
+              >
+              <TextField
+                fullWidth
+                label="Github"
+                name="github"
+                onChange={event => rootStore.settings.setGithub(event.target.value)}
+                type="text"
+                value={rootStore.settings.getGithub}
                 variant="outlined"
               />
             </Grid>

@@ -7,6 +7,10 @@ class SettingsStore {
 	@observable socials: Array<String> = []
 	@observable bio: String = ""
 	@observable tags: Array<String> = []
+	@observable location: string = ""
+	@observable telegram: string = ""
+	@observable twitter: string = ""
+	@observable github: string = ""
 	
     constructor(public root: RootStore) {
 		this.root = root
@@ -55,6 +59,42 @@ class SettingsStore {
 
 	@computed get getTags() {
 		return this.tags
+	}
+
+	@action("set location (settings")
+	setLocation (location: string) {
+		this.location = location
+	}
+
+	@computed get getLocation() {
+		return this.location
+	}
+
+	@action("set telegram (settings")
+	setTelegram (telegram: string) {
+		this.telegram = telegram
+	}
+
+	@computed get getTelegram() {
+		return this.telegram
+	}
+
+	@action("set twitter (settings")
+	setTwitter (twitter: string) {
+		this.twitter = twitter
+	}
+
+	@computed get getTwitter() {
+		return this.twitter
+	}
+
+	@action("set github (settings")
+	setGithub (github: string) {
+		this.github = github
+	}
+
+	@computed get getGithub() {
+		return this.github
 	}
 
 	getData () {

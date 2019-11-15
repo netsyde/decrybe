@@ -53,7 +53,7 @@ const General = observer((props) => {
         xl={3}
         xs={12}
       >
-        <ProfileDetails profile={rootStore.user.getUserFullData} />
+        <ProfileDetails profile={rootStore.user.getUserFullData} rootStore={rootStore}/>
       </Grid>
       <Grid
         item

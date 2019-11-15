@@ -32,8 +32,8 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const ProfileDetails = (props) => {
-  const { profile, className, ...rest } = props;
+const ProfileDetails = observer((props) => {
+  const { profile, className, rootStore, ...rest } = props;
 
   const classes = useStyles(props);
 
@@ -45,20 +45,20 @@ const ProfileDetails = (props) => {
       <CardContent className={classes.content}>
         <Avatar
           className={classes.avatar}
-          src={profile.avatar ? profile.avatar : ""}
+          src={rootStore.settings.getAvatar ? rootStore.settings.getAvatar : ""}
         />
         <Typography
           className={classes.name}
           gutterBottom
           variant="h3"
         >
-          {profile.name ? profile.name : ""}
+          {rootStore.settings.getName ? rootStore.settings.getName : ""}
         </Typography>
         <Typography
           color="textSecondary"
           variant="body1"
         >
-          {profile.bio ? profile.bio : ""}
+          {rootStore.settings.getBio ? rootStore.settings.getBio : ""}
         </Typography>
         <Typography
           color="textSecondary"
@@ -77,6 +77,6 @@ const ProfileDetails = (props) => {
       </CardActions>
     </Card>
   );
-};
+});
 
 export default ProfileDetails;

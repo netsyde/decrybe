@@ -70,15 +70,6 @@ const Other = props => {
                 You will recieve emails in your business email address
               </Typography>
               <FormControlLabel
-                control={
-                  <Checkbox
-                    color="primary"
-                    defaultChecked //
-                  />
-                }
-                label="Email alerts"
-              />
-              <FormControlLabel
                 control={<Checkbox color="primary" />}
                 label="Push Notifications"
               />
@@ -90,22 +81,6 @@ const Other = props => {
                   />
                 }
                 label="Text message"
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    color="primary"
-                    defaultChecked //
-                  />
-                }
-                label={
-                  <Fragment>
-                    <Typography variant="body1">Phone calls</Typography>
-                    <Typography variant="caption">
-                      Short voice phone updating you
-                    </Typography>
-                  </Fragment>
-                }
               />
             </Grid>
             <Grid
