@@ -3,20 +3,21 @@ import * as nodeInt from '../modules/nodeInt'
 import {RootStore} from './RootStore'
 import Cookies from 'universal-cookie';
 class UserStore {
-	@observable isLogin = false;
-	@observable address = "";
-	@observable balance = "";
-	@observable network = "";
+	@observable isLogin: boolean = false;
+	@observable address: string = "";
+	@observable balance;
+	@observable network: string = "";
 	@observable userData;
 	@observable isReg;
-	@observable name = "";
-	@observable socials = "";
-	@observable bio = "";
-	@observable status = "";
+	@observable name: string = "";
+	@observable socials: Array<String> = [];
+	@observable bio: string = "";
+	@observable status: string = "";
 	@observable createTime = "";
-	@observable tags = "";
+	@observable tags: Array<String> = [];
 	@observable avatar = "";
-	dapp = "3N9kox62MPg67TokQMTTZJKTYQBPwtJL2Tk";
+	@observable location = "";
+	dapp: string = "3N9kox62MPg67TokQMTTZJKTYQBPwtJL2Tk";
 	wavesKeeper;
 	cookies = new Cookies()
 	constructor(public root: RootStore) {
@@ -37,12 +38,19 @@ class UserStore {
 			let userDataFromDapp = await nodeInt.getUserData(address, this.dapp, nodeUrl);
 			if (userDataFromDapp) {
 				this.name = userDataFromDapp.name;
+				this.root.settings.setName(this.name)
 				this.socials = userDataFromDapp.socials;
+				this.root.settings.setSocials(this.socials)
 				this.bio = userDataFromDapp.bio;
+				this.root.settings.setBio(this.bio)
 				this.status = userDataFromDapp.status;
 				this.createTime = userDataFromDapp.createTime;
 				this.tags = userDataFromDapp.tags;
+				this.root.settings.setTags(this.tags)
 				this.avatar = userDataFromDapp.avatar
+				this.root.settings.setAvatar(this.avatar)
+				this.location = userDataFromDapp.location
+				this.root.settings.setAvatar(this.location)
 				console.log("userData success")
 			} else {
 				console.log('userData kick')
@@ -81,12 +89,19 @@ class UserStore {
 				let userDataFromDapp = await nodeInt.getUserData(state.account.address, this.dapp, state.network.server);
 				if (userDataFromDapp) {
 					this.name = userDataFromDapp.name;
+					this.root.settings.setName(this.name)
 					this.socials = userDataFromDapp.socials;
+					this.root.settings.setSocials(this.socials)
 					this.bio = userDataFromDapp.bio;
+					this.root.settings.setBio(this.bio)
 					this.status = userDataFromDapp.status;
 					this.createTime = userDataFromDapp.createTime;
 					this.tags = userDataFromDapp.tags;
+					this.root.settings.setTags(this.tags)
 					this.avatar = userDataFromDapp.avatar
+					this.root.settings.setAvatar(this.avatar)
+					this.location = userDataFromDapp.location
+					this.root.settings.setAvatar(this.location)
 					console.log("userData success")
 				} else {
 					console.log('userData kick')
@@ -105,17 +120,18 @@ class UserStore {
 		console.log('sign out')
 		this.isLogin = false;
 		this.address = "";
-		this.balance = "";
+		this.balance;
 		this.network = "";
 		this.userData = "";
 		this.isReg = undefined;
 		this.name = ""
-		this.socials = ""
+		this.socials = []
 		this.bio = ""
 		this.status = ""
 		this.createTime = ""
-		this.tags = ""
+		this.tags = []
 		this.avatar = ""
+		this.location = ""
 		// firefox fix
 		this.cookies.set('address', '', { path: '/' });
 		this.cookies.set('network', '', { path: '/' });

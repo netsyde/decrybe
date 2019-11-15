@@ -2,8 +2,11 @@ import { observable, action, computed} from "mobx"
 import {RootStore} from './RootStore'
 
 class SettingsStore {
-	@observable name = this.root.user.getUserName;
-	@observable avatar = this.root.user.getUserAvatar;
+	@observable name: String = ""
+	@observable avatar: String = ""
+	@observable socials: Array<String> = []
+	@observable bio: String = ""
+	@observable tags: Array<String> = []
 	
     constructor(public root: RootStore) {
 		this.root = root
@@ -11,7 +14,6 @@ class SettingsStore {
 
 	@action("set name (settings")
 	setName (name: string) {
-		console.log('set name')
 		this.name = name
 	}
 
@@ -26,6 +28,33 @@ class SettingsStore {
 
 	@computed get getAvatar() {
 		return this.avatar
+	}
+
+	@action("set socials (settings")
+	setSocials (socials: Array<String>) {
+		this.socials = socials
+	}
+
+	@computed get getSocials() {
+		return this.socials
+	}
+
+	@action("set bio (settings")
+	setBio (bio: string) {
+		this.bio = bio
+	}
+
+	@computed get getBio() {
+		return this.bio
+	}
+
+	@action("set socials (settings")
+	setTags (tags: Array<String>) {
+		this.tags = tags
+	}
+
+	@computed get getTags() {
+		return this.tags
 	}
 
 	getData () {

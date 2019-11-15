@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
+import { observer, inject } from 'mobx-react';
 import {
   Button,
   Card,
@@ -29,7 +30,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const GeneralSettings = props => {
+const GeneralSettings = observer((props) => {
   const { profile, rootStore, className, ...rest } = props;
 
   const classes = useStyles(props);
@@ -93,7 +94,7 @@ const GeneralSettings = props => {
                 name="name"
                 onChange={event => rootStore.settings.setName(event.target.value)}
                 required
-                value={rootStore.settings.name}
+                value={rootStore.settings.getName}
                 variant="outlined"
               />
             </Grid>
@@ -238,6 +239,6 @@ const GeneralSettings = props => {
       />
     </Card>
   );
-};
+});
 
 export default GeneralSettings;
