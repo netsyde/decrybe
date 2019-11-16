@@ -81,7 +81,7 @@ const Signup = props => {
         socials: {
           telegram: "",
           twitter: "",
-          website: ""
+          github: ""
         },
         avatar: values.avatar
       }

@@ -16,6 +16,7 @@ class TasksStore {
 	async loadTasks(isLogin, dapp, network) {
 		if (isLogin) {
 			let allTasksData = await nodeInt.getTasksAllData(dapp, network)
+			console.log('tasks loaded')
 			if (allTasksData) {
 				this.allTasksData = allTasksData
 			} else {

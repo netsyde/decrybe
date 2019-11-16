@@ -30,7 +30,7 @@ const TaskList = inject('rootStore')(observer(({ rootStore }) => {
         className={classes.root}
         title="Tasks List"
       >
-        <Header className={classes.header} />
+        <Header className={classes.header} rootStore={rootStore} />
         <Filter className={classes.filter} rootStore={rootStore}/>
         <Results className={classes.results} />
       </Page>

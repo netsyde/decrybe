@@ -143,32 +143,44 @@ export let taskUpdate = async (taskId, data, wavesKeeper, type = "featured") => 
  * @param wavesKeeper - class
  */
 export let userUpdate = async (user, data, wavesKeeper) => {
-    wavesKeeper.signAndPublishTransaction({
-        type: 16,
-        data: {
-             fee: {
-                 "tokens": "0.05",
-                 "assetId": "WAVES"
-             },
-             dApp: dAppAddress,
-             call: {
-             	function: 'userUpdate',
-             	args: [
-                    {
-                        type: "string", value: user
-                    },
-                    {
-                        type: "string", value: JSON.stringify(data)
-                    },
-                ]
-            },
-            payment: []
+    const state = await wavesKeeper.publicState();
+    try {
+        let tx = wavesKeeper.signAndPublishTransaction({
+            type: 16,
+            data: {
+                 fee: {
+                     "tokens": "0.05",
+                     "assetId": "WAVES"
+                 },
+                 dApp: dAppAddress,
+                 call: {
+                 	function: 'userUpdate',
+                 	args: [
+                        {
+                            type: "string", value: user
+                        },
+                        {
+                            type: "string", value: JSON.stringify(data)
+                        },
+                    ]
+                },
+                payment: []
+            }
+        })
+        tx = JSON.parse(tx)
+        if (tx) {
+            console.log(tx.id)
+            let wait = await nodeInteraction.waitForTx(tx.id, {apiBase: state.network.server})
+            if (wait) {
+                return true
+            }
+        } else {
+            return false
         }
-   }).then((tx) => {
-        console.log("Success!");
-   }).catch((error) => {
+    } catch(error) {
         console.error("Error ", error);
-   });  
+        return false
+   }
 }
 
 /**

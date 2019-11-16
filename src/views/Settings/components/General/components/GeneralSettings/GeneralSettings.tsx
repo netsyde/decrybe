@@ -16,6 +16,7 @@ import {
   Typography,
   colors
 } from '@material-ui/core';
+import { userUpdate } from '../../../../../../modules/dAppInt'
 
 import SuccessSnackbar from '../SuccessSnackbar';
 
@@ -58,9 +59,30 @@ const GeneralSettings = observer((props) => {
     });
   };
 
-  const handleSubmit = event => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    setOpenSnackbar(true);
+    let data = {
+      name: rootStore.settings.getName,
+      bio: rootStore.settings.getBio,
+      location: rootStore.settings.getLocation,
+      tags: [],
+      address: rootStore.user.getUserAddress,
+      createTime: rootStore.user.getUserCreateTime,
+      status: rootStore.user.getUserStatus,
+      socials: {
+        telegram: rootStore.settings.getTelegram,
+        twitter: rootStore.settings.getTwitter,
+        github: rootStore.settings.getGithub
+      },
+      avatar: rootStore.settings.getAvatar
+
+    }
+    let tx = await userUpdate(rootStore.user.getUserAddress, data, rootStore.user.getWavesKeeper)
+    if (tx) {
+      setOpenSnackbar(true);
+    } else {
+      console.log('tx error')
+    }
   };
 
   const handleSnackbarClose = () => {
@@ -105,6 +127,7 @@ const GeneralSettings = observer((props) => {
             >
               <TextField
                 fullWidth
+                helperText="Please enter the link"
                 label="Avatar"
                 name="avatar"
                 onChange={event => rootStore.settings.setAvatar(event.target.value)}
@@ -134,7 +157,9 @@ const GeneralSettings = observer((props) => {
               xs={12}
             >
               <TextField
+                required
                 fullWidth
+                helperText="Any information about you (70 characters)"
                 label="Bio"
                 name="bio"
                 onChange={event => rootStore.settings.setBio(event.target.value)}

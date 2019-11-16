@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import {
@@ -118,6 +118,10 @@ const ProjectsContainer = observer((props) => {
   const handleModeChange = (event, value) => {
     setMode(value);
   };
+
+  useEffect(() => {
+    
+  }, []);
 
   return (
     <div

@@ -18,76 +18,13 @@ export default [
   {
     title: 'Pages',
     pages: [
-      {
-        title: 'Overview',
-        href: '/overview',
-        icon: HomeIcon
-      },
-      {
-        title: 'Dashboards',
-        href: '/dashboards',
-        icon: DashboardIcon,
-        children: [
-          {
-            title: 'Default',
-            href: '/dashboards/default'
-          },
-          {
-            title: 'Analytics',
-            href: '/dashboards/analytics'
-          }
-        ]
-      },
-      {
-        title: 'Management',
-        href: '/management',
-        icon: BarChartIcon,
-        children: [
-          {
-            title: 'Customers',
-            href: '/management/customers'
-          },
-          {
-            title: 'Customer Details',
-            href: '/management/customers/1/summary'
-          },
-          {
-            title: 'Tasks',
-            href: '/management/projects'
-          },
-          {
-            title: 'Orders',
-            href: '/management/orders'
-          },
-          {
-            title: 'Order Details',
-            href: '/management/orders/1'
-          }
-        ]
-      },
+      /*
       {
         title: 'Profile',
         href: '/profile',
-        icon: PersonIcon,
-        children: [
-          {
-            title: 'Timeline',
-            href: '/profile/1/timeline'
-          },
-          {
-            title: 'Connections',
-            href: '/profile/1/connections'
-          },
-          {
-            title: 'Tasks',
-            href: '/profile/1/projects'
-          },
-          {
-            title: 'Reviews',
-            href: '/profile/1/reviews'
-          }
-        ]
+        icon: PersonIcon
       },
+      */
       {
         title: 'Tasks',
         href: '/tasks',
@@ -118,6 +55,7 @@ export default [
           }
         ]
       },
+      /*
       {
         title: 'Authentication',
         href: '/auth',
@@ -133,8 +71,9 @@ export default [
           }
         ]
       },
+      */
     ]
-  },
+  /*
   {
     title: 'Support',
     pages: [
@@ -149,5 +88,7 @@ export default [
         icon: CodeIcon
       },
     ]
+  }
+  */
   }
 ];
