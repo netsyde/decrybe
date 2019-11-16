@@ -145,7 +145,7 @@ export let taskUpdate = async (taskId, data, wavesKeeper, type = "featured") => 
 export let userUpdate = async (user, data, wavesKeeper) => {
     const state = await wavesKeeper.publicState();
     try {
-        let tx = wavesKeeper.signAndPublishTransaction({
+        let tx = await wavesKeeper.signAndPublishTransaction({
             type: 16,
             data: {
                  fee: {

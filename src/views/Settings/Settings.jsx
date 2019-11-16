@@ -40,7 +40,7 @@ const SettingsContainer = props => {
 
   const tabs = [
     { value: 'general', label: 'General' },
-    { value: 'other', label: 'Other' },
+    /*{ value: 'other', label: 'Other' }*/,
   ];
 
   if (!tab) {

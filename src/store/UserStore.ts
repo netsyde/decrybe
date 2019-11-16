@@ -192,12 +192,27 @@ class UserStore {
 		return this.name
 	}
 
+	@action("set user name")
+	setUserName (name) {
+		this.name = name;
+	}
+
 	@computed get getUserSocials() {
 		return this.socials
 	}
 
+	@action("set user socials")
+	setUserSocials (socials) {
+		this.socials = socials;
+	}
+
 	@computed get getUserBio() {
 		return this.bio
+	}
+
+	@action("set user bio")
+	setUserBio (bio) {
+		this.bio = bio;
 	}
 
 	@computed get getUserStatus() {
@@ -212,8 +227,18 @@ class UserStore {
 		return this.tags
 	}
 
+	@action("set user tags")
+	setUserTags (tags) {
+		this.tags = tags;
+	}
+
 	@computed get getUserAvatar() {
 		return this.avatar
+	}
+
+	@action("set user avatar")
+	setUserAvatar (avatar) {
+		this.avatar = avatar;
 	}
 
 	@computed get getUserLocation() {

@@ -49,10 +49,10 @@ export default [
             title: 'General',
             href: '/settings/general'
           },
-          {
+          /*{
             title: 'Other',
             href: '/settings/other'
-          }
+          }*/
         ]
       },
       /*

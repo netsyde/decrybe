@@ -35,8 +35,10 @@ class SettingsStore {
 	}
 
 	@action("set socials (settings")
-	setSocials (socials: Array<String>) {
-		this.socials = socials
+	setSocials (socials) {
+		this.telegram = socials.telegram
+		this.twitter = socials.twitter
+		this.github = socials.github
 	}
 
 	@computed get getSocials() {

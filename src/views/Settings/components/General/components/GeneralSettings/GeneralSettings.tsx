@@ -80,6 +80,14 @@ const GeneralSettings = observer((props) => {
     let tx = await userUpdate(rootStore.user.getUserAddress, data, rootStore.user.getWavesKeeper)
     if (tx) {
       setOpenSnackbar(true);
+      rootStore.user.setUserName(data.name)
+      rootStore.user.setUserBio(data.bio)
+      rootStore.user.setUserLocation(data.location)
+      rootStore.user.setUserTags(data.tags)
+      rootStore.user.setUserSocials(data.socials)
+      rootStore.user.setUserAvatar(data.avatar)
+
+
     } else {
       console.log('tx error')
     }
@@ -213,7 +221,7 @@ const GeneralSettings = observer((props) => {
                 variant="outlined"
               />
             </Grid>
-            <Grid
+            {/*<Grid
               item
               md={6}
               xs={12}
@@ -248,7 +256,7 @@ const GeneralSettings = observer((props) => {
                 name="canHire"
                 onChange={handleChange}
               />
-            </Grid>
+            </Grid>*/}
           </Grid>
         </CardContent>
         <Divider />
