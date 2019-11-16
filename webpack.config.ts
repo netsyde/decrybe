@@ -1,5 +1,5 @@
 const TerserPlugin = require('terser-webpack-plugin');
-//const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
+const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 module.exports = {
 	entry: [
 		'./src/index.tsx'
@@ -59,6 +59,6 @@ module.exports = {
 		]
 	},
 	plugins: [
-		//new HardSourceWebpackPlugin()
+		new HardSourceWebpackPlugin()
 	]
 };
