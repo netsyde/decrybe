@@ -27,9 +27,4 @@ const Brief = props => {
   );
 };
 
-Brief.propTypes = {
-  brief: PropTypes.string.isRequired,
-  className: PropTypes.string
-};
-
 export default Brief;

@@ -96,7 +96,7 @@ const HolderContainer = props => {
           >
             <Typography variant="subtitle2">Per Project</Typography>
             <Typography variant="h6">
-              {project.price ? project.price : "Undefined"} {project.currency ? project.currency : "Undefined"}
+              {project.price ? ((project.price.toString()).length > 5 ? (project.price.toString()).substr(0, 5) : project.price) : "undefined"} {project.currency ? project.currency : "Undefined"}
             </Typography>
           </ListItem>
           <ListItem

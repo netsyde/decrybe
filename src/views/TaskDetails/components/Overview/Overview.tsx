@@ -44,10 +44,11 @@ const Overview = props => {
         xs={12}
       >
         <Holder project={project} />
-        <Members
+
+        {/*<Members
           className={classes.members}
           members={project.members ? project.members : ""}
-        />
+        />*/}
       </Grid>
     </Grid>
   );

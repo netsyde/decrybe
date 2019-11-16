@@ -80,9 +80,10 @@ const Members = props => {
             ))}
           </List>
         </CardContent>
+        {/*
         <CardActions className={classes.actions}>
           <Button className={classes.manageButton}>Manage users</Button>
-        </CardActions>
+        </CardActions>*/}
       </Card>
     )
   } else {

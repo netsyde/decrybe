@@ -65,7 +65,7 @@ const Application = props => {
 
   const [value, setValue] = useState('');
 
-  const classes = useStyles(1);
+  const classes = useStyles(props);
 
   const handleChange = event => {
     event.persist();
@@ -73,6 +73,8 @@ const Application = props => {
     setValue(event.target.value);
   };
 
+
+  const handleBrokenImage = e => (e.target.src = "/img/gag.png");
   return (
     <Dialog
       maxWidth="lg"
@@ -98,7 +100,7 @@ const Application = props => {
             variant="subtitle2"
           >
             Write down a short note with your application regarding why you
-            think you'd be a good fit for this position.
+            think you'd be a good fit for this task.
           </Typography>
         </div>
         <div className={classes.content}>
@@ -112,7 +114,7 @@ const Application = props => {
             label="Short Note"
             multiline
             onChange={handleChange}
-            placeholder="What excites you about this project?"
+            placeholder="Tell the customer about yourself"
             rows={5}
             value={value}
             variant="outlined"
@@ -121,7 +123,8 @@ const Application = props => {
             <Avatar
               alt="Author"
               className={classes.avatar}
-              src={author.avatar ? author.avatar : ""}
+              src={author.avatar || "/img/gag.png"}
+              imgProps={{ onError: handleBrokenImage }}
             >
               {author.name ? author.name : ""}
             </Avatar>

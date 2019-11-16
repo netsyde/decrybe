@@ -24,7 +24,6 @@ import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 
 import getInitials from '../../utils/getInitials';
 import { Label } from '../';
-import * as nodeInt from '../../modules/nodeInt'
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -173,7 +172,7 @@ const ProjectCard = props => {
             spacing={3}
           >
             <Grid item>
-              <Typography variant="h5">${project.price ? project.price : "undefined"}</Typography>
+              <Typography variant="h5">${project.price ? ((project.price.toString()).length > 5 ? (project.price.toString()).substr(0, 5) : project.price) : "undefined"}</Typography>
               <Typography variant="body2">Per Task</Typography>
             </Grid>
             <Grid item>

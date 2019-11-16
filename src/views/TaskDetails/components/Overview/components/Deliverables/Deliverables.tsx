@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
-import { Card, CardContent, Typography } from '@material-ui/core';
+import { Card, CardContent, Typography, Link } from '@material-ui/core';
 
 const useStyles = makeStyles(() => ({
   root: {}
@@ -19,18 +19,20 @@ const Deliverables = props => {
       className={clsx(classes.root, className)}
     >
       <CardContent>
-        <Typography variant="h4">Deliverables:</Typography>
+        <Typography variant="h4">Notification:</Typography>
         <Typography variant="body1">
-          You will be required to provide a zip file. Please check with the
-          client to see if they have a preference.
+          There may be some errors in the display.
+          Please report them to our
+          <Link
+           href="https://t.me/decrybechat"
+           target="_blank"
+           rel="noopener"
+          > telegram </Link>
+           chat
         </Typography>
       </CardContent>
     </Card>
   );
-};
-
-Deliverables.propTypes = {
-  className: PropTypes.string
 };
 
 export default Deliverables;
