@@ -10,6 +10,7 @@ import {
 } from './components';
 import Error401 from '../Error401'
 const uuid = require('uuid/v4');
+import { ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -120,7 +121,7 @@ const TaskCreate = inject('rootStore')(observer(({ rootStore }) => {
       >
 
         <Header />
-        <form onSubmit={handleSubmit}>
+        <ValidatorForm onSubmit={handleSubmit} onError={errors => console.log(errors)}>
           <AboutTask className={classes.aboutProject} rootStore={rootStore}/>
           <div className={classes.actions}>
             <Button
@@ -132,7 +133,7 @@ const TaskCreate = inject('rootStore')(observer(({ rootStore }) => {
               Create task
             </Button>
           </div>
-        </form>
+        </ValidatorForm>
       </Page>
     );
   } else {

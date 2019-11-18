@@ -3,7 +3,7 @@
     "version": "0.3.0",
     "scripts": {
         "start": "node server.ts",
-        "build": "webpack",
+        "build": "webpack --config webpack.config.ts",
         "watch": "webpack --watch"
     },
     "dependencies": {
@@ -45,6 +45,7 @@
         "react-dropzone": "^10.1.10",
         "react-helmet": "^5.2.1",
         "react-markdown": "^4.2.2",
+        "react-material-ui-form-validator": "^2.0.9",
         "react-paginate": "^6.3.0",
         "react-perfect-scrollbar": "^1.5.3",
         "react-router-config": "^5.1.1",

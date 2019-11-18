@@ -25,7 +25,8 @@ class TaskCreateStore {
 	
 	@action("set task title")
 	setTitle (title: String) {
-		this.title = title
+		this.title = title.replace(/(\s\s)/g, ' ')
+		console.log(this.title)
 	}
 
 	@computed get getTitle() {
@@ -34,11 +35,7 @@ class TaskCreateStore {
 
 	@action("set task price")
 	setPrice (price: Number) {
-		if (price <= 0) {
-			this.price = 0.1
-		} else {
-			this.price = price;
-		}
+		this.price = price;
 	}
 
 	@computed get getPrice() {
@@ -70,7 +67,7 @@ class TaskCreateStore {
 
 	@action("set task brief description")
 	setBriefDescription (briefDescription: String) {
-		this.briefDescription = briefDescription;
+		this.briefDescription = briefDescription.replace(/(\s\s)/g, ' ');
 	}
 
 	@computed get getBriefDescription() {
