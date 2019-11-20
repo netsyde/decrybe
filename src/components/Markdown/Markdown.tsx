@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import Prism from 'prismjs';
 import ReactMarkdown from 'react-markdown/with-html';
@@ -78,10 +77,6 @@ const Markdown = props => {
       <ReactMarkdown {...rest} />
     </div>
   );
-};
-
-Markdown.propTypes = {
-  className: PropTypes.string
 };
 
 export default Markdown;

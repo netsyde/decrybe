@@ -6,3 +6,5 @@ export { default as TaskCreate } from './TaskCreate';
 export { default as TaskDetails } from './TaskDetails';
 export { default as Settings } from './Settings';
 export { default as Error401 } from './Error401';
+export { default as Chat } from './Chat';
+export { default as Changelog } from './Changelog';

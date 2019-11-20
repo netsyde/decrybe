@@ -60,14 +60,6 @@ const Label = props => {
   );
 };
 
-Label.propTypes = {
-  children: PropTypes.node,
-  className: PropTypes.string,
-  color: PropTypes.string,
-  shape: PropTypes.oneOf(['square', 'rounded']),
-  style: PropTypes.object,
-  variant: PropTypes.oneOf(['contained', 'outlined'])
-};
 
 Label.defaultProps = {
   style: {},

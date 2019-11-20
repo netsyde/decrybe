@@ -46,6 +46,21 @@ const routes = [
         component: lazy(() => import('./views/Settings'))
       },
       {
+        path: '/chat',
+        exact: true,
+        component: lazy(() => import('./views/Chat'))
+      },
+      {
+        path: '/chat/:id',
+        exact: true,
+        component: lazy(() => import('./views/Chat'))
+      },
+      {
+        path: '/changelog',
+        exact: true,
+        component: lazy(() => import('./views/Changelog'))
+      },
+      {
         path: '/404',
         exact: true,
         component: lazy(() => import('./views/NotFound'))
