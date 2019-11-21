@@ -24,6 +24,7 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     justifyContent: 'space-between',
     flexWrap: 'wrap',
+    marginTop: theme.spacing(2),
     marginBottom: theme.spacing(2)
   },
   title: {

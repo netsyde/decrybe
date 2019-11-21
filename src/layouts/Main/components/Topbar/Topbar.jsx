@@ -20,7 +20,7 @@ const useStyles = makeStyles(theme => ({
     marginLeft: theme.spacing(1)
   },
   logo: {
-    height: 50,
+    width: 206,
     display: "flex"
   }
 }));
@@ -50,7 +50,7 @@ const Topbar = props => {
           <RouterLink to="/">
             <img
               alt="Logo"
-              src="/img/logo.svg"
+              src="/img/decrybe.png"
               className={classes.logo}
             />
           </RouterLink>
