@@ -99,34 +99,7 @@ const ConversationToolbar = props => {
       </Tooltip>
       <div className={classes.user}>
         <Typography variant="h6">{conversation.otherUser.name}</Typography>
-        <div className={classes.activity}>
-          {conversation.otherUser.active ? (
-            <Fragment>
-              <StatusBullet
-                className={classes.statusBullet}
-                color="success"
-                size="small"
-              />
-              <Typography variant="body2">Active now</Typography>
-            </Fragment>
-          ) : (
-            <Typography variant="body2">
-              Active {moment(conversation.otherUser.lastActivity).fromNow()}
-            </Typography>
-          )}
-        </div>
       </div>
-      <Paper
-        className={classes.search}
-        elevation={1}
-      >
-        <SearchIcon className={classes.searchIcon} />
-        <Input
-          className={classes.searchInput}
-          disableUnderline
-          placeholder="Search email"
-        />
-      </Paper>
       <Tooltip title="More options">
         <IconButton
           onClick={handleMenuOpen}
@@ -152,18 +125,6 @@ const ConversationToolbar = props => {
             <DeleteIcon />
           </ListItemIcon>
           <ListItemText primary="Delete conversation" />
-        </MenuItem>
-        <MenuItem>
-          <ListItemIcon>
-            <ArchiveIcon />
-          </ListItemIcon>
-          <ListItemText primary="Archive conversation" />
-        </MenuItem>
-        <MenuItem>
-          <ListItemIcon>
-            <NotificationsOffIcon />
-          </ListItemIcon>
-          <ListItemText primary="Mute notifications" />
         </MenuItem>
       </Menu>
     </Toolbar>

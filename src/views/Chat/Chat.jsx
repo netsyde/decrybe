@@ -37,7 +37,6 @@ const useStyles = makeStyles(theme => ({
   },
   conversationList: {
     width: 300,
-    //flexBasis: 300,
     flexShrink: 0,
     '@media (min-width: 864px)': {
       borderRight: `1px solid ${theme.palette.divider}`
@@ -60,13 +59,6 @@ const Chat = inject('rootStore')(observer(({ rootStore }) => {
     let mounted = true;
 
     const fetchConversations = () => {
-      /*
-      axios.get('/api/chat/conversations').then(response => {
-        if (mounted) {
-          setConversations(response.data.conversations);
-        }
-      });
-      */
      let image = "https://www.10000h.ru/wp-content/uploads/2017/04/bill-gates-jpg.jpg"
      let image2 = "https://cdn.cultofmac.com/wp-content/uploads/2015/03/Steve_Jobs_The_Man_in_the_Machine.jpg"
      let conv = [{
