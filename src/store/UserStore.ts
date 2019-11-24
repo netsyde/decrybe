@@ -73,7 +73,12 @@ class UserStore {
 	@action("login")
 	async login () {
 		try {
+			
 			if (WavesKeeper) {
+				const authData = { data: "Auth on decrybe.com" };
+				WavesKeeper.auth(authData)
+				.then(async () => {
+				
 				this.wavesKeeper = WavesKeeper;
 				const state = await WavesKeeper.publicState();
 				
@@ -111,9 +116,11 @@ class UserStore {
 					console.log('User not signup')
 				}
 				await this.root.tasks.loadTasks(this.isUserLogin, this.getDapp, this.getUserNetwork)
+			})
 			} else {
 				alert("To Auth WavesKeeper should be installed.");
 			}
+			
 		} catch (e) {
 			if (e.message == "WavesKeeper is not defined") {
 				alert("To Auth WavesKeeper should be installed.");
