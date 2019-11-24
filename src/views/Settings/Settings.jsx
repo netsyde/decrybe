@@ -91,7 +91,7 @@ class Settings extends React.Component {
   }
   
   render() {
-    if (this.props.rootStore.user.isUserLogin) {
+    if (this.props.rootStore.user.isUserLogin && this.props.rootStore.user.isUserReg) {
       return (
         <SettingsContainer rootStore={this.props.rootStore} match={this.props.match} history={this.props.history}/>
       )

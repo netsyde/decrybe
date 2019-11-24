@@ -1,3 +1,12 @@
+### V0.3.2
+
+###### 25-11-2019
+
+#### New
+
+- Faster data loading
+- Fixed several bugs
+
 ### V0.3.1
 
 ###### 21-11-2019

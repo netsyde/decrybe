@@ -38,9 +38,7 @@ const Task = props => {
 
   useEffect(() => {
     async function getTask () {
-      console.log(props.rootStore.user.getUserNetwork)
-      let data = await nodeInt.getTaskData(id, props.rootStore.user.getDapp, props.rootStore.user.getUserNetwork)
-      console.log(data)
+      let data = await props.rootStore.tasks.getTaskData(id)
       setProject(data);
     }
     if (props.rootStore.user.isLogin) {

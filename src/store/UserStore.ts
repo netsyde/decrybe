@@ -17,6 +17,7 @@ class UserStore {
 	@observable tags: Array<String> = [];
 	@observable avatar = "";
 	@observable location = "";
+	@observable storage;
 	dapp: string = "3N9kox62MPg67TokQMTTZJKTYQBPwtJL2Tk";
 	wavesKeeper;
 	cookies = new Cookies()
@@ -33,9 +34,10 @@ class UserStore {
 		console.log('restore session')
 		this.wavesKeeper = WavesKeeper;
 		this.isLogin = true;
-		this.isReg = await nodeInt.checkReg(address, this.dapp, nodeUrl);
+		this.storage = await nodeInt.getAllData(this.dapp, nodeUrl);
+		this.isReg = await nodeInt.checkReg(this.storage, address, this.dapp, nodeUrl);
 		if (this.isReg) {
-			let userDataFromDapp = await nodeInt.getUserData(address, this.dapp, nodeUrl);
+			let userDataFromDapp = await nodeInt.getUserData(this.storage, address, this.dapp, nodeUrl);
 			if (userDataFromDapp) {
 				this.name = userDataFromDapp.name;
 				this.root.settings.setName(this.name)
@@ -87,12 +89,14 @@ class UserStore {
 				this.network = state.network.server;
 				this.userData = state;
 				this.isLogin = true;
-				this.isReg = await nodeInt.checkReg(state.account.address, this.dapp, state.network.server);
+				this.storage = await nodeInt.getAllData(this.dapp, state.network.server);
+				this.isReg = await nodeInt.checkReg(this.storage, state.account.address, this.dapp, state.network.server);
+				
 				console.log(this.isReg)
 				if (this.isReg) {
 					this.cookies.set('address', this.getUserAddress, { path: '/' });
 					this.cookies.set('network', this.getUserNetwork, { path: '/' });
-					let userDataFromDapp = await nodeInt.getUserData(state.account.address, this.dapp, state.network.server);
+					let userDataFromDapp = await nodeInt.getUserData(this.storage, state.account.address, this.dapp, state.network.server);
 					if (userDataFromDapp) {
 						this.name = userDataFromDapp.name;
 						this.root.settings.setName(this.name)
@@ -156,6 +160,9 @@ class UserStore {
 		
 	}
 
+	@computed get getStorage() {
+		return this.storage
+	}
 	@computed get isUserLogin() {
 		return this.isLogin
 	}

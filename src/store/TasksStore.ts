@@ -15,7 +15,7 @@ class TasksStore {
 
 	async loadTasks(isLogin, dapp, network) {
 		if (isLogin) {
-			let allTasksData = await nodeInt.getTasksAllData(dapp, network)
+			let allTasksData = await nodeInt.getTasksAllData(this.root.user.getStorage, dapp, network)
 			console.log('tasks loaded')
 			if (allTasksData) {
 				this.allTasksData = allTasksData
@@ -36,7 +36,7 @@ class TasksStore {
 	async getTaskData (id) {
 		if (this.root.user.isLogin) {
 			console.log(`${id} ${this.root.user.getDapp} ${this.root.user.getUserNetwork}`)
-			let task = await nodeInt.getTaskData(id, this.root.user.getDapp, this.root.user.getUserNetwork)
+			let task = await nodeInt.getTaskData(this.root.user.getStorage,id, this.root.user.getDapp, this.root.user.getUserNetwork)
 			return task
 		} else {
 			return false

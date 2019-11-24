@@ -64,10 +64,10 @@ export let getAllData = async (address: String, nodeUrl: String) => {
  * @param nodeUrl - node url
  * @returns {String}
  */
-export let getDataByKey = async (key: String, dAppAddress: String, nodeUrl: String) => {
+export let getDataByKey = async (data, key: String, dAppAddress: String, nodeUrl: String) => {
     try {
         let response;
-        let data = await getAllData(dAppAddress, nodeUrl);
+        
 		for (let i in data) {
 			if (data[i].key == key) {
 				//console.log(data[i].value);
@@ -81,7 +81,6 @@ export let getDataByKey = async (key: String, dAppAddress: String, nodeUrl: Stri
 		return response;
     } catch (e) {
         return false
-        console.log(`ERROR in nodeInt.getDataByKey! ${e.name}: ${e.message}\n${e.stack}`);
     }
 }
 
@@ -92,10 +91,10 @@ export let getDataByKey = async (key: String, dAppAddress: String, nodeUrl: Stri
  * @param nodeUrl - node url
  * @returns {boolean}
  */
-export let checkReg = async (address: String, dAppAddress: String, nodeUrl: String) => {
+export let checkReg = async (alldata, address: String, dAppAddress: String, nodeUrl: String) => {
     try {
         let fAddress = `user_sts_${address}`
-        let data = await getDataByKey(fAddress, dAppAddress, nodeUrl)
+        let data = await getDataByKey(alldata, fAddress, dAppAddress, nodeUrl)
         if (data) {
             //console.log(true)
             return true;
@@ -116,9 +115,8 @@ export let checkReg = async (address: String, dAppAddress: String, nodeUrl: Stri
  * @param nodeUrl - node url
  * @returns {Object}
  */
-export let getAllTasks = async (dAppAddress: String, nodeUrl: String) => {
+export let getAllTasks = async (data, dAppAddress: String, nodeUrl: String) => {
     try {
-        let data = await getAllData(dAppAddress, nodeUrl);
         let tasks = await Promise.all(
             Object.keys(data)
                 .filter(key => /^author_/.test(key))
@@ -139,11 +137,10 @@ export let getAllTasks = async (dAppAddress: String, nodeUrl: String) => {
  * @param nodeUrl - node url
  * @returns {Object}
  */
-export let getAllUsers = async (dAppAddress: String, nodeUrl: String) => {
+export let getAllUsers = async (alldata, dAppAddress: String, nodeUrl: String) => {
     try {
-        let data = await getAllData(dAppAddress, nodeUrl);
         let users = await Promise.all(
-            Object.keys(data)
+            Object.keys(alldata)
                 .filter(key => /^user_sts_/.test(key))
                 .map(key => key.replace(/^user_sts_/, ''))
         );
@@ -161,9 +158,9 @@ export let getAllUsers = async (dAppAddress: String, nodeUrl: String) => {
  * @param nodeUrl - node url
  * @returns {Object}
  */
-export let getUserData = async (address: String, dAppAddress: String, nodeUrl: String) => {
+export let getUserData = async (alldata, address: String, dAppAddress: String, nodeUrl: String) => {
     try {
-        let userData = await getDataByKey("user_bio_" + address, dAppAddress, nodeUrl)
+        let userData = await getDataByKey(alldata, "user_bio_" + address, dAppAddress, nodeUrl)
         if (userData) {
             userData = JSON.parse(userData)
             let userDataObj = {
@@ -196,11 +193,11 @@ export let getUserData = async (address: String, dAppAddress: String, nodeUrl: S
  * @param nodeUrl - node url
  * @returns {Object}
  */
-export let getTaskData = async (id: String, dAppAddress: String, nodeUrl: String) => {
+export let getTaskData = async (alldata, id: String, dAppAddress: String, nodeUrl: String) => {
     try {
-        let taskData = await getDataByKey("datajson_" + id, dAppAddress, nodeUrl)
+        let taskData = await getDataByKey(alldata, "datajson_" + id, dAppAddress, nodeUrl)
         taskData = JSON.parse(taskData)
-        let userData = await getUserData(taskData.author, dAppAddress, nodeUrl)
+        let userData = await getUserData(alldata, taskData.author, dAppAddress, nodeUrl)
         taskData.author = {
             address: taskData.author,
             name: userData ? userData.name : "",
@@ -222,13 +219,13 @@ export let getTaskData = async (id: String, dAppAddress: String, nodeUrl: String
  * @returns {Object}
  */
 
-export let getTasksAllData = async (dAppAddress: String, nodeUrl: String) => {
+export let getTasksAllData = async (alldata, dAppAddress: String, nodeUrl: String) => {
     try {
-        let allTasks = await getAllTasks(dAppAddress, nodeUrl)
+        let allTasks = await getAllTasks(alldata, dAppAddress, nodeUrl)
         let tasks = [];
         if (allTasks) {
             for(let i = 0; i < allTasks.length; i++) {
-                let taskData = await getTaskData(allTasks[i], dAppAddress, nodeUrl)
+                let taskData = await getTaskData(alldata, allTasks[i], dAppAddress, nodeUrl)
                 tasks.push(taskData)
             }
             //console.log(tasks)
