@@ -72,46 +72,54 @@ class UserStore {
 
 	@action("login")
 	async login () {
-		if (WavesKeeper) {
-			this.wavesKeeper = WavesKeeper;
-			const state = await WavesKeeper.publicState();
-			
-			this.address = state.account.address;
-			this.balance = state.account.balance.available;
-			this.network = state.network.server;
-			this.userData = state;
-			this.isLogin = true;
-			this.isReg = await nodeInt.checkReg(state.account.address, this.dapp, state.network.server);
-			console.log(this.isReg)
-			if (this.isReg) {
-				this.cookies.set('address', this.getUserAddress, { path: '/' });
-				this.cookies.set('network', this.getUserNetwork, { path: '/' });
-				let userDataFromDapp = await nodeInt.getUserData(state.account.address, this.dapp, state.network.server);
-				if (userDataFromDapp) {
-					this.name = userDataFromDapp.name;
-					this.root.settings.setName(this.name)
-					this.socials = userDataFromDapp.socials;
-					this.root.settings.setSocials(this.socials)
-					this.bio = userDataFromDapp.bio;
-					this.root.settings.setBio(this.bio)
-					this.status = userDataFromDapp.status;
-					this.createTime = userDataFromDapp.createTime;
-					this.tags = userDataFromDapp.tags;
-					this.root.settings.setTags(this.tags)
-					this.avatar = userDataFromDapp.avatar
-					this.root.settings.setAvatar(this.avatar)
-					this.location = userDataFromDapp.location
-					this.root.settings.setLocation(this.location)
-					console.log("userData success")
+		try {
+			if (WavesKeeper) {
+				this.wavesKeeper = WavesKeeper;
+				const state = await WavesKeeper.publicState();
+				
+				this.address = state.account.address;
+				this.balance = state.account.balance.available;
+				this.network = state.network.server;
+				this.userData = state;
+				this.isLogin = true;
+				this.isReg = await nodeInt.checkReg(state.account.address, this.dapp, state.network.server);
+				console.log(this.isReg)
+				if (this.isReg) {
+					this.cookies.set('address', this.getUserAddress, { path: '/' });
+					this.cookies.set('network', this.getUserNetwork, { path: '/' });
+					let userDataFromDapp = await nodeInt.getUserData(state.account.address, this.dapp, state.network.server);
+					if (userDataFromDapp) {
+						this.name = userDataFromDapp.name;
+						this.root.settings.setName(this.name)
+						this.socials = userDataFromDapp.socials;
+						this.root.settings.setSocials(this.socials)
+						this.bio = userDataFromDapp.bio;
+						this.root.settings.setBio(this.bio)
+						this.status = userDataFromDapp.status;
+						this.createTime = userDataFromDapp.createTime;
+						this.tags = userDataFromDapp.tags;
+						this.root.settings.setTags(this.tags)
+						this.avatar = userDataFromDapp.avatar
+						this.root.settings.setAvatar(this.avatar)
+						this.location = userDataFromDapp.location
+						this.root.settings.setLocation(this.location)
+						console.log("userData success")
+					} else {
+						console.log('userData kick')
+					}
 				} else {
-					console.log('userData kick')
+					console.log('User not signup')
 				}
+				await this.root.tasks.loadTasks(this.isUserLogin, this.getDapp, this.getUserNetwork)
 			} else {
-				console.log('User not signup')
+				alert("To Auth WavesKeeper should be installed.");
 			}
-			await this.root.tasks.loadTasks(this.isUserLogin, this.getDapp, this.getUserNetwork)
-		} else {
-			alert("To Auth WavesKeeper should be installed.");
+		} catch (e) {
+			if (e.message == "WavesKeeper is not defined") {
+				alert("To Auth WavesKeeper should be installed.");
+			} else {
+				console.log(`ERROR in UserStore.login! ${e.name}: ${e.message}\n${e.stack}`);
+			}
 		}
 	}
 
