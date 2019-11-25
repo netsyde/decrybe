@@ -105,7 +105,7 @@ const HolderContainer = props => {
             divider
           >
             <Typography variant="subtitle2">Main Technology</Typography>
-            <Label color={"#e74c3c"}>{project.tags ? project.tags[0] : "Undefined"}</Label>
+            <Label color={project.tags[0].color}>{project.tags ? project.tags[0].name : "Undefined"}</Label>
           </ListItem>
           <ListItem
             className={classes.listItem}

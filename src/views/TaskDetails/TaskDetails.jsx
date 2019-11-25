@@ -30,7 +30,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Task = props => {
+const Task = observer((props) => {
   const classes = useStyles(1);
   const { id, tab } = props.match.params;
   const [openAlert, setOpenAlert] = useState(true);
@@ -38,8 +38,14 @@ const Task = props => {
 
   useEffect(() => {
     async function getTask () {
+      
       let data = await props.rootStore.tasks.getTaskData(id)
-      setProject(data);
+      if (data) {
+        
+        setProject(data);
+      } else {
+        console.log('Task Details load error')
+      }
     }
     if (props.rootStore.user.isLogin) {
       getTask()
@@ -100,7 +106,7 @@ const Task = props => {
       </div>
     </Page>
   );
-};
+});
 
 @inject("rootStore")
 @observer

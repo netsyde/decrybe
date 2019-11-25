@@ -83,8 +83,6 @@ function validate (str, trim) {
   }
   
 }
-let color = ["#1abc9c", "#2ecc71", "#3498db", "#9b59b6", "#34495e", "#16a085",
-"#27ae60", "#2980b9", "#8e44ad", "#2c3e50", "#e67e22", "#e74c3c"]
 
 const ProjectCard = props => {
   const { project, rootStore, className, ...rest } = props;
@@ -156,10 +154,10 @@ const ProjectCard = props => {
         <div className={classes.tags}>
           {project.tags ? (project.tags.map(tag => (
             <Label
-              color={color[getRandomArbitary(0, color.length - 1)]}
-              key={tag}
+              color={tag.color}
+              key={tag.name}
             >
-              {tag ? (tag.length > 10 ? (project.brief.substr(0, 10)) : tag) : "undefined"}
+              {tag.name ? (tag.name.length > 10 ? (tag.name.substr(0, 10)) : tag.name) : "undefined"}
             </Label>
           ))) : ""}
         </div>
@@ -180,7 +178,7 @@ const ProjectCard = props => {
               <Typography variant="body2">Status</Typography>
             </Grid>
             <Grid item>
-              <Typography variant="h5">{project.category ? project.category : "undefined"}</Typography>
+              <Typography variant="h5">{project.category ? project.category.name : "undefined"}</Typography>
               <Typography variant="body2">Category</Typography>
             </Grid>
             <Grid item>

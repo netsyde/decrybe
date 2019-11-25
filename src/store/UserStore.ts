@@ -33,8 +33,9 @@ class UserStore {
 		this.setUserAddress(address)
 		console.log('restore session')
 		this.wavesKeeper = WavesKeeper;
-		this.isLogin = true;
+		
 		this.storage = await nodeInt.getAllData(this.dapp, nodeUrl);
+		this.isLogin = true;
 		this.isReg = await nodeInt.checkReg(this.storage, address, this.dapp, nodeUrl);
 		if (this.isReg) {
 			let userDataFromDapp = await nodeInt.getUserData(this.storage, address, this.dapp, nodeUrl);
@@ -88,8 +89,9 @@ class UserStore {
 				this.balance = state.account.balance.available;
 				this.network = state.network.server;
 				this.userData = state;
-				this.isLogin = true;
+				
 				this.storage = await nodeInt.getAllData(this.dapp, state.network.server);
+				this.isLogin = true;
 				this.isReg = await nodeInt.checkReg(this.storage, state.account.address, this.dapp, state.network.server);
 				
 				console.log(this.isReg)

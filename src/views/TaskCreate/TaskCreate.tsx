@@ -109,9 +109,6 @@ const TaskCreate = inject('rootStore')(observer(({ rootStore }) => {
             }
             rootStore.tasks.addTask(data)
           }
-        /*} else {
-          console.log('field not filled')
-        } */
   }
   if (rootStore.user.isUserLogin && rootStore.user.isUserReg) {
     return (
@@ -127,7 +124,6 @@ const TaskCreate = inject('rootStore')(observer(({ rootStore }) => {
             <Button
               color="primary"
               variant="contained"
-              //onClick={() => {createTask()}}
               type="submit"
             >
               Create task

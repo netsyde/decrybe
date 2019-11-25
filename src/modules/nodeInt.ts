@@ -203,6 +203,54 @@ export let getTaskData = async (alldata, id: String, dAppAddress: String, nodeUr
             name: userData ? userData.name : "",
             avatar: userData ? userData.avatar : ""
         }
+
+        let color = ["#1abc9c", "#2ecc71", "#3498db", "#9b59b6", "#34495e", "#16a085",
+                    "#27ae60", "#2980b9", "#8e44ad", "#2c3e50", "#e67e22", "#e74c3c",
+                    "#ff7979", "#badc58", "#f9ca24", "#f0932b",
+                    "#eb4d4b", "#6ab04c", "#e056fd", "#686de0", "#30336b", "#130f40"]
+        for (let i = 0; i < taskData.tags.length; i++) {
+            taskData.tags[i] = {
+                name: taskData.tags[i],
+                color: color[getRandomArbitary(0, color.length - 1)]
+            }
+        }
+        if (taskData.category == 1) {
+            taskData.category = {
+                id: taskData.category,
+                name: "Websites, IT & Software"
+            }
+        } else if (taskData.category == 2) {
+            taskData.category = {
+                id: taskData.category,
+                name: "Design & Media"
+            }
+        } else if (taskData.category == 3) {
+            taskData.category = {
+                id: taskData.category,
+                name: "Product Sourcing"
+            }
+        } else if (taskData.category == 4) {
+            taskData.category = {
+                id: taskData.category,
+                name: "Sales & Marketing"
+            }
+        } else if (taskData.category == 5) {
+            taskData.category = {
+                id: taskData.category,
+                name: "Translation & Languages"
+            }
+        } else if (taskData.category == 6) {
+            taskData.category = {
+                id: taskData.category,
+                name: "Local Jobs & Services"
+            }
+        } else {
+            taskData.category = {
+                id: taskData.category,
+                name: "Other"
+            }
+        }
+        taskData.status = ucFirst(taskData.status)
         return taskData;
     } catch (e) {
         return false;
@@ -240,3 +288,14 @@ export let getTasksAllData = async (alldata, dAppAddress: String, nodeUrl: Strin
 }
 
 //getTasksAllData(dApp, nodeUrl)
+
+function getRandomArbitary(min, max) {
+    let rand = Math.random() * (max - min) + min;
+    return rand.toFixed(0)
+}
+
+function ucFirst(str) {
+    if (!str) return str;
+  
+    return str[0].toUpperCase() + str.slice(1);
+  }
