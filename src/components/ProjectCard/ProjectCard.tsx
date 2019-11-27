@@ -56,6 +56,14 @@ const useStyles = makeStyles(theme => ({
   },
   details: {
     padding: theme.spacing(1, 3)
+  },
+  priceContainer: {
+    display: "flex",
+    flexDirection: "row"
+  },
+  wavesLogo: {
+    paddingLeft: 4,
+    width: 22
   }
 }));
 
@@ -170,7 +178,10 @@ const ProjectCard = props => {
             spacing={3}
           >
             <Grid item>
-              <Typography variant="h5">${project.price ? ((project.price.toString()).length > 5 ? (project.price.toString()).substr(0, 5) : project.price) : "undefined"}</Typography>
+              <div className={classes.priceContainer}>
+                <Typography variant="h5">{project.price ? ((project.price.toString()).length > 5 ? (project.price.toString()).substr(0, 5) : project.price) : "undefined"}</Typography>
+                <img className={classes.wavesLogo} src='/img/waves-ico.svg' />
+              </div>
               <Typography variant="body2">Per Task</Typography>
             </Grid>
             <Grid item>

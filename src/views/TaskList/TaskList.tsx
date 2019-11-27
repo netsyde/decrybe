@@ -24,7 +24,7 @@ const useStyles = makeStyles(theme => ({
 
 const TaskList = inject('rootStore')(observer(({ rootStore }) => {
   const classes = useStyles(1);
-  if (rootStore.user.isUserLogin) {
+  if (rootStore.user.isUserOnline) {
     return (
       <Page
         className={classes.root}

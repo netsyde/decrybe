@@ -37,6 +37,9 @@ const useStyles = makeStyles(theme => ({
   },
   navigation: {
     marginTop: theme.spacing(2)
+  },
+  testnet: {
+    textAlign: "center"
   }
 }));
 
@@ -118,6 +121,7 @@ const NavBar = props => {
           square
         >
           {navbarContent}
+          <Typography className={classes.testnet} variant="body2">Please use TESTNET</Typography>
         </Paper>
       </Hidden>
     </Fragment>

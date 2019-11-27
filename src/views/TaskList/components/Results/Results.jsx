@@ -189,7 +189,7 @@ class Projects extends React.Component {
   }
 
   render() {
-    if (this.props.rootStore.user.isUserLogin) {
+    if (this.props.rootStore.user.isUserOnline) {
       return (
         <ProjectsContainer rootStore={this.props.rootStore} />
       )

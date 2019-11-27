@@ -1,3 +1,14 @@
+### V0.3.3
+
+###### 28-11-2019
+
+#### New
+
+- Categories are now displayed normally in the tasks list
+- Fixed a bug where you couldn't log in if you were using google chrome
+- Now if you have not registered, the settings page is not available
+- Updated logo
+- And other fixes and improvements
 ### V0.3.2
 
 ###### 25-11-2019

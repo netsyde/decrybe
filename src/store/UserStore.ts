@@ -18,6 +18,7 @@ class UserStore {
 	@observable avatar = "";
 	@observable location = "";
 	@observable storage;
+	@observable online = false
 	dapp: string = "3N9kox62MPg67TokQMTTZJKTYQBPwtJL2Tk";
 	wavesKeeper;
 	cookies = new Cookies()
@@ -35,35 +36,7 @@ class UserStore {
 				this.setUserAddress(address)
 				console.log('restore session')
 		
-				this.wavesKeeper = WavesKeeper;
-				//console.log(state)
-				
-				this.storage = await nodeInt.getAllData(this.dapp, nodeUrl);
-				this.isLogin = true;
-				this.isReg = await nodeInt.checkReg(this.storage, address, this.dapp, nodeUrl);
-				if (this.isReg) {
-					let userDataFromDapp = await nodeInt.getUserData(this.storage, address, this.dapp, nodeUrl);
-					if (userDataFromDapp) {
-						this.name = userDataFromDapp.name;
-						this.root.settings.setName(this.name)
-						this.socials = userDataFromDapp.socials;
-						this.root.settings.setSocials(this.socials)
-						this.bio = userDataFromDapp.bio;
-						this.root.settings.setBio(this.bio)
-						this.status = userDataFromDapp.status;
-						this.createTime = userDataFromDapp.createTime;
-						this.tags = userDataFromDapp.tags;
-						this.root.settings.setTags(this.tags)
-						this.avatar = userDataFromDapp.avatar
-						this.root.settings.setAvatar(this.avatar)
-						this.location = userDataFromDapp.location
-						this.root.settings.setLocation(this.location)
-						console.log("userData success")
-					} else {
-						console.log('userData kick')
-					}
-				}
-				await this.root.tasks.loadTasks(this.isUserLogin, this.getDapp, nodeUrl)
+				await this.getState()
 			} else {
 				alert("To Auth WavesKeeper should be installed.");
 			}
@@ -101,48 +74,8 @@ class UserStore {
 				const authData = { data: "Auth on decrybe.com" };
 				WavesKeeper.auth(authData)
 				.then(async () => {
-				
-				this.wavesKeeper = WavesKeeper;
-				const state = await WavesKeeper.publicState();
-				
-				this.address = state.account.address;
-				this.balance = state.account.balance.available;
-				this.network = state.network.server;
-				this.userData = state;
-				
-				this.storage = await nodeInt.getAllData(this.dapp, state.network.server);
-				this.isLogin = true;
-				this.isReg = await nodeInt.checkReg(this.storage, state.account.address, this.dapp, state.network.server);
-				
-				console.log(this.isReg)
-				if (this.isReg) {
-					this.cookies.set('address', this.getUserAddress, { path: '/' });
-					this.cookies.set('network', this.getUserNetwork, { path: '/' });
-					let userDataFromDapp = await nodeInt.getUserData(this.storage, state.account.address, this.dapp, state.network.server);
-					if (userDataFromDapp) {
-						this.name = userDataFromDapp.name;
-						this.root.settings.setName(this.name)
-						this.socials = userDataFromDapp.socials;
-						this.root.settings.setSocials(this.socials)
-						this.bio = userDataFromDapp.bio;
-						this.root.settings.setBio(this.bio)
-						this.status = userDataFromDapp.status;
-						this.createTime = userDataFromDapp.createTime;
-						this.tags = userDataFromDapp.tags;
-						this.root.settings.setTags(this.tags)
-						this.avatar = userDataFromDapp.avatar
-						this.root.settings.setAvatar(this.avatar)
-						this.location = userDataFromDapp.location
-						this.root.settings.setLocation(this.location)
-						console.log("userData success")
-					} else {
-						console.log('userData kick')
-					}
-				} else {
-					console.log('User not signup')
-				}
-				await this.root.tasks.loadTasks(this.isUserLogin, this.getDapp, this.getUserNetwork)
-			})
+					await this.getState()
+				})
 			} else {
 				alert("To Auth WavesKeeper should be installed.");
 			}
@@ -156,10 +89,58 @@ class UserStore {
 		}
 	}
 
+	async getState () {
+		this.online = true
+		this.wavesKeeper = WavesKeeper;
+		const state = await WavesKeeper.publicState();
+		
+		this.address = state.account.address;
+		this.balance = state.account.balance.available;
+		this.network = state.network.server;
+		this.userData = state;
+		
+		this.storage = await nodeInt.getAllData(this.dapp, state.network.server);
+		this.isLogin = true;
+		this.isReg = await nodeInt.checkReg(this.storage, state.account.address, this.dapp, state.network.server);
+		
+		console.log(this.isReg)
+		if (this.isReg) {
+			this.cookies.set('address', this.getUserAddress, { path: '/' });
+			this.cookies.set('network', this.getUserNetwork, { path: '/' });
+			let userDataFromDapp = await nodeInt.getUserData(this.storage, state.account.address, this.dapp, state.network.server);
+			if (userDataFromDapp) {
+				this.name = userDataFromDapp.name;
+				this.root.settings.setName(this.name)
+				this.socials = userDataFromDapp.socials;
+				this.root.settings.setSocials(this.socials)
+				this.bio = userDataFromDapp.bio;
+				this.root.settings.setBio(this.bio)
+				this.status = userDataFromDapp.status;
+				this.createTime = userDataFromDapp.createTime;
+				this.tags = userDataFromDapp.tags;
+				this.root.settings.setTags(this.tags)
+				this.avatar = userDataFromDapp.avatar
+				this.root.settings.setAvatar(this.avatar)
+				this.location = userDataFromDapp.location
+				this.root.settings.setLocation(this.location)
+				console.log("userData success")
+			} else {
+				console.log('userData kick')
+			}
+		} else {
+			console.log('User not signup')
+		}
+		await this.root.tasks.loadTasks(this.isUserLogin, this.getDapp, this.getUserNetwork)
+	}
+
+	async actionAfterSignup () {
+		this.getState ()
+	}
 	@action("sign out")
 	signOut() {
 		console.log('sign out')
 		this.isLogin = false;
+		this.online = false;
 		this.address = "";
 		this.balance;
 		this.network = "";
@@ -187,6 +168,10 @@ class UserStore {
 	}
 	@computed get isUserLogin() {
 		return this.isLogin
+	}
+
+	@computed get isUserOnline() {
+		return this.online
 	}
 	
 	@computed get getUserAddress() {

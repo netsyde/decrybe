@@ -89,9 +89,9 @@ const Signup = props => {
       let signTx = await dAppInt.signUp(data, rootStore.user.getWavesKeeper)
       console.log(signTx)
       if (signTx) {
-        rootStore.user.login()
+        rootStore.user.actionAfterSignup()
       } else {
-        console.log('oleg')
+        console.log('tx err')
       }
       handleClose()
     } else {
