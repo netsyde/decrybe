@@ -27,6 +27,22 @@ class TasksStore {
 			console.log('user not login')
 		}
 	}
+
+	async updateTasks(isLogin, dapp, network) {
+		if (isLogin) {
+			let allTasksData = await nodeInt.getTasksAllData(this.root.user.getStorage, dapp, network)
+			console.log('tasks loaded')
+			if (allTasksData) {
+				this.allTasksData = allTasksData
+			} else {
+				console.log('allTasksData is false')
+			}
+			
+		} else {
+			console.log('user not login')
+		}
+	}
+
 	@action
 	addTask(data: Object) {
 		this.allTasksData.push(data)

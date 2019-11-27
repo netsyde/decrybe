@@ -20,9 +20,18 @@ const useStyles = makeStyles(theme => ({
     marginLeft: theme.spacing(1)
   },
   logo: {
-    width: 206,
+    //paddingLeft: 21,
+    width: 150,
     display: "flex"
+  },
+  logoLink: {
+    /*
+    width: 256,
+    display: 'flex',
+    justifyContent: "center"
+    */
   }
+  
 }));
 
 const CustomRouterLink = forwardRef((props, ref) => (
@@ -47,7 +56,7 @@ const Topbar = props => {
     >
       <Toolbar>
         <BrowserRouter>
-          <RouterLink to="/">
+          <RouterLink className={classes.logoLink} to="/">
             <img
               alt="Logo"
               src="/img/decrybe.png"

@@ -24,7 +24,7 @@ const Header = observer((props) => {
   const classes = useStyles(1);
 
   const handleUpdate = async () => {
-    await rootStore.tasks.loadTasks(rootStore.user.isUserLogin, rootStore.user.getDapp, rootStore.user.getUserNetwork)
+    await rootStore.user.updateStorage()
     
   };
   

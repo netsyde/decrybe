@@ -20,10 +20,16 @@ class RootStore {
 
 let rootStore = new RootStore()
 
-autorun(() => {
+autorun(async () => {
 	if (rootStore.user.checkSession()) {
-    rootStore.user.restoreSession()
+    if (typeof WavesKeeper !== 'undefined') {
+      let keeperApi = await WavesKeeper.initialPromise
+      if (keeperApi) {
+        rootStore.user.restoreSession();
+      }
+      
   }
+}
 });
 
 export default rootStore;

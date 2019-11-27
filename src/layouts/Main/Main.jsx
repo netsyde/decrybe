@@ -1,6 +1,5 @@
 import React, { useState, Suspense } from 'react';
-import PropTypes from 'prop-types';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import { NavBar, Topbar} from './components';
 import { Provider, observer, inject } from 'mobx-react';
 import Signup  from './components/Signup'
@@ -39,6 +38,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const RegisterModal = inject('rootStore')(observer(({ rootStore }) => {
+  console.log('reg modal')
   if (rootStore.user.isUserLogin) {
     if (rootStore.user.isUserReg == false) {
       return <Signup rootStore={rootStore}/>
@@ -52,7 +52,7 @@ const RegisterModal = inject('rootStore')(observer(({ rootStore }) => {
   }
 }))
 
-const Main = props => {
+const Main = observer((props) => {
   const { route } = props; // children
 
   const classes = useStyles(1);
@@ -82,7 +82,6 @@ const Main = props => {
         />
         <main className={classes.content}>
           <Suspense fallback={<LinearProgress />}>
-            {/*children*/}
             {renderRoutes(route.routes)}
           </Suspense>
         </main>
@@ -90,6 +89,6 @@ const Main = props => {
     </div>
     </Provider>
   );
-};
+});
 
 export default Main;

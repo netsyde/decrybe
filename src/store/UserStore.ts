@@ -27,39 +27,53 @@ class UserStore {
 
 	@action('restore session')
 	async restoreSession() {
-		let address = this.cookies.get("address")
-		let nodeUrl = this.cookies.get("network")
-		this.setUserNetwork(nodeUrl)
-		this.setUserAddress(address)
-		console.log('restore session')
-		this.wavesKeeper = WavesKeeper;
+		try {
+			if (WavesKeeper) {
+				let address = this.cookies.get("address")
+				let nodeUrl = this.cookies.get("network")
+				this.setUserNetwork(nodeUrl)
+				this.setUserAddress(address)
+				console.log('restore session')
 		
-		this.storage = await nodeInt.getAllData(this.dapp, nodeUrl);
-		this.isLogin = true;
-		this.isReg = await nodeInt.checkReg(this.storage, address, this.dapp, nodeUrl);
-		if (this.isReg) {
-			let userDataFromDapp = await nodeInt.getUserData(this.storage, address, this.dapp, nodeUrl);
-			if (userDataFromDapp) {
-				this.name = userDataFromDapp.name;
-				this.root.settings.setName(this.name)
-				this.socials = userDataFromDapp.socials;
-				this.root.settings.setSocials(this.socials)
-				this.bio = userDataFromDapp.bio;
-				this.root.settings.setBio(this.bio)
-				this.status = userDataFromDapp.status;
-				this.createTime = userDataFromDapp.createTime;
-				this.tags = userDataFromDapp.tags;
-				this.root.settings.setTags(this.tags)
-				this.avatar = userDataFromDapp.avatar
-				this.root.settings.setAvatar(this.avatar)
-				this.location = userDataFromDapp.location
-				this.root.settings.setLocation(this.location)
-				console.log("userData success")
+				this.wavesKeeper = WavesKeeper;
+				//console.log(state)
+				
+				this.storage = await nodeInt.getAllData(this.dapp, nodeUrl);
+				this.isLogin = true;
+				this.isReg = await nodeInt.checkReg(this.storage, address, this.dapp, nodeUrl);
+				if (this.isReg) {
+					let userDataFromDapp = await nodeInt.getUserData(this.storage, address, this.dapp, nodeUrl);
+					if (userDataFromDapp) {
+						this.name = userDataFromDapp.name;
+						this.root.settings.setName(this.name)
+						this.socials = userDataFromDapp.socials;
+						this.root.settings.setSocials(this.socials)
+						this.bio = userDataFromDapp.bio;
+						this.root.settings.setBio(this.bio)
+						this.status = userDataFromDapp.status;
+						this.createTime = userDataFromDapp.createTime;
+						this.tags = userDataFromDapp.tags;
+						this.root.settings.setTags(this.tags)
+						this.avatar = userDataFromDapp.avatar
+						this.root.settings.setAvatar(this.avatar)
+						this.location = userDataFromDapp.location
+						this.root.settings.setLocation(this.location)
+						console.log("userData success")
+					} else {
+						console.log('userData kick')
+					}
+				}
+				await this.root.tasks.loadTasks(this.isUserLogin, this.getDapp, nodeUrl)
 			} else {
-				console.log('userData kick')
+				alert("To Auth WavesKeeper should be installed.");
+			}
+		} catch (e) {
+			if (e.message == "WavesKeeper is not defined") {
+				alert("To Auth WavesKeeper should be installed.");
+			} else {
+				console.log(`ERROR in UserStore.login! ${e.name}: ${e.message}\n${e.stack}`);
 			}
 		}
-		await this.root.tasks.loadTasks(this.isUserLogin, this.getDapp, nodeUrl)
 	}
 
 	checkSession() {
@@ -71,6 +85,11 @@ class UserStore {
 		} else {
 			return false
 		}
+	}
+	@action("login")
+	async updateStorage () {
+		console.log('storage update')
+		this.storage = await nodeInt.getAllData(this.dapp, this.network);
 	}
 
 	@action("login")

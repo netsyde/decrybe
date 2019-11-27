@@ -107,7 +107,7 @@ const TaskCreate = inject('rootStore')(observer(({ rootStore }) => {
               avatar: rootStore.user.getUserAvatar,
               name: rootStore.user.getUserName,
             }
-            rootStore.tasks.addTask(data)
+            await rootStore.user.updateStorage()
           }
   }
   if (rootStore.user.isUserLogin && rootStore.user.isUserReg) {
