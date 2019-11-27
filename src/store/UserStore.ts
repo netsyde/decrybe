@@ -88,8 +88,9 @@ class UserStore {
 	}
 	@action("login")
 	async updateStorage () {
-		console.log('storage update')
 		this.storage = await nodeInt.getAllData(this.dapp, this.network);
+		await this.root.tasks.loadTasks(this.isUserLogin, this.getDapp, this.getUserNetwork)
+		console.log('storage update')
 	}
 
 	@action("login")
