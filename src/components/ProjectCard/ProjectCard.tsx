@@ -92,6 +92,11 @@ function validate (str, trim) {
   
 }
 
+function httpsFix(str) {
+  str = str.replace('http://', 'https://')
+  return str;
+
+}
 const ProjectCard = props => {
   const { project, rootStore, className, ...rest } = props;
 
@@ -117,7 +122,7 @@ const ProjectCard = props => {
         avatar={
           <Avatar
             alt="Author"
-            src={project.author.avatar || "/img/gag.png"}
+            src={httpsFix(project.author.avatar) || "/img/gag.png"}
             imgProps={{ onError: handleBrokenImage }}
           >
             {project.author ? getInitials(project.author.name) : ""}

@@ -33,6 +33,12 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+function httpsFix(str) {
+  str = str.replace('http://', 'https://')
+  return str;
+
+}
+
 const HolderContainer = props => {
   const { project, className, rootStore, ...rest } = props;
 
@@ -50,7 +56,7 @@ const HolderContainer = props => {
             alt="Author"
             className={classes.avatar}
             component={RouterLink}
-            src={project.author.avatar || "/img/gag.png"}
+            src={httpsFix(project.author.avatar) || "/img/gag.png"}
             imgProps={{ onError: handleBrokenImage }}
             to={`/profile/${project.author ? project.author.address : "undefined"}`}
           >

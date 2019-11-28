@@ -32,11 +32,17 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+function httpsFix(str) {
+  str = str.replace('http://', 'https://')
+  return str;
+
+}
+
 const ProfileDetails = observer((props) => {
   const { profile, className, rootStore, ...rest } = props;
 
   const classes = useStyles(props);
-
+  const handleBrokenImage = e => (e.target.src = "/img/gag.png");
   return (
     <Card
       {...rest}
@@ -45,7 +51,8 @@ const ProfileDetails = observer((props) => {
       <CardContent className={classes.content}>
         <Avatar
           className={classes.avatar}
-          src={rootStore.settings.getAvatar ? rootStore.settings.getAvatar : ""}
+          src={rootStore.settings.getAvatar ? httpsFix(rootStore.settings.getAvatar) : "/img/gag.png"}
+          imgProps={{ onError: handleBrokenImage }}
         />
         <Typography
           className={classes.name}

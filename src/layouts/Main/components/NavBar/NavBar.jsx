@@ -43,6 +43,12 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+function httpsFix(str) {
+  str = str.replace('http://', 'https://')
+  return str;
+
+}
+
 const User = inject('rootStore')(observer(({ rootStore }) => {
   const handleBrokenImage = e => (e.target.src = "/img/gag.png");
   const classes = useStyles(1);
@@ -52,7 +58,7 @@ const User = inject('rootStore')(observer(({ rootStore }) => {
       alt="Person"
       className={classes.avatar}
       component={RouterLink}
-      src={rootStore.user.getUserAvatar || "/img/gag.png"}
+      src={httpsFix(rootStore.user.getUserAvatar) || "/img/gag.png"}
       imgProps={{ onError: handleBrokenImage }}
       to={`/profile/${rootStore.user.getUserAddress}`}
     />
