@@ -7,11 +7,17 @@ import ChatIcon from '@material-ui/icons/ChatOutlined';
 import { Label } from '../../../../components'
 import { colors } from '@material-ui/core';
 import ViewModuleIcon from '@material-ui/icons/ViewModule';
+import HomeIcon from '@material-ui/icons/HomeOutlined';
 
 export default [
   {
     title: 'Pages',
     pages: [
+      {
+        title: 'Overview',
+        href: '/overview',
+        icon: HomeIcon
+      },
       {
         title: 'Tasks',
         href: '/tasks',
@@ -59,7 +65,7 @@ export default [
         title: 'Changelog',
         href: '/changelog',
         icon: ViewModuleIcon,
-        label: () => <Label color={colors.blue['500']}>v0.3.3</Label>
+        label: () => <Label color={colors.blue['500']}>v0.3.4</Label>
       }
     ]
   }

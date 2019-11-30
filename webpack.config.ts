@@ -59,6 +59,6 @@ module.exports = {
 		]
 	},
 	plugins: [
-		new HardSourceWebpackPlugin()
+		//new HardSourceWebpackPlugin()
 	]
 };

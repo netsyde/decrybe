@@ -161,6 +161,16 @@ class TaskCreateStore {
 	@computed get getFreelancers() {
 		return this.freelancers
 	}
+
+	@action("Clean task creator")
+	clean () {
+		this.setTitle("")
+		this.setPrice(1);
+		this.setCategory("");
+		this.endDate = Date.now() + 84000 * 1000;
+		this.setBriefDescription("");
+
+	}
 }
 
 export { TaskCreateStore }

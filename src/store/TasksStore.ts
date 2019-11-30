@@ -5,6 +5,7 @@ import {RootStore} from './RootStore'
 class TasksStore {
 	@observable allTasksIds
 	@observable allTasksData
+	@observable length
 	@observable taskData
 	@observable currentTask
 	@observable filteredTasks
@@ -16,9 +17,11 @@ class TasksStore {
 	async loadTasks(isLogin, dapp, network) {
 		if (isLogin) {
 			let allTasksData = await nodeInt.getTasksAllData(this.root.user.getStorage, dapp, network)
+			
 			console.log('tasks loaded')
 			if (allTasksData) {
 				this.allTasksData = allTasksData
+				this.length = allTasksData.length
 			} else {
 				console.log('allTasksData is false')
 			}
@@ -85,6 +88,10 @@ class TasksStore {
 
 	@computed get getTasks () {
 		return this.allTasksData;
+	}
+
+	@computed get getLength () {
+		return this.length;
 	}
 
 	@computed get getAllTasksIds () {

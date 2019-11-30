@@ -1,5 +1,16 @@
 ### V0.3.3
 
+###### 30-11-2019
+
+#### New
+
+- Added `Overview` page
+- Added users storage for a future community tab
+- Added snackbars to `Task Create` page
+- Added redirect to `Task Overview` after create the task
+- Some fixes
+### V0.3.3
+
 ###### 28-11-2019
 
 #### New
@@ -9,6 +20,7 @@
 - Now if you have not registered, the settings page is not available
 - Updated logo
 - And other fixes and improvements
+
 ### V0.3.2
 
 ###### 25-11-2019

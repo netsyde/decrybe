@@ -131,6 +131,7 @@ class UserStore {
 			console.log('User not signup')
 		}
 		await this.root.tasks.loadTasks(this.isUserLogin, this.getDapp, this.getUserNetwork)
+		await this.root.users.loadUsers(this.isUserLogin, this.getDapp, this.getUserNetwork)
 	}
 
 	async actionAfterSignup () {

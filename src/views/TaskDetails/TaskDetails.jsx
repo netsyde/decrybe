@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { Tabs, Tab, Divider, colors } from '@material-ui/core';
 import { Header, Overview } from './components';
@@ -8,7 +7,6 @@ import { observer, inject } from 'mobx-react';
 
 import { Page } from '../../components'
 import Error401 from '../Error401'
-import * as nodeInt from '../../modules/nodeInt'
 const useStyles = makeStyles(theme => ({
   root: {
     width: theme.breakpoints.values.lg,

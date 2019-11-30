@@ -8,3 +8,4 @@ export { default as Settings } from './Settings';
 export { default as Error401 } from './Error401';
 export { default as Chat } from './Chat';
 export { default as Changelog } from './Changelog';
+export { default as Overview } from './Overview';

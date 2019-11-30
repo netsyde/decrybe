@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import clsx from 'clsx';
-import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
-import { observer, inject } from 'mobx-react';
+import { observer } from 'mobx-react';
 import {
   Button,
   Card,
@@ -11,9 +10,7 @@ import {
   CardHeader,
   Grid,
   Divider,
-  Switch,
   TextField,
-  Typography,
   colors
 } from '@material-ui/core';
 import { userUpdate } from '../../../../../../modules/dAppInt'
@@ -96,8 +93,6 @@ const GeneralSettings = observer((props) => {
   const handleSnackbarClose = () => {
     setOpenSnackbar(false);
   };
-
-  const states = ['Alabama', 'New York', 'San Francisco'];
 
   return (
     <Card

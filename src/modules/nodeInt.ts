@@ -289,6 +289,34 @@ export let getTasksAllData = async (alldata, dAppAddress: String, nodeUrl: Strin
 
 //getTasksAllData(dApp, nodeUrl)
 
+/**
+ * Return task data
+ * @param id - task id
+ * @param dAppAddress - dApp address
+ * @param nodeUrl - node url
+ * @returns {Object}
+ */
+
+export let getUsersAllData = async (alldata, dAppAddress: String, nodeUrl: String) => {
+    try {
+        let allUsers = await getAllUsers(alldata, dAppAddress, nodeUrl)
+        let users = [];
+        if (allUsers) {
+            for(let i = 0; i < allUsers.length; i++) {
+                let userData = await getUserData(alldata, allUsers[i], dAppAddress, nodeUrl)
+                users.push(userData)
+            }
+            //console.log(tasks)
+            return users;
+        } else {
+            return false;
+        }
+    } catch (e) {
+        console.log(`ERROR in nodeInt.getTasksAllData! ${e.name}: ${e.message}\n${e.stack}`);
+        return false;
+    }
+}
+
 function getRandomArbitary(min, max) {
     let rand = Math.random() * (max - min) + min;
     return rand.toFixed(0)

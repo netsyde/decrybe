@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { Snackbar, SnackbarContent, colors } from '@material-ui/core';
 import CheckCircleIcon from '@material-ui/icons/CheckCircleOutlined';
@@ -40,7 +39,6 @@ const SuccessSnackbar = props => {
             Successfully saved changes!
           </span>
         }
-        //variant="h6"
       />
     </Snackbar>
   );

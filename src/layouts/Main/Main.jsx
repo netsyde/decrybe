@@ -1,12 +1,13 @@
 import React, { useState, Suspense } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { NavBar, Topbar} from './components';
+import { NavBar, Topbar } from './components';
 import { Provider, observer, inject } from 'mobx-react';
 import Signup  from './components/Signup'
 import rootStore from '../../store/RootStore'
 import { LinearProgress } from '@material-ui/core';
 const stores = { rootStore };
 import { renderRoutes } from 'react-router-config';
+import { Snackbar } from '../../components'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -66,6 +67,7 @@ const Main = observer((props) => {
   const handleNavBarMobileClose = () => {
     setOpenNavBarMobile(false);
   };
+  
   return (
     <Provider { ...stores }>
       <div className={classes.root}>

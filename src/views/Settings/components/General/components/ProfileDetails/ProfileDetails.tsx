@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import {
@@ -10,7 +9,7 @@ import {
   Typography,
   Button
 } from '@material-ui/core';
-import { observer, inject } from 'mobx-react';
+import { observer } from 'mobx-react';
 
 const useStyles = makeStyles(theme => ({
   root: {},

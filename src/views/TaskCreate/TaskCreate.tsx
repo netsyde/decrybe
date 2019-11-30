@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
 import { Page } from '../../components'
@@ -10,7 +10,9 @@ import {
 } from './components';
 import Error401 from '../Error401'
 const uuid = require('uuid/v4');
-import { ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
+import { ValidatorForm } from 'react-material-ui-form-validator';
+import { CustomSnackbar } from '../../components'
+import { Redirect } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -49,6 +51,19 @@ const TaskCreate = inject('rootStore')(observer(({ rootStore }) => {
       return false
     }
   }
+  const [taskCreated, setTaskCreated] = useState(false);
+  const [task, setTask] = useState('');
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarType, setSnackbarType] = useState("")
+  const handleSnackbarClose = () => {
+    setOpenSnackbar(false);
+  };
+  const createSnackbar = (type, message) => {
+    setSnackbarMessage(message)
+    setSnackbarType(type)
+    setOpenSnackbar(true);
+  }
 
   const handleSubmit = event => {
     event.preventDefault();
@@ -62,10 +77,7 @@ const TaskCreate = inject('rootStore')(observer(({ rootStore }) => {
       currency: ${len(store.getCurrency)}; author: ${len(store.getAuthor)}; status: ${len(store.getStatus)}`)
       createTask()
     } else {
-      console.log(`title: ${len(store.getTitle)}; price: ${store.getPrice}; category: ${store.getCategory}
-      endDate: ${store.getEndDate}; brief: ${len(store.getBriefDescription)}; tags: ${len(store.getTags)}; desc: ${len(store.getDescription)};
-      currency: ${len(store.getCurrency)}; author: ${len(store.getAuthor)}; status: ${len(store.getStatus)}`)
-      
+      createSnackbar('info', 'You have not filled in all the fields')
     }
   
   };
@@ -99,16 +111,23 @@ const TaskCreate = inject('rootStore')(observer(({ rootStore }) => {
             description: store.getDescription,
             category: store.getCategory
           }
+        
           let tx = await dAppInt.createTask(taskId, expiration, data, rootStore.user.getWavesKeeper)
           
           if (tx) {
-            data.author = {
-              address: rootStore.user.getUserAddress,
-              avatar: rootStore.user.getUserAvatar,
-              name: rootStore.user.getUserName,
-            }
+            createSnackbar('success', 'Task successfully created!')
+            rootStore.taskCreate.clean();
             await rootStore.user.updateStorage()
+            setTask(taskId)
+            setTaskCreated(true)
+            
+          } else {
+            createSnackbar('error', 'Error: transaction is rejected')
           }
+  }
+  if (taskCreated) {
+    console.log('taskCreated')
+    return <Redirect to={`/tasks/${task}/overview`} />
   }
   if (rootStore.user.isUserLogin && rootStore.user.isUserReg) {
     return (
@@ -130,6 +149,12 @@ const TaskCreate = inject('rootStore')(observer(({ rootStore }) => {
             </Button>
           </div>
         </ValidatorForm>
+        <CustomSnackbar
+          onClose={handleSnackbarClose}
+          open={openSnackbar}
+          message={snackbarMessage}
+          type={snackbarType}
+        />
       </Page>
     );
   } else {

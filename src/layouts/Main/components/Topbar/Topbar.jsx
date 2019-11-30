@@ -1,7 +1,6 @@
 import React, { useState, forwardRef } from 'react';
 import { Link as RouterLink, BrowserRouter } from 'react-router-dom';
 import clsx from 'clsx';
-import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { AppBar, Toolbar, Badge, Hidden, IconButton } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -74,15 +73,6 @@ const Topbar = props => {
           >
             Create Task
           </Button>
-          <IconButton color="inherit">
-            <Badge
-              badgeContent={notifications.length}
-              color="primary"
-              variant="dot"
-            >
-              <NotificationsIcon />
-            </Badge>
-          </IconButton>
           <Login />
         </Hidden>
         <Hidden lgUp>

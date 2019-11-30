@@ -8,12 +8,17 @@ const routes = [
   {
     path: '/',
     exact: true,
-    component: () => <Redirect to="/tasks" />
+    component: () => <Redirect to="/overview" />
   },
   {
     route: '*',
     component: MainLayout,
     routes: [
+      {
+        path: '/overview',
+        exact: true,
+        component: lazy(() => import('./views/Overview'))
+      },
       {
         path: '/tasks/create',
         exact: true,

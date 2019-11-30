@@ -164,7 +164,8 @@ const Signup = props => {
 						label="Avatar"
 						className={classes.textField}
 						value={values.avatar}
-						onChange={handleChange('avatar')}
+            onChange={handleChange('avatar')}
+            helperText="Please enter only https link"
 						margin="normal"
 					/>
 				</DialogContent>
