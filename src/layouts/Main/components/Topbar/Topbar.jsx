@@ -65,14 +65,14 @@ const Topbar = props => {
         </BrowserRouter>
         <div className={classes.flexGrow} />
         <Hidden mdDown>
-          <Button
+          {/*<Button
             variant="contained"
             color="primary"
             component={CustomRouterLink}
             to="/tasks/create"
           >
             Create Task
-          </Button>
+          </Button>*/}
           <Login />
         </Hidden>
         <Hidden lgUp>

@@ -3,12 +3,26 @@
 import React, { lazy } from 'react';
 import { Redirect } from 'react-router-dom';
 import { Main as MainLayout } from './layouts';
-
+import { Auth as AuthLayout } from './layouts'
 const routes = [
   {
     path: '/',
     exact: true,
     component: () => <Redirect to="/overview" />
+  },
+  {
+    path: '/register_undef',
+    component: AuthLayout,
+    routes: [
+      {
+        path: '/register_undef',
+        exact: true,
+        component: lazy(() => import('./views/Register'))
+      },
+      {
+        component: () => <Redirect to="/404" />
+      }
+    ]
   },
   {
     route: '*',
