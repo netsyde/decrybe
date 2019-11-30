@@ -83,6 +83,7 @@ const GeneralSettings = observer((props) => {
       rootStore.user.setUserTags(data.tags)
       rootStore.user.setUserSocials(data.socials)
       rootStore.user.setUserAvatar(data.avatar)
+      rootStore.user.updateStorage()
 
 
     } else {
