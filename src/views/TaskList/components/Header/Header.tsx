@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Typography, Grid, Button } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import UpdateIcon from '@material-ui/icons/Update';
-import { observer, inject } from 'mobx-react';
+import { observer } from 'mobx-react';
 
 
 const useStyles = makeStyles(theme => ({

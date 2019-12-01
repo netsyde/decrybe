@@ -34,8 +34,10 @@ autorun(async () => {
         rootStore.user.restoreSession();
       }
       
+    } else {
+      console.log('Waves Keeper is undefined')
+    }
   }
-}
 });
 
 export default rootStore;

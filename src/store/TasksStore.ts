@@ -1,10 +1,10 @@
-import { observable, action, computed } from "mobx"
+import { observable, action, computed, toJS } from "mobx"
 import * as nodeInt from '../modules/nodeInt'
 import {RootStore} from './RootStore'
 
 class TasksStore {
 	@observable allTasksIds
-	@observable allTasksData
+	@observable allTasksData = []
 	@observable length
 	@observable taskData
 	@observable currentTask
@@ -20,7 +20,8 @@ class TasksStore {
 			
 			console.log('tasks loaded')
 			if (allTasksData) {
-				this.allTasksData = allTasksData
+				this.allTasksData = allTasksData;
+				console.log(this.getFilteredTasks)
 				this.length = allTasksData.length
 			} else {
 				console.log('allTasksData is false')
@@ -34,6 +35,7 @@ class TasksStore {
 	async updateTasks(isLogin, dapp, network) {
 		if (isLogin) {
 			let allTasksData = await nodeInt.getTasksAllData(this.root.user.getStorage, dapp, network)
+			console.log(allTasksData)
 			console.log('tasks loaded')
 			if (allTasksData) {
 				this.allTasksData = allTasksData
@@ -72,11 +74,17 @@ class TasksStore {
 		this.filteredTasks = tasks;
 	};
 
+	@action
+	setAllTasksData = data => {
+		this.allTasksData = data;
+	};
+
+
 	@computed get getFilteredTasks () {
 		if (this.filteredTasks) {
-			return this.filteredTasks;
+			return toJS(this.filteredTasks);
 		} else {
-			return this.allTasksData;
+			return toJS(this.allTasksData);
 		}
 	}
 

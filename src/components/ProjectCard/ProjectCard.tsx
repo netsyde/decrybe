@@ -189,10 +189,10 @@ const ProjectCard = props => {
               </div>
               <Typography variant="body2">Per Task</Typography>
             </Grid>
-            <Grid item>
+            {/*<Grid item>
               <Typography variant="h5">{project.status ? project.status : "undefined"}</Typography>
               <Typography variant="body2">Status</Typography>
-            </Grid>
+            </Grid>*/}
             <Grid item>
               <Typography variant="h5">{project.category ? project.category.name : "undefined"}</Typography>
               <Typography variant="body2">Category</Typography>

@@ -12,7 +12,7 @@ import {
 } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import SearchIcon from '@material-ui/icons/Search';
-import { observer, inject } from 'mobx-react';
+import { observer } from 'mobx-react';
 
 import { MultiSelect } from './components';
 
@@ -44,6 +44,9 @@ const useStyles = makeStyles(theme => ({
   },
   inNetwork: {
     marginLeft: 'auto'
+  },
+  inputSearch: {
+    width: "100%"
   }
 }));
 
@@ -127,43 +130,9 @@ const Filter = observer((props) => {
         <Input
           disableUnderline
           onChange={handleInputChange}
-          //onKeyUp={handleInputKeyup}
           placeholder="Search a task"
           value={inputValue}
-        />
-      </div>
-      <Divider />
-      <div className={classes.chips}>
-        {chips.map(chip => (
-          <Chip
-            className={classes.chip}
-            deleteIcon={<CloseIcon />}
-            key={chip}
-            label={chip}
-            onDelete={() => handleChipDelete(chip)}
-          />
-        ))}
-      </div>
-      <Divider />
-      <div className={classes.selects}>
-        {selects.map(select => (
-          <MultiSelect
-            key={select.label}
-            label={select.label}
-            onChange={handleMultiSelectChange}
-            options={select.options}
-            value={chips}
-          />
-        ))}
-        <FormControlLabel
-          className={classes.inNetwork}
-          control={
-            <Checkbox
-              color="primary"
-              defaultChecked //
-            />
-          }
-          label="In network"
+          fullWidth
         />
       </div>
     </Card>

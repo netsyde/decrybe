@@ -8,9 +8,13 @@ const useStyles = makeStyles(theme => ({
   signOutButton: {
     marginLeft: theme.spacing(1)
   },
+  iconButton: {
+    paddingRight: 0
+  }
 }));
 
 const Login = inject('rootStore')(observer(({ rootStore }) => {
+  const classes = useStyles(1);
   if (!rootStore.user.isUserLogin) {
     return (
       <Button onClick={() => rootStore.user.login()} variant="contained" color="primary">Sign In</Button>
@@ -18,7 +22,7 @@ const Login = inject('rootStore')(observer(({ rootStore }) => {
   } else {
     if (rootStore.user.isUserReg) {
       return (
-        <IconButton color="inherit" onClick={() => rootStore.user.signOut()}>
+        <IconButton className={classes.iconButton} color="inherit" onClick={() => rootStore.user.signOut()}>
           <InputIcon />
         </IconButton>
       )

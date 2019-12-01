@@ -93,6 +93,25 @@ const ProjectsGrig = (props) => {
     )
   }
 }
+
+function compareNumeric(a, b) {
+  if (Number(a.createTime) > Number(b.createTime)) return -1;
+  if (Number(a.createTime) == Number(b.createTime)) return 0;
+  if (Number(a.createTime) < Number(b.createTime)) return 1;
+}
+
+function definePriceHigh(a, b) {
+  if (Number(a.price) > Number(b.price)) return -1;
+  if (Number(a.price) == Number(b.price)) return 0;
+  if (Number(a.price) < Number(b.price)) return 1;
+}
+
+function definePriceLow(a, b) {
+  if (a.price > b.price) return 1;
+  if (a.price == b.price) return 0;
+  if (a.price < b.price) return -1;
+}
+
 const ProjectsContainer = observer((props) => {
   const { className, rootStore, ...rest } = props;
 
@@ -101,8 +120,7 @@ const ProjectsContainer = observer((props) => {
   const [openSort, setOpenSort] = useState(false);
   const [selectedSort, setSelectedSort] = useState('Most popular');
   const [mode, setMode] = useState('grid');
-  const [projects, setProjects] = useState([]);
-
+  const [offset, setOffset] = useState(0)
   const handleSortOpen = () => {
     setOpenSort(true);
   };
@@ -114,6 +132,17 @@ const ProjectsContainer = observer((props) => {
   const handleSortSelect = value => {
     setSelectedSort(value);
     setOpenSort(false);
+
+    if (value == "Most recent") {
+      let tasks = rootStore.tasks.getFilteredTasks.sort(compareNumeric)
+      rootStore.tasks.setFilteredTasks(tasks)
+    } else if (value == "Price high") {
+      let tasks = rootStore.tasks.getFilteredTasks.sort(definePriceHigh)
+      rootStore.tasks.setFilteredTasks(tasks)
+    } else if (value == "Price low") {
+      let tasks = rootStore.tasks.getFilteredTasks.sort(definePriceLow)
+      rootStore.tasks.setFilteredTasks(tasks)
+    }
   };
 
   const handleModeChange = (event, value) => {
@@ -123,6 +152,12 @@ const ProjectsContainer = observer((props) => {
   useEffect(() => {
     
   }, []);
+  const handlePageClick = data => {
+    let selected = data.selected;
+    let offset = Math.ceil(selected * 9);
+
+    setOffset(offset)
+  };
 
   return (
     <div
@@ -134,7 +169,7 @@ const ProjectsContainer = observer((props) => {
           className={classes.title}
           variant="h5"
         >
-          Showing {rootStore.tasks.getFilteredTasks ? rootStore.tasks.getFilteredTasks.length : 0} tasks
+          Showing {rootStore.tasks.getFilteredTasks ? rootStore.tasks.getFilteredTasks.slice(offset, offset+9).length : 0} tasks
         </Typography>
         <div className={classes.actions}>
           <Button
@@ -157,16 +192,16 @@ const ProjectsContainer = observer((props) => {
           </ToggleButtonGroup>
         </div>
       </div>
-      <ProjectsGrig classes={classes} mode={mode} projects={rootStore.tasks.getFilteredTasks} rootStore={rootStore}/>
+      <ProjectsGrig classes={classes} mode={mode} projects={rootStore.tasks.getFilteredTasks.slice(offset, offset+9)} rootStore={rootStore}/>
       <div className={classes.paginate}>
-        {/*<Paginate pageCount={3} />*/}
+        <Paginate pageCount={Math.ceil(rootStore.tasks.getFilteredTasks.length/9) || 1} onPageChange={handlePageClick}/>
       </div>
       <Menu
         anchorEl={sortRef.current}
         onClose={handleSortClose}
         open={openSort}
       >
-        {['Most recent', 'Popular', 'Price high', 'Price low', 'On sale'].map(
+        {['Most recent', 'Price high', 'Price low'].map(
           option => (
             <MenuItem
               key={option}
@@ -189,7 +224,7 @@ class Projects extends React.Component {
   }
 
   render() {
-    if (this.props.rootStore.user.isUserOnline) {
+    if (this.props.rootStore.user.isUserLogin) {
       return (
         <ProjectsContainer rootStore={this.props.rootStore} />
       )

@@ -104,13 +104,6 @@ const Paginate = props => {
   );
 };
 
-Paginate.propTypes = {
-  className: PropTypes.string,
-  onPageChange: PropTypes.func.isRequired,
-  pageCount: PropTypes.number.isRequired,
-  pageRangeDisplayed: PropTypes.number.isRequired
-};
-
 Paginate.defaultProps = {
   onPageChange: () => {},
   pageRangeDisplayed: 5

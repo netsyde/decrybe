@@ -1,3 +1,15 @@
+### V0.3.4
+
+###### 1-11-2019
+
+#### New
+
+- Improved tasks search, now you can display the latest tasks, sort by high and low price
+- Added a prototype of a new registration page (not available now)
+- Added pagination for `Task List` page
+- Updated header
+- Updated `Task Card`
+
 ### V0.3.3
 
 ###### 30-11-2019
@@ -9,6 +21,7 @@
 - Added snackbars to `Task Create` page
 - Added redirect to `Task Overview` after create the task
 - Some fixes
+
 ### V0.3.3
 
 ###### 28-11-2019
