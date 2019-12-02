@@ -71,7 +71,8 @@ const GeneralSettings = observer((props) => {
         twitter: rootStore.settings.getTwitter,
         github: rootStore.settings.getGithub
       },
-      avatar: rootStore.settings.getAvatar
+      avatar: rootStore.settings.getAvatar,
+      cover: rootStore.settings.getCover
 
     }
     let tx = await userUpdate(rootStore.user.getUserAddress, data, rootStore.user.getWavesKeeper)
@@ -89,6 +90,7 @@ const GeneralSettings = observer((props) => {
     } else {
       console.log('tx error')
     }
+  
   };
 
   const handleSnackbarClose = () => {
@@ -120,7 +122,7 @@ const GeneralSettings = observer((props) => {
                 name="name"
                 onChange={event => rootStore.settings.setName(event.target.value)}
                 required
-                value={rootStore.settings.getName}
+                value={rootStore.settings.getName || ""}
                 variant="outlined"
               />
             </Grid>
@@ -131,12 +133,12 @@ const GeneralSettings = observer((props) => {
             >
               <TextField
                 fullWidth
-                helperText="Please enter the link"
+                helperText="Please enter the https link"
                 label="Avatar"
                 name="avatar"
                 onChange={event => rootStore.settings.setAvatar(event.target.value)}
                 required
-                value={rootStore.settings.getAvatar}
+                value={rootStore.settings.getAvatar || ""}
                 variant="outlined"
               />
             </Grid>
@@ -151,7 +153,7 @@ const GeneralSettings = observer((props) => {
                 name="location"
                 onChange={event => rootStore.settings.setLocation(event.target.value)}
                 required
-                value={rootStore.settings.getLocation}
+                value={rootStore.settings.getLocation || ""}
                 variant="outlined"
               />
             </Grid>
@@ -168,7 +170,7 @@ const GeneralSettings = observer((props) => {
                 name="bio"
                 onChange={event => rootStore.settings.setBio(event.target.value)}
                 type="text"
-                value={rootStore.settings.getBio}
+                value={rootStore.settings.getBio || ""}
                 variant="outlined"
               />
             </Grid>
@@ -183,8 +185,9 @@ const GeneralSettings = observer((props) => {
                 name="telegram"
                 onChange={event => rootStore.settings.setTelegram(event.target.value)}
                 type="text"
-                value={rootStore.settings.getTelegram}
+                value={rootStore.settings.getTelegram || ""}
                 variant="outlined"
+                helperText="Please enter the link"
               />
             </Grid>
             <Grid
@@ -198,22 +201,40 @@ const GeneralSettings = observer((props) => {
                 name="twitter"
                 onChange={event => rootStore.settings.setTwitter(event.target.value)}
                 type="text"
-                value={rootStore.settings.getTwitter}
+                value={rootStore.settings.getTwitter || ""}
                 variant="outlined"
+                helperText="Please enter the link"
               />
-              </Grid>
-              <Grid
-                item
-                md={4}
-                xs={12}
-              >
+            </Grid>
+            <Grid
+              item
+              md={4}
+              xs={12}
+            >
               <TextField
                 fullWidth
                 label="Github"
                 name="github"
                 onChange={event => rootStore.settings.setGithub(event.target.value)}
                 type="text"
-                value={rootStore.settings.getGithub}
+                value={rootStore.settings.getGithub || ""}
+                variant="outlined"
+                helperText="Please enter the link"
+              />
+            </Grid>
+            <Grid
+              item
+              md={12}
+              xs={12}
+            >
+              <TextField
+                fullWidth
+                helperText="Please enter the https link"
+                label="Profile cover"
+                name="profile_cover"
+                onChange={event => rootStore.settings.setCover(event.target.value)}
+                //required
+                value={rootStore.settings.getCover || ""}
                 variant="outlined"
               />
             </Grid>

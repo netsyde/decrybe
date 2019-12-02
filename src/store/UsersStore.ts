@@ -36,7 +36,17 @@ class UsersStore {
 
     @computed get getCount () {
         return this.count;
-    }
+	}
+	
+	async getTasks (id) {
+		let userTasks = await nodeInt.getAllUserTasks(this.root.user.getStorage, id, this.root.user.getDapp, this.root.user.getUserNetwork)
+		return userTasks
+	}
+
+	async getUserData (address) {
+		let userData = await nodeInt.getUserData(this.root.user.storage, address, this.root.user.getDapp, this.root.user.getUserNetwork);
+		return userData
+	} 
 }
 
 export { UsersStore }

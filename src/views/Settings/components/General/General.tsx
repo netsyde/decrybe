@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
-import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import { Grid } from '@material-ui/core';
 
@@ -14,30 +13,6 @@ const General = observer((props) => {
   const { className, rootStore, ...rest } = props;
 
   const classes = useStyles(props);
-  const [profile, setProfile] = useState(null);
-
-  useEffect(() => {
-    let mounted = true;
-
-    let data = {
-      avatar: rootStore.user.getUserAvatar,
-      canHire: false,
-      country: rootStore.user.getUserLocation,
-      email: 'shen.zhi@devias.io',
-      name: rootStore.user.getUserName,
-      isPublic: true,
-      lastName: 'Zhi',
-      phone: '+40 777666555',
-      state: 'Alabama',
-      timezone: '4:32PM (GMT-4)'
-    }
-
-    setProfile(data)
-  }, []);
-
-  if (!profile) {
-    return null;
-  }
 
   return (
     <Grid

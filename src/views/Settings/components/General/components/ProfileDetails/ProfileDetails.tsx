@@ -42,6 +42,7 @@ const ProfileDetails = observer((props) => {
 
   const classes = useStyles(props);
   const handleBrokenImage = e => (e.target.src = "/img/gag.png");
+
   return (
     <Card
       {...rest}
@@ -77,6 +78,7 @@ const ProfileDetails = observer((props) => {
         <Button
           className={classes.removeBotton}
           variant="text"
+          onClick={() => rootStore.settings.setAvatar('')}
         >
           Remove picture
         </Button>

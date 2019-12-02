@@ -1,3 +1,12 @@
+### V0.3.6
+
+###### 2-11-2019
+
+#### New
+
+- Add `Profile` page
+- Some settings fixes
+
 ### V0.3.5
 
 ###### 1-11-2019

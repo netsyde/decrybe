@@ -88,7 +88,6 @@ const Register = () => {
     >
       <Card className={classes.card}>
         <CardContent className={classes.content}>
-          <PersonAddIcon className={classes.icon} />
           <Typography
             gutterBottom
             variant="h3"
@@ -96,7 +95,7 @@ const Register = () => {
             Sign up
           </Typography>
           <Typography variant="subtitle2">
-            Sign up on the internal platform
+            Sign up on the Decrybe platform
           </Typography>
           <RegisterForm className={classes.registerForm} />
           <Divider className={classes.divider} />

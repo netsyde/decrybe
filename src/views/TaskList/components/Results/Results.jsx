@@ -118,7 +118,7 @@ const ProjectsContainer = observer((props) => {
   const classes = useStyles(1);
   const sortRef = useRef(null);
   const [openSort, setOpenSort] = useState(false);
-  const [selectedSort, setSelectedSort] = useState('Most popular');
+  const [selectedSort, setSelectedSort] = useState('Default');
   const [mode, setMode] = useState('grid');
   const [offset, setOffset] = useState(0)
   const handleSortOpen = () => {

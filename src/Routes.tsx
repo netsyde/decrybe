@@ -80,6 +80,16 @@ const routes = [
         component: lazy(() => import('./views/Changelog'))
       },
       {
+        path: '/profile/:id',
+        exact: true,
+        component: lazy(() => import('./views/Profile'))
+      },
+      {
+        path: '/profile/:id/:tab',
+        exact: true,
+        component: lazy(() => import('./views/Profile'))
+      },
+      {
         path: '/404',
         exact: true,
         component: lazy(() => import('./views/NotFound'))

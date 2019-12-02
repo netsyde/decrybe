@@ -130,7 +130,7 @@ const Filter = observer((props) => {
         <Input
           disableUnderline
           onChange={handleInputChange}
-          placeholder="Search a task"
+          placeholder="Search"
           value={inputValue}
           fullWidth
         />

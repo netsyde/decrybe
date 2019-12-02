@@ -164,15 +164,16 @@ export let getUserData = async (alldata, address: String, dAppAddress: String, n
         if (userData) {
             userData = JSON.parse(userData)
             let userDataObj = {
-                name: userData.name ? userData.name : "",
-                socials: userData.socials ? userData.socials : "",
-                bio: userData.bio ? userData.bio : "",
-                status: userData.status ? userData.status: "",
-                createTime: userData.createTime ? userData.createTime : "",
-                tags: userData.tags ? userData.tags : "",
-                avatar: userData.avatar ? userData.avatar : "",
+                name: "name" in userData ? userData.name : "",
+                socials: "socials" in userData ? userData.socials : "",
+                bio: "bio" in userData ? userData.bio : "",
+                status: "status" in userData ? userData.status: "",
+                createTime: "createTime" in userData ? userData.createTime : "",
+                tags: "tags" in userData ? userData.tags : "",
+                avatar: "avatar" in userData ? userData.avatar : "",
                 address: address,
-                location: userData.location ? userData.location : "",
+                location: "location" in userData ? userData.location : "",
+                cover: "cover" in userData ? userData.cover : "/img/cover.png"
             }
             return userDataObj;
         } else {
@@ -312,7 +313,24 @@ export let getUsersAllData = async (alldata, dAppAddress: String, nodeUrl: Strin
             return false;
         }
     } catch (e) {
-        console.log(`ERROR in nodeInt.getTasksAllData! ${e.name}: ${e.message}\n${e.stack}`);
+        console.log(`ERROR in nodeInt.getUsersAllData! ${e.name}: ${e.message}\n${e.stack}`);
+        return false;
+    }
+}
+
+export let getAllUserTasks = async (alldata, address, dAppAddress, nodeUrl) => {
+    try {
+        let data = await getTasksAllData(alldata, dAppAddress, nodeUrl)
+        //console.log(data)
+        const matchesFilter = new RegExp(address)
+        if (data) {
+            let filteredData = data.filter(task => matchesFilter.test(task.author.address))
+            return filteredData;
+        } else {
+            return false
+        }
+    } catch (e) {
+        console.log(`ERROR in nodeInt.getAllUserTasks! ${e.name}: ${e.message}\n${e.stack}`);
         return false;
     }
 }

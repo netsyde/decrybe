@@ -11,6 +11,7 @@ class SettingsStore {
 	@observable telegram: string = ""
 	@observable twitter: string = ""
 	@observable github: string = ""
+	@observable cover: string = ""
 	
     constructor(public root: RootStore) {
 		this.root = root
@@ -32,6 +33,15 @@ class SettingsStore {
 
 	@computed get getAvatar() {
 		return this.avatar
+	}
+
+	@action("set cover (settings")
+	setCover (cover: string) {
+		this.cover = cover
+	}
+
+	@computed get getCover() {
+		return this.cover
 	}
 
 	@action("set socials (settings")

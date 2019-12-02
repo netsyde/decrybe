@@ -19,6 +19,7 @@ class UserStore {
 	@observable location = "";
 	@observable storage;
 	@observable online = false
+	@observable tasks = []
 	dapp: string = "3N9kox62MPg67TokQMTTZJKTYQBPwtJL2Tk";
 	wavesKeeper;
 	cookies = new Cookies()
@@ -123,6 +124,10 @@ class UserStore {
 				this.root.settings.setAvatar(this.avatar)
 				this.location = userDataFromDapp.location
 				this.root.settings.setLocation(this.location)
+				let userTasks = await nodeInt.getAllUserTasks(this.storage, this.address, this.dapp, state.network.server)
+				if (userTasks) {
+					this.tasks = userTasks;
+				}
 				console.log("userData success")
 			} else {
 				console.log('userData kick')
@@ -294,6 +299,10 @@ class UserStore {
 			//location: this.getUser
 		}
 		return data
+	}
+
+	@computed get getTasks () {
+		return this.tasks
 	}
 	
 }
