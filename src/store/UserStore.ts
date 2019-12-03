@@ -45,7 +45,7 @@ class UserStore {
 			if (e.message == "WavesKeeper is not defined") {
 				alert("To Auth WavesKeeper should be installed.");
 			} else {
-				console.log(`ERROR in UserStore.login! ${e.name}: ${e.message}\n${e.stack}`);
+				console.log(`ERROR in UserStore.restoreSession! ${e.name}: ${e.message}\n${e.stack}`);
 			}
 		}
 	}
@@ -60,7 +60,7 @@ class UserStore {
 			return false
 		}
 	}
-	@action("login")
+	@action("update storage")
 	async updateStorage () {
 		this.storage = await nodeInt.getAllData(this.dapp, this.network);
 		await this.root.tasks.loadTasks(this.isUserLogin, this.getDapp, this.getUserNetwork)
@@ -91,52 +91,65 @@ class UserStore {
 	}
 
 	async getState () {
-		this.online = true
-		this.wavesKeeper = WavesKeeper;
-		const state = await WavesKeeper.publicState();
-		
-		this.address = state.account.address;
-		this.balance = state.account.balance.available;
-		this.network = state.network.server;
-		this.userData = state;
-		
-		this.storage = await nodeInt.getAllData(this.dapp, state.network.server);
-		this.isLogin = true;
-		this.isReg = await nodeInt.checkReg(this.storage, state.account.address, this.dapp, state.network.server);
-		
-		console.log(this.isReg)
-		if (this.isReg) {
-			this.cookies.set('address', this.getUserAddress, { path: '/' });
-			this.cookies.set('network', this.getUserNetwork, { path: '/' });
-			let userDataFromDapp = await nodeInt.getUserData(this.storage, state.account.address, this.dapp, state.network.server);
-			if (userDataFromDapp) {
-				this.name = userDataFromDapp.name;
-				this.root.settings.setName(this.name)
-				this.socials = userDataFromDapp.socials;
-				this.root.settings.setSocials(this.socials)
-				this.bio = userDataFromDapp.bio;
-				this.root.settings.setBio(this.bio)
-				this.status = userDataFromDapp.status;
-				this.createTime = userDataFromDapp.createTime;
-				this.tags = userDataFromDapp.tags;
-				this.root.settings.setTags(this.tags)
-				this.avatar = userDataFromDapp.avatar
-				this.root.settings.setAvatar(this.avatar)
-				this.location = userDataFromDapp.location
-				this.root.settings.setLocation(this.location)
-				let userTasks = await nodeInt.getAllUserTasks(this.storage, this.address, this.dapp, state.network.server)
-				if (userTasks) {
-					this.tasks = userTasks;
+		try {
+			console.log('get state')
+			this.online = true
+			this.wavesKeeper = WavesKeeper;
+			let api = await WavesKeeper.initialPromise
+			if (api) {
+				const state = await WavesKeeper.publicState();
+				console.log(state)
+				
+				
+				this.address = state.account.address;
+				this.balance = state.account.balance.available;
+				this.network = state.network.server;
+				this.userData = state;
+				
+				this.storage = await nodeInt.getAllData(this.dapp, state.network.server);
+				console.log(this.storage)
+				this.isLogin = true;
+				this.isReg = await nodeInt.checkReg(this.storage, state.account.address, this.dapp, state.network.server);
+				
+				console.log(this.isReg)
+				if (this.isReg) {
+					this.cookies.set('address', this.getUserAddress, { path: '/' });
+					this.cookies.set('network', this.getUserNetwork, { path: '/' });
+					let userDataFromDapp = await nodeInt.getUserData(this.storage, state.account.address, this.dapp, state.network.server);
+					if (userDataFromDapp) {
+						this.name = userDataFromDapp.name;
+						this.root.settings.setName(this.name)
+						this.socials = userDataFromDapp.socials;
+						this.root.settings.setSocials(this.socials)
+						this.bio = userDataFromDapp.bio;
+						this.root.settings.setBio(this.bio)
+						this.status = userDataFromDapp.status;
+						this.createTime = userDataFromDapp.createTime;
+						this.tags = userDataFromDapp.tags;
+						this.root.settings.setTags(this.tags)
+						this.avatar = userDataFromDapp.avatar
+						this.root.settings.setAvatar(this.avatar)
+						this.location = userDataFromDapp.location
+						this.root.settings.setLocation(this.location)
+						let userTasks = await nodeInt.getAllUserTasks(this.storage, this.address, this.dapp, state.network.server)
+						if (userTasks) {
+							this.tasks = userTasks;
+						}
+						console.log("userData success")
+					} else {
+						console.log('userData kick')
+					}
+				} else {
+					console.log('User not signup')
 				}
-				console.log("userData success")
+				await this.root.tasks.loadTasks(this.isUserLogin, this.getDapp, this.getUserNetwork)
+				await this.root.users.loadUsers(this.isUserLogin, this.getDapp, this.getUserNetwork)
 			} else {
-				console.log('userData kick')
+				console.log('Waves keeper is undef')
 			}
-		} else {
-			console.log('User not signup')
+		} catch (e) {
+			console.log(`ERROR in UserStore.getState! ${e.name}: ${e.message}\n${e.stack}`);
 		}
-		await this.root.tasks.loadTasks(this.isUserLogin, this.getDapp, this.getUserNetwork)
-		await this.root.users.loadUsers(this.isUserLogin, this.getDapp, this.getUserNetwork)
 	}
 
 	async actionAfterSignup () {

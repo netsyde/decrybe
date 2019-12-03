@@ -4,7 +4,7 @@
 
 #### New
 
-- Add `Profile` page
+- Added `Profile` page
 - Some settings fixes
 
 ### V0.3.5

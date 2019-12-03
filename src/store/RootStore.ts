@@ -27,15 +27,13 @@ class RootStore {
 let rootStore = new RootStore()
 
 autorun(async () => {
-	if (rootStore.user.checkSession()) {
-    if (typeof WavesKeeper !== 'undefined') {
-      let keeperApi = await WavesKeeper.initialPromise
-      if (keeperApi) {
+  window.onload = () =>{
+    if (rootStore.user.checkSession()) {
+      if(window.WavesKeeper === undefined) {
+        console.log('Waves Keeper not installed')
+      } else {
         rootStore.user.restoreSession();
       }
-      
-    } else {
-      console.log('Waves Keeper is undefined')
     }
   }
 });
