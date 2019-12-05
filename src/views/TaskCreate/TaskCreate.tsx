@@ -72,9 +72,9 @@ const TaskCreate = inject('rootStore')(observer(({ rootStore }) => {
         len(store.getBriefDescription) && len(store.getTags) &&
         len(store.getDescription) && store.getCurrency &&
         len(store.getStatus) && store.getEndDate) {
-          console.log(`title: ${len(store.getTitle)}; price: ${store.getPrice}; category: ${store.getCategory}
-      endDate: ${store.getEndDate}; brief: ${len(store.getBriefDescription)}; tags: ${len(store.getTags)}; desc: ${len(store.getDescription)};
-      currency: ${len(store.getCurrency)}; author: ${len(store.getAuthor)}; status: ${len(store.getStatus)}`)
+      //     console.log(`title: ${len(store.getTitle)}; price: ${store.getPrice}; category: ${store.getCategory}
+      // endDate: ${store.getEndDate}; brief: ${len(store.getBriefDescription)}; tags: ${len(store.getTags)}; desc: ${len(store.getDescription)};
+      // currency: ${len(store.getCurrency)}; author: ${len(store.getAuthor)}; status: ${len(store.getStatus)}`)
       createTask()
     } else {
       createSnackbar('info', 'You have not filled in all the fields')
@@ -84,9 +84,9 @@ const TaskCreate = inject('rootStore')(observer(({ rootStore }) => {
 
   const createTask = async () => {
       let store = rootStore.taskCreate;
-      console.log(`${store.getTitle}\n${store.getPrice}\n${store.getCategory}`)
-      console.log(`${store.getEndDate}\n${store.getBriefDescription}\n${store.getTags}`)
-      console.log(`${store.getDescription}\n${store.getCurrency}\n${store.getAuthor}\n${store.getStatus}`)
+      // console.log(`${store.getTitle}\n${store.getPrice}\n${store.getCategory}`)
+      // console.log(`${store.getEndDate}\n${store.getBriefDescription}\n${store.getTags}`)
+      // console.log(`${store.getDescription}\n${store.getCurrency}\n${store.getAuthor}\n${store.getStatus}`)
       /* if (len(store.getTitle) && store.getPrice > 0 && len(store.getCategory) && 
         len(store.getEndDate) && len(store.getBriefDescription) && len(store.getTags) &&
         len(store.getDescription) && len(store.getCurrency) && len(store.getAuthor) &&
@@ -126,7 +126,7 @@ const TaskCreate = inject('rootStore')(observer(({ rootStore }) => {
           }
   }
   if (taskCreated) {
-    console.log('taskCreated')
+    //console.log('taskCreated')
     return <Redirect to={`/tasks/${task}/overview`} />
   }
   if (rootStore.user.isUserLogin && rootStore.user.isUserReg) {

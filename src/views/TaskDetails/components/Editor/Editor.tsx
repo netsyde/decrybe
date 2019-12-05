@@ -152,9 +152,9 @@ const Editor = observer((props) => {
         len(store.getBriefDescription) && len(store.getTags) &&
         len(store.getDescription) && store.getCurrency &&
         len(store.getStatus) && store.getEndDate) {
-          console.log(`title: ${len(store.getTitle)}; price: ${store.getPrice}; category: ${store.getCategory}
-      endDate: ${store.getEndDate}; brief: ${len(store.getBriefDescription)}; tags: ${len(store.getTags)}; desc: ${len(store.getDescription)};
-      currency: ${len(store.getCurrency)}; author: ${len(store.getAuthor)}; status: ${len(store.getStatus)}`)
+      //     console.log(`title: ${len(store.getTitle)}; price: ${store.getPrice}; category: ${store.getCategory}
+      // endDate: ${store.getEndDate}; brief: ${len(store.getBriefDescription)}; tags: ${len(store.getTags)}; desc: ${len(store.getDescription)};
+      // currency: ${len(store.getCurrency)}; author: ${len(store.getAuthor)}; status: ${len(store.getStatus)}`)
       createTask()
     } else {
       createSnackbar('info', 'You have not filled in all the fields')
@@ -187,8 +187,7 @@ const Editor = observer((props) => {
           let tx = await dAppInt.taskUpdate(taskId, data, rootStore.user.getWavesKeeper)
           
           if (tx) {
-            createSnackbar('success', 'Task successfully created!')
-            //rootStore.taskEdit.clean();
+            createSnackbar('success', 'Task successfully updated!')
             await rootStore.user.updateStorage()
             await updateTask()
             setTask(taskId)
@@ -199,8 +198,6 @@ const Editor = observer((props) => {
           }
   }
   if (taskEdited) {
-    console.log('taskEdited')
-    //return <Redirect to={`/tasks/${task}/overview`} />
     history.push(`/tasks/${task}/overview`);
   }
   const [values, setValues] = useState({ ...initialValues });

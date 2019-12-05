@@ -34,7 +34,6 @@ const Task = observer((props) => {
   const [openAlert, setOpenAlert] = useState(true);
   const [project, setProject] = useState(false);
   async function getTask () {
-    console.log('get task')
     let data = await props.rootStore.tasks.getTaskData(id)
     if (data) {
       
@@ -60,7 +59,6 @@ const Task = observer((props) => {
   }
 
   async function updateTask () {
-    console.log('update task')
     let data = await props.rootStore.tasks.getTaskData(id)
     if (data) {
       setProject(data);
