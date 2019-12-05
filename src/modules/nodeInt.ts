@@ -144,7 +144,6 @@ export let getAllUsers = async (alldata, dAppAddress: String, nodeUrl: String) =
                 .filter(key => /^user_sts_/.test(key))
                 .map(key => key.replace(/^user_sts_/, ''))
         );
-        //console.log(users)
         return users;
     } catch (e) {
         console.log(`ERROR in nodeInt.getAllUsers! ${e.name}: ${e.message}\n${e.stack}`);

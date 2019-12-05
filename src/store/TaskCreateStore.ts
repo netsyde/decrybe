@@ -169,6 +169,7 @@ class TaskCreateStore {
 		this.setCategory("");
 		this.endDate = Date.now() + 84000 * 1000;
 		this.setBriefDescription("");
+		this.setDescription('')
 
 	}
 }

@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography, Grid, Button, colors } from '@material-ui/core';
 import ShareIcon from '@material-ui/icons/Share';
-
+import { observer } from 'mobx-react';
 import { Label } from '../../../../components';
 import { Application } from './components';
 
@@ -28,8 +27,8 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Header = props => {
-  const { project, className, ...rest } = props;
+const Header = observer((props) => {
+  const { project, rootStore, className, ...rest } = props;
 
   const classes = useStyles(1);
 
@@ -67,7 +66,7 @@ const Header = props => {
             gutterBottom
             variant="h3"
           >
-            {project.title ? project.title : "Undefined"}
+            {project.title ? project.title : "undefined"}
           </Typography>
           <Label
             className={classes.label}
@@ -85,13 +84,16 @@ const Header = props => {
             <ShareIcon className={classes.shareIcon} />
             Share
           </Button>
-          <Button
-            className={classes.applyButton}
-            onClick={handleApplicationOpen}
-            variant="contained"
-          >
-            Apply for a role
-          </Button>
+
+          {rootStore.user.getUserAddress != project.author.address ?
+            <Button
+              className={classes.applyButton}
+              onClick={handleApplicationOpen}
+              variant="contained"
+            >
+              Apply for a role
+            </Button>
+          : null}
         </Grid>
       </Grid>
       <Application
@@ -102,8 +104,6 @@ const Header = props => {
       />
     </div>
   );
-};
-
-Header.defaultProps = {};
+});
 
 export default Header;

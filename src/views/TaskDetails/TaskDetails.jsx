@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { Tabs, Tab, Divider, colors } from '@material-ui/core';
-import { Header, Overview } from './components';
+import { Header, Overview, Editor } from './components';
 import { observer, inject } from 'mobx-react';
 
 import { Page } from '../../components'
@@ -33,18 +33,41 @@ const Task = observer((props) => {
   const { id, tab } = props.match.params;
   const [openAlert, setOpenAlert] = useState(true);
   const [project, setProject] = useState(false);
-
-  useEffect(() => {
-    async function getTask () {
+  async function getTask () {
+    console.log('get task')
+    let data = await props.rootStore.tasks.getTaskData(id)
+    if (data) {
       
-      let data = await props.rootStore.tasks.getTaskData(id)
-      if (data) {
-        
-        setProject(data);
-      } else {
-        console.log('Task Details load error')
+      setProject(data);
+      props.rootStore.taskEdit.setTitle(data.title)
+      props.rootStore.taskEdit.setPrice(data.price)
+      props.rootStore.taskEdit.setCategory(data.category.id)
+      props.rootStore.taskEdit.setEndDateFromBlockchain(data.expireTime)
+      props.rootStore.taskEdit.setCreateDate(data.createTime)
+      props.rootStore.taskEdit.setBriefDescription(data.brief)
+      let tags = []
+      for (let i = 0; i < data.tags.length; i++) {
+        tags.push(data.tags[i].name)
       }
+      props.rootStore.taskEdit.setTags(tags) // dont work
+      props.rootStore.taskEdit.setDescription(data.description) // dont work
+      props.rootStore.taskEdit.setCurrency(data.currency)
+      props.rootStore.taskEdit.setAuthor(data.author.address)
+      props.rootStore.taskEdit.setStatus(data.status)
+      props.rootStore.taskEdit.setMembers(data.members)
+      props.rootStore.taskEdit.setFreelancers(data.freelancers)
     }
+  }
+
+  async function updateTask () {
+    console.log('update task')
+    let data = await props.rootStore.tasks.getTaskData(id)
+    if (data) {
+      setProject(data);
+    }
+  }
+  useEffect(() => {
+    
     if (props.rootStore.user.isLogin) {
       getTask()
     }
@@ -59,7 +82,7 @@ const Task = observer((props) => {
   };
 
   const tabs = [
-    { value: 'overview', label: 'Overview' }
+    { value: 'overview', label: 'Overview' },
   ];
   
   if (!tab) {
@@ -67,8 +90,9 @@ const Task = observer((props) => {
   }
   
  
-  if (!tabs.find(t => t.value === tab)) {
-    return <Redirect to="/errors/error-404" />;
+  if (!tabs.find(t => t.value == tab || "edit" === tab)) {
+    console.log(tab)
+    return <Redirect to="/404" />;
   }
   
 
@@ -76,34 +100,47 @@ const Task = observer((props) => {
     return null;
   }
   
-  return (
-    <Page
-      className={classes.root}
-      title={`Task | ${project.title}`}
-    >
-     <Header project={project} />
-     
-     <Tabs
-        className={classes.tabs}
-        onChange={props.handleTabsChange}
-        scrollButtons="auto"
-        value={tab}
-        variant="scrollable"
+  if (project) {
+    return (
+      <Page
+        className={classes.root}
+        title={`Task | ${project.title}`}
       >
-        {tabs.map(tab => (
-          <Tab
-            key={tab.value}
-            label={tab.label}
-            value={tab.value}
-          />
-        ))}
-      </Tabs>
-      <Divider className={classes.divider} />
-      <div className={classes.content}>
-        {tab === 'overview' && <Overview project={project} />}
-      </div>
-    </Page>
-  );
+      <Header project={project} rootStore={props.rootStore}/>
+      
+      <Tabs
+          className={classes.tabs}
+          onChange={handleTabsChange}
+          scrollButtons="auto"
+          value={tab}
+          variant="scrollable"
+        >
+          {tabs.map(tab => (
+            <Tab
+              key={tab.value}
+              label={tab.label}
+              value={tab.value}
+            />
+          ))}
+          {props.rootStore.user.getUserAddress == project.author.address ?
+          (
+            <Tab
+              key={'edit'}
+              label={'Edit'}
+              value={'edit'}
+            />
+          )
+            : null
+          }
+        </Tabs>
+        <Divider className={classes.divider} />
+        <div className={classes.content}>
+          {tab === 'overview' && <Overview project={project} />}
+          {props.rootStore.user.getUserAddress == project.author.address ? (tab === 'edit' && <Editor project={project} updateTask={updateTask} history={props.history} rootStore={props.rootStore} id={id}/>) : null}
+        </div>
+      </Page>
+    );
+  }
 });
 
 @inject("rootStore")

@@ -20,7 +20,7 @@ import { RichEditor } from '../../../../components';
 import MenuItem from '@material-ui/core/MenuItem';
 import Grid from '@material-ui/core/Grid';
 import { observer } from 'mobx-react';
-import { ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
+import { TextValidator} from 'react-material-ui-form-validator';
 const useStyles = makeStyles(theme => ({
   root: {},
   alert: {
@@ -144,19 +144,6 @@ const AboutTask = observer((props) => {
       : moment(values.startDate).add(1, 'day');
   const calendarValue = values[calendarTrigger];
 
-  let onChange = e => {
-    rootStore.taskCreate.setTitle(e.target.value)
-    e.preventDefault();
-  }
-
-  let getValue = () => {
-    let tesr = rootStore.taskCreate.getTitle
-    return tesr
-  }
-
-  const handleSubmit = event => {
-    console.log('send')
-  };
   return (
     <Card
       {...rest}
@@ -291,7 +278,7 @@ const AboutTask = observer((props) => {
               ))}
             </div>
           </div>
-        <RichEditor placeholder={"Say something about the task..."} rootStore={rootStore} />
+        <RichEditor placeholder={"Say something about the task..."} store={rootStore.taskCreate} />
       </CardContent>
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <DatePicker

@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Grid } from '@material-ui/core';
 
 import { Brief, Deliverables, Holder, Members } from './components';
-
+import { observer, inject } from 'mobx-react';
 const useStyles = makeStyles(theme => ({
   root: {},
   deliverables: {
@@ -15,7 +15,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Overview = props => {
+const Overview = observer((props) => {
   const { project, className, ...rest } = props;
 
   const classes = useStyles(1);
@@ -51,6 +51,6 @@ const Overview = props => {
       </Grid>
     </Grid>
   );
-};
+});
 
 export default Overview;

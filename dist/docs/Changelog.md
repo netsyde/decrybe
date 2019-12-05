@@ -1,3 +1,12 @@
+### V0.3.7
+
+###### 5-11-2019
+
+#### New
+
+- Added `Task Editor` page
+- And other fixes and improvements
+
 ### V0.3.6
 
 ###### 2-11-2019

@@ -17,6 +17,7 @@ import { EditorToolbar } from './components';
 import { blockRenderMap } from './utils';
 
 import { mdToDraftjs, draftjsToMd } from 'draftjs-md-converter';
+import { setTimeout } from 'timers';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -87,15 +88,28 @@ const useStyles = makeStyles(theme => ({
 const capitalize = string => string.charAt(0).toUpperCase() + string.slice(1);
 
 const RichEditor = observer((props) => {
-  const { className, rootStore, ...rest } = props;
+  const { className, store, rootStore, ...rest } = props;
 
   const classes = useStyles(1);
 
   const editorRef = useRef(null);
 
   const [editorState, setEditorState] = useState(
-    EditorState.createWithContent(convertFromRaw(mdToDraftjs(rootStore.taskCreate.getDescription)))
+    //EditorState.createWithContent(convertFromRaw(mdToDraftjs(store.getDescription)))
+    EditorState.createEmpty()
   );
+
+  useEffect(() => {
+    if (store.getDescription.length > 0) {
+      console.log('editor ready')
+      setEditorState(EditorState.createWithContent(convertFromRaw(mdToDraftjs(store.getDescription))))
+    } else {
+      console.log('waiting editor')
+      setTimeout(() => {
+        setEditorState(EditorState.createWithContent(convertFromRaw(mdToDraftjs(store.getDescription))))
+      }, 1000);
+    }
+  }, [])
 
   const handleContainerClick = () => {
     editorRef.current.focus();
@@ -132,7 +146,7 @@ const RichEditor = observer((props) => {
 
     console.log(JSON.stringify(markdown))
 
-    rootStore.taskCreate.setDescription(markdown)
+    store.setDescription(markdown)
     setEditorState(editorState);
   };
 

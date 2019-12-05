@@ -56,7 +56,6 @@ class TasksStore {
 	@action
 	async getTaskData (id) {
 		if (this.root.user.isLogin) {
-			console.log(`${id} ${this.root.user.getDapp} ${this.root.user.getUserNetwork}`)
 			let task = await nodeInt.getTaskData(this.root.user.getStorage,id, this.root.user.getDapp, this.root.user.getUserNetwork)
 			return task
 		} else {
