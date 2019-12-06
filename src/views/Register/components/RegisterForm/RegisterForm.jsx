@@ -1,53 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import clsx from 'clsx';
-import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {
   Button,
   Checkbox,
-  FormHelperText,
-  TextField,
   Typography,
   Link
 } from '@material-ui/core';
 
 import useRouter from '../../../../utils/useRouter';
-
-const schema = {
-  firstName: {
-    presence: { allowEmpty: false, message: 'is required' },
-    length: {
-      maximum: 32
-    }
-  },
-  lastName: {
-    presence: { allowEmpty: false, message: 'is required' },
-    length: {
-      maximum: 32
-    }
-  },
-  email: {
-    presence: { allowEmpty: false, message: 'is required' },
-    email: true,
-    length: {
-      maximum: 64
-    }
-  },
-  password: {
-    presence: { allowEmpty: false, message: 'is required' },
-    length: {
-      maximum: 128
-    }
-  },
-  policy: {
-    presence: { allowEmpty: false, message: 'is required' },
-    checked: true
-  }
-};
+import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator';
+import { CustomSnackbar } from '../../../../components'
+import { observer, inject } from 'mobx-react';
+import * as dAppInt from '../../../../modules/dAppInt'
 
 const useStyles = makeStyles(theme => ({
-  root: {},
+  root: {
+    marginTop: theme.spacing(3)
+  },
   fields: {
     margin: theme.spacing(-1),
     display: 'flex',
@@ -69,85 +39,127 @@ const useStyles = makeStyles(theme => ({
     width: '100%'
   }
 }));
-const RegisterForm = props => {
-  const { className, ...rest } = props;
+
+const RegisterForm = inject('rootStore')(observer(({ rootStore }) => {
+  //const { className, ...rest } = props;
 
   const classes = useStyles();
   const { history } = useRouter();
 
-  const [formState, setFormState] = useState({
-    isValid: false,
-    values: {},
-    touched: {},
-    errors: {}
+  const [values, setValues] = React.useState({
+    name: "",
+    bio: "",
+    avatar: "",
+    checked: false
   });
+  const [isValid, setValid] = React.useState(false);
+
+  const handleChange = name => event => {
+    setValues({ ...values, [name]: event.target.value });
+  };
+
+  const handleCheckboxChange = name => event => {
+    setValues({ ...values, [name]: event.target.checked });
+  };
+
+  let formRef = React.createRef();
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+   
+    let data = {
+      name: values.name,
+      bio: values.bio,
+      location: "",
+      tags: [],
+      address: rootStore.user.getUserAddress,
+      createTime: Date.now(),
+      status: "registered",
+      socials: {
+        telegram: "",
+        twitter: "",
+        github: ""
+      },
+      avatar: values.avatar
+    }
+    console.log(data)
+    let signTx = await dAppInt.signUp(data, rootStore.user.getWavesKeeper)
+    if (signTx.status) {
+      createSnackbar('success', 'You have successfully registered!')
+      rootStore.user.actionAfterSignup()
+      history.push('/')
+    } else {
+      createSnackbar('error', signTx.error.data ? signTx.error.data : signTx.error.message)
+    }
+  };
+
+  let validatorListener = async () => {
+    const valid = await formRef.current.isFormValid();
+    setValid(valid)
+  }
+
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarType, setSnackbarType] = useState("")
+
+  const handleSnackbarClose = () => {
+    setOpenSnackbar(false);
+  };
+
+  const createSnackbar = (type, message) => {
+    setSnackbarMessage(message)
+    setSnackbarType(type)
+    setOpenSnackbar(true);
+  }
 
   return (
-    <form
-      {...rest}
-      className={clsx(classes.root, className)}
-      //onSubmit={handleSubmit}
+    <ValidatorForm onSubmit={handleSubmit} onError={errors => console.log(errors)}
+      className={classes.root}
+      ref={formRef}
     >
       <div className={classes.fields}>
-        <TextField
-          //error={hasError('firstName')}
-          /*
-          helperText={
-            hasError('firstName') ? formState.errors.firstName[0] : null
-          }
-          */
+        <TextValidator
           label="Name"
           name="name"
-          //onChange={handleChange}
-          //value={formState.values.firstName || ''}
           variant="outlined"
+          helperText="Your nickname"
+          onChange={handleChange('name')}
+          value={values.name}
+          validators={['required', 'minStringLength:3', 'maxStringLength:15', 'trim']}
+          errorMessages={['This field is required', 'Minimum 3 characters', 'Maximum 15 characters', 'Please enter words']}
+          validatorListener={validatorListener}
         />
-        <TextField
-          //error={hasError('lastName')}
-          /*
-          helperText={
-            hasError('lastName') ? formState.errors.lastName[0] : null
-          }
-          */
+        <TextValidator
           label="Bio"
           name="bio"
-          //onChange={handleChange}
-          //value={formState.values.lastName || ''}
+          helperText="Any information about you (70 characters)"
           variant="outlined"
+          onChange={handleChange('bio')}
+          value={values.bio}
+          validators={['required', 'minStringLength:5', 'maxStringLength:70', 'trim']}
+          errorMessages={['This field is required', 'Minimum 5 characters', 'Maximum 70 characters', 'Please enter words']}
+          validatorListener={validatorListener}
         />
-        <TextField
-          //error={hasError('email')}
-          fullWidth
-         // helperText={hasError('email') ? formState.errors.email[0] : null}
-          label="Email address"
-          name="email"
-          //onChange={handleChange}
-          //value={formState.values.email || ''}
+        <TextValidator
+          label="Avatar"
+          name="avatar"
           variant="outlined"
-        />
-        <TextField
-          //error={hasError('password')}
-          fullWidth
-          /*
-          helperText={
-            hasError('password') ? formState.errors.password[0] : null
-          }
-          */
-          label="Password"
-          name="password"
-          //onChange={handleChange}
-          type="password"
-          //value={formState.values.password || ''}
-          variant="outlined"
+          helperText="Please enter only https link"
+          onChange={handleChange('avatar')}
+          value={values.avatar}
+          validators={['matchRegexp:^https://']}
+          errorMessages={['Use only https link']}
+          validatorListener={validatorListener}
         />
         <div>
           <div className={classes.policy}>
             <Checkbox
-              checked={false}
+              checked={values.checked}
               className={classes.policyCheckbox}
+              value="checked"
               color="primary"
               name="policy"
-              //onChange={handleChange}
+              onChange={handleCheckboxChange('checked')}
             />
             <Typography
               color="textSecondary"
@@ -157,9 +169,10 @@ const RegisterForm = props => {
               <Link
                 color="secondary"
                 component={RouterLink}
-                to="#"
+                to="/register/terms"
                 underline="always"
                 variant="h6"
+                target="_blank"
               >
                 Terms and Conditions
               </Link>
@@ -170,19 +183,21 @@ const RegisterForm = props => {
       <Button
         className={classes.submitButton}
         color="secondary"
-        //disabled={!formState.isValid}
+        disabled={!isValid || !values.checked}
         size="large"
         type="submit"
         variant="contained"
       >
         Create account
       </Button>
-    </form>
+      <CustomSnackbar
+          onClose={handleSnackbarClose}
+          open={openSnackbar}
+          message={snackbarMessage}
+          type={snackbarType}
+      />
+      </ValidatorForm>
   );
-};
-
-RegisterForm.propTypes = {
-  className: PropTypes.string
-};
+}));
 
 export default RegisterForm;

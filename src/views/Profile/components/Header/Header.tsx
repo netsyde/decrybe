@@ -18,7 +18,7 @@ import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import ChatIcon from '@material-ui/icons/ChatOutlined';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import { observer, inject } from 'mobx-react';
-
+import getInitials from '../../../../utils/getInitials';
 const useStyles = makeStyles(theme => ({
   root: {},
   cover: {
@@ -79,7 +79,8 @@ const useStyles = makeStyles(theme => ({
     width: 120,
     top: -60,
     left: theme.spacing(3),
-    position: 'absolute'
+    position: 'absolute',
+    fontSize: 50
   },
   details: {
     marginLeft: 136
@@ -118,6 +119,7 @@ const Header = observer((props) => {
       
       let data = await rootStore.users.getUserData(id)
       if (data) {
+        console.log(data)
         setUser(data);
       } else {
         console.log('User Load error')
@@ -127,7 +129,12 @@ const Header = observer((props) => {
       getUser()
     }
   }, []);
-  const handleBrokenImage = e => (e.target.src = "/img/gag.png");
+  const handleBrokenImage = e => (e.target.src = "/img/gag1.png");
+
+  function httpsFix(str) {
+    str = str.replace('http://', 'https://')
+    return str;
+  }
 
   return (
     <div
@@ -156,9 +163,12 @@ const Header = observer((props) => {
         <Avatar
           alt="Person"
           className={classes.avatar}
-          src={user ? user.avatar : "/img/gag.png"}
+          //style={{backgroundColor: user ? user.avatarColor : "#000000"}}
+          src={user ? httpsFix(user.avatar) : ""}
           imgProps={{ onError: handleBrokenImage }}
-        />
+        >
+          {user ? getInitials(user.name) : "U"}
+        </Avatar>
         <div className={classes.details}>
           <Typography
             component="h2"

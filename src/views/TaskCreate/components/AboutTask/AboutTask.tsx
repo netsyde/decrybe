@@ -20,7 +20,7 @@ import { RichEditor } from '../../../../components';
 import MenuItem from '@material-ui/core/MenuItem';
 import Grid from '@material-ui/core/Grid';
 import { observer } from 'mobx-react';
-import { TextValidator} from 'react-material-ui-form-validator';
+import { TextValidator } from 'react-material-ui-form-validator';
 const useStyles = makeStyles(theme => ({
   root: {},
   alert: {
@@ -163,19 +163,18 @@ const AboutTask = observer((props) => {
               }
               value={rootStore.taskCreate.getTitle}
               variant="outlined"
-              validators={['required', 'minStringLength:5', 'maxStringLength:50', 'trim', 'matchRegexp:^((?!\s{2}).)*$']}
-              errorMessages={['This field is required', 'Minimum 5 char', 'Maximum 50 char', 'Please enter words', 'Do not use two spaces in a row']}
+              validators={['required', 'minStringLength:5', 'maxStringLength:50', 'trim']}
+              errorMessages={['This field is required', 'Minimum 5 char', 'Maximum 50 char', 'Please enter words']}
             />
           </Grid>
           <Grid item lg={4} md={6} sm={12} xs={12}>
             <TextValidator
               fullWidth
-              required
               type="number"
               label="Price"
               name="price"
-              validators={['minNumber:1']}
-              errorMessages={['Minimum price is 1']}
+              validators={['minNumber:1', 'maxNumber: 100000', 'required']}
+              errorMessages={['Minimum price is 1', 'Maximum price is 100k', 'This field is required']}
               className={classes.textField}
               onChange={event =>
                 rootStore.taskCreate.setPrice(event.target.value)
@@ -187,7 +186,6 @@ const AboutTask = observer((props) => {
           <Grid item lg={4} md={6} sm={12} xs={12}>
             <TextValidator
               fullWidth
-              required
               id="category"
               select
               label="Category"
@@ -203,6 +201,8 @@ const AboutTask = observer((props) => {
               }}
               margin="normal"
               variant="outlined"
+              validators={['required']}
+              errorMessages={['This field is required']}
             >
               {categories.map(option => (
                 <MenuItem key={option.value} value={option.value}>
@@ -214,7 +214,8 @@ const AboutTask = observer((props) => {
           <Grid item lg={4} md={12} sm={12} xs={12}>
             <TextValidator
               fullWidth
-              required
+              validators={['required']}
+              errorMessages={['This field is required']}
               className={classes.dateField}
               label="End Date"
               name="endDate"
@@ -227,11 +228,10 @@ const AboutTask = observer((props) => {
           <div className={classes.formGroup}>
             <TextValidator
               fullWidth
-              required
               label="Brief description"
               name="briefDescription"
-              validators={['required', 'minStringLength:15', 'maxStringLength:80', 'trim', 'matchRegexp:^((?!\s{2}).)*$']}
-              errorMessages={['This field is required', 'Minimum 15 char', 'Maximum 80 char', 'Please enter words', 'Do not use two spaces in a row']}
+              validators={['required', 'minStringLength:15', 'maxStringLength:80', 'trim']}
+              errorMessages={['This field is required', 'Minimum 15 char', 'Maximum 80 char', 'Please enter words']}
               onChange={event =>
                 rootStore.taskCreate.setBriefDescription(event.target.value)
               }

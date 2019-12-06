@@ -1,7 +1,6 @@
 import React, { Fragment, useEffect } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import clsx from 'clsx';
-import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { Drawer, Divider, Paper, Avatar, Typography } from '@material-ui/core';
 import { Hidden } from '@material-ui/core';
@@ -10,6 +9,7 @@ import useRouter from '../../../../utils/useRouter';
 import { Navigation } from '../../../../components';
 import navigationConfig from './navigationConfig';
 import { observer, inject } from 'mobx-react';
+import getInitials from '../../../../utils/getInitials';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -52,16 +52,20 @@ function httpsFix(str) {
 const User = inject('rootStore')(observer(({ rootStore }) => {
   const handleBrokenImage = e => (e.target.src = "/img/gag.png");
   const classes = useStyles(1);
+
   return (
     <div className={classes.profile}>
     <Avatar
       alt="Person"
       className={classes.avatar}
       component={RouterLink}
-      src={httpsFix(rootStore.user.getUserAvatar) || "/img/gag.png"}
+      //style={{backgroundColor: rootStore.user.getUserAvatarColor}}
+      src={httpsFix(rootStore.user.getUserAvatar)}
       imgProps={{ onError: handleBrokenImage }}
       to={`/profile/${rootStore.user.getUserAddress}`}
-    />
+    >
+      {rootStore.user.getUserName ? getInitials(rootStore.user.getUserName) : "U"}
+    </Avatar>
     <Typography
       className={classes.name}
       variant="h4"
@@ -72,6 +76,7 @@ const User = inject('rootStore')(observer(({ rootStore }) => {
   </div>
   )
 }))
+
 const NavBar = props => {
   const { openMobile, onMobileClose, className, ...rest } = props;
 

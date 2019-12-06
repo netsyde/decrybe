@@ -30,13 +30,15 @@ class RootStore {
 let rootStore = new RootStore()
 
 autorun(async () => {
-  window.onload = () =>{
+  window.onload = () => {
     if (rootStore.user.checkSession()) {
       if(window.WavesKeeper === undefined) {
         console.log('Waves Keeper not installed')
       } else {
         rootStore.user.restoreSession();
       }
+    } else {
+      rootStore.user.setShowRegister(true)
     }
   }
 });

@@ -35,14 +35,23 @@ export let signUp = async (data, wavesKeeper) => {
             console.log(tx.id)
             let wait = await nodeInteraction.waitForTx(tx.id, {apiBase: state.network.server})
             if (wait) {
-                return true
+                return {
+                    status: true,
+                    //error: error
+                }
             }
         } else {
-            return false
+            return {
+                status: false,
+                //error: error
+            }
         }
     } catch(error) {
         console.error("Error ", error);
-        return false
+        return {
+            status: false,
+            error: error
+        }
    }
 }
 

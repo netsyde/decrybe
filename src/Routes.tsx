@@ -11,13 +11,18 @@ const routes = [
     component: () => <Redirect to="/overview" />
   },
   {
-    path: '/register_undef',
+    path: '/register',
     component: AuthLayout,
     routes: [
       {
-        path: '/register_undef',
+        path: '/register',
         exact: true,
         component: lazy(() => import('./views/Register'))
+      },
+      {
+        path: '/register/terms',
+        exact: true,
+        component: lazy(() => import('./views/Terms'))
       },
       {
         component: () => <Redirect to="/404" />

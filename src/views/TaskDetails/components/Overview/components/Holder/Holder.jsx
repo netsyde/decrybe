@@ -56,7 +56,7 @@ const HolderContainer = props => {
             alt="Author"
             className={classes.avatar}
             component={RouterLink}
-            src={httpsFix(project.author.avatar) || "/img/gag.png"}
+            src={httpsFix(project.author.avatar) || ""}
             imgProps={{ onError: handleBrokenImage }}
             to={`/profile/${project.author ? project.author.address : "undefined"}`}
           >

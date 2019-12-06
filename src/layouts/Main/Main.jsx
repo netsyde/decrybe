@@ -2,7 +2,6 @@ import React, { useState, Suspense } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { NavBar, Topbar } from './components';
 import { Provider, observer, inject } from 'mobx-react';
-import Signup  from './components/Signup'
 import rootStore from '../../store/RootStore'
 import { LinearProgress } from '@material-ui/core';
 const stores = { rootStore };
@@ -38,21 +37,6 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const RegisterModal = inject('rootStore')(observer(({ rootStore }) => {
-  console.log('reg modal')
-  if (rootStore.user.isUserLogin) {
-    if (rootStore.user.isUserReg == false) {
-      return <Signup rootStore={rootStore}/>
-    } else if (rootStore.user.isUserReg == undefined) {
-      return <LinearProgress />
-    } else {
-      return null
-    }
-  } else {
-    return null
-  }
-}))
-
 const Main = observer((props) => {
   const { route } = props; // children
 
@@ -75,7 +59,6 @@ const Main = observer((props) => {
         className={classes.topBar}
         onOpenNavBarMobile={handleNavBarMobileOpen}
       />
-      <RegisterModal />
       <div className={classes.container}>
         <NavBar
           className={classes.navBar}

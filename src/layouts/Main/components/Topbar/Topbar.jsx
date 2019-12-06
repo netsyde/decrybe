@@ -54,21 +54,15 @@ const Topbar = props => {
       className={clsx(classes.root, className)}
     >
       <Toolbar>
-        <img
-          alt="Logo"
-          src="/img/decrybe.png"
-          className={classes.logo}
-        />
+        <RouterLink to="/">
+          <img
+            alt="Logo"
+            src="/img/decrybe.png"
+            className={classes.logo}
+          />
+        </RouterLink>
         <div className={classes.flexGrow} />
         <Hidden mdDown>
-          {/*<Button
-            variant="contained"
-            color="primary"
-            component={CustomRouterLink}
-            to="/tasks/create"
-          >
-            Create Task
-          </Button>*/}
           <Login />
         </Hidden>
         <Hidden lgUp>

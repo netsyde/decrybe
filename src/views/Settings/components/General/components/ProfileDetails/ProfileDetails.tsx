@@ -10,7 +10,7 @@ import {
   Button
 } from '@material-ui/core';
 import { observer } from 'mobx-react';
-
+import getInitials from '../../../../../../utils/getInitials';
 const useStyles = makeStyles(theme => ({
   root: {},
   content: {
@@ -24,7 +24,8 @@ const useStyles = makeStyles(theme => ({
   },
   avatar: {
     height: 100,
-    width: 100
+    width: 100,
+    fontSize: 40
   },
   removeBotton: {
     width: '100%'
@@ -34,7 +35,6 @@ const useStyles = makeStyles(theme => ({
 function httpsFix(str) {
   str = str.replace('http://', 'https://')
   return str;
-
 }
 
 const ProfileDetails = observer((props) => {
@@ -51,9 +51,12 @@ const ProfileDetails = observer((props) => {
       <CardContent className={classes.content}>
         <Avatar
           className={classes.avatar}
-          src={rootStore.settings.getAvatar ? httpsFix(rootStore.settings.getAvatar) : "/img/gag.png"}
+          //style={{backgroundColor: rootStore.user.getUserAvatarColor}}
+          src={rootStore.settings.getAvatar ? httpsFix(rootStore.settings.getAvatar) : ""}
           imgProps={{ onError: handleBrokenImage }}
-        />
+        >
+          {rootStore.user.getUserName ? getInitials(rootStore.user.getUserName) : "U"}
+        </Avatar>
         <Typography
           className={classes.name}
           gutterBottom

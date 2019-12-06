@@ -3,8 +3,10 @@ import { renderRoutes } from 'react-router-config';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { LinearProgress } from '@material-ui/core';
-
+import { Provider } from 'mobx-react';
 import { Topbar } from './components';
+import rootStore from '../../store/RootStore'
+const stores = { rootStore };
 
 const useStyles = makeStyles(theme => ({
   content: {
@@ -22,19 +24,17 @@ const Auth = props => {
   const classes = useStyles(1);
 
   return (
-    <Fragment>
-      <Topbar />
-      <main className={classes.content}>
-        <Suspense fallback={<LinearProgress />}>
-          {renderRoutes(route.routes)}
-        </Suspense>
-      </main>
-    </Fragment>
+    <Provider { ...stores }>
+      <Fragment>
+        <Topbar />
+        <main className={classes.content}>
+          <Suspense fallback={<LinearProgress />}>
+            {renderRoutes(route.routes)}
+          </Suspense>
+        </main>
+      </Fragment>
+    </Provider>
   );
-};
-
-Auth.propTypes = {
-  route: PropTypes.object
 };
 
 export default Auth;

@@ -5,6 +5,11 @@ const axios = require('axios');
 const dApp = "3N9kox62MPg67TokQMTTZJKTYQBPwtJL2Tk"
 const nodeUrl = "https://testnodes.wavesnodes.com"
 
+let color = ["#1abc9c", "#2ecc71", "#3498db", "#9b59b6", "#34495e", "#16a085",
+                    "#27ae60", "#2980b9", "#8e44ad", "#2c3e50", "#e67e22", "#e74c3c",
+                    "#ff7979", "#badc58", "#f9ca24", "#f0932b",
+                    "#eb4d4b", "#6ab04c", "#e056fd", "#686de0", "#30336b", "#130f40"]
+
 /**
  * Get user balance
  * @param address - user address
@@ -171,6 +176,7 @@ export let getUserData = async (alldata, address: String, dAppAddress: String, n
                 tags: "tags" in userData ? userData.tags : "",
                 avatar: "avatar" in userData ? userData.avatar : "",
                 address: address,
+                avatarColor: color[getRandomArbitary(0, color.length - 1)],
                 location: "location" in userData ? userData.location : "",
                 cover: "cover" in userData ? userData.cover : "/img/cover.png"
             }
@@ -201,13 +207,10 @@ export let getTaskData = async (alldata, id: String, dAppAddress: String, nodeUr
         taskData.author = {
             address: taskData.author,
             name: userData ? userData.name : "",
-            avatar: userData ? userData.avatar : ""
+            avatar: userData ? userData.avatar : "",
+            avatarColor: color[getRandomArbitary(0, color.length - 1)],
         }
 
-        let color = ["#1abc9c", "#2ecc71", "#3498db", "#9b59b6", "#34495e", "#16a085",
-                    "#27ae60", "#2980b9", "#8e44ad", "#2c3e50", "#e67e22", "#e74c3c",
-                    "#ff7979", "#badc58", "#f9ca24", "#f0932b",
-                    "#eb4d4b", "#6ab04c", "#e056fd", "#686de0", "#30336b", "#130f40"]
         for (let i = 0; i < taskData.tags.length; i++) {
             taskData.tags[i] = {
                 name: taskData.tags[i],

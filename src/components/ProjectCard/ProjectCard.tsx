@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import moment from 'moment';
 import { makeStyles } from '@material-ui/core/styles';
@@ -122,7 +121,8 @@ const ProjectCard = props => {
         avatar={
           <Avatar
             alt="Author"
-            src={httpsFix(project.author.avatar) || "/img/gag.png"}
+            src={httpsFix(project.author.avatar) || ""}
+            //style={{backgroundColor: project.author.avatarColor}}
             imgProps={{ onError: handleBrokenImage }}
           >
             {project.author ? getInitials(project.author.name) : ""}

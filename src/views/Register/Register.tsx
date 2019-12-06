@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import {
@@ -10,11 +10,10 @@ import {
   Link,
   Avatar
 } from '@material-ui/core';
-import PersonAddIcon from '@material-ui/icons/PersonAddOutlined';
-
-//import gradients from 'utils/gradients';
 import { Page } from '../../components';
 import { RegisterForm } from './components';
+import { observer, inject } from 'mobx-react';
+import { Redirect } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -78,8 +77,16 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Register = () => {
+const Register = inject('rootStore')(observer(({ rootStore }) => {
   const classes = useStyles(1);
+  const handleBrokenImage = e => (e.target.src = "/img/gag.png");
+
+  if (rootStore.user.isUserReg) {
+    rootStore.user.setShowRegister(false)
+    console.log('user reg')
+    return <Redirect to={`/overview`} />
+  }
+  
 
   return (
     <Page
@@ -103,7 +110,8 @@ const Register = () => {
             align="center"
             color="secondary"
             component={RouterLink}
-            to="/auth/login"
+            onClick={() => rootStore.user.login()}
+            to={""}
             underline="always"
             variant="subtitle2"
           >
@@ -119,27 +127,30 @@ const Register = () => {
             color="inherit"
             variant="subtitle1"
           >
-            Hella narvwhal Cosby sweater McSweeney's, salvia kitsch before they
-            sold out High Life.
+            Decrybe — is a decentralized freelancing exchange.
+            The exchange based on Web3 technologies,
+            each user decides what information to disclose.
           </Typography>
           <div className={classes.person}>
             <Avatar
               alt="Person"
               className={classes.avatar}
-              src="/images/avatars/avatar_2.png"
-            />
+              src={'/img/avatars/sgoldik.jpg'}
+              imgProps={{ onError: handleBrokenImage }}
+
+            > S </Avatar>
             <div>
               <Typography
                 color="inherit"
                 variant="body1"
               >
-                Vyacheslav Zolotykh
+                Sgoldik
               </Typography>
               <Typography
                 color="inherit"
                 variant="body2"
               >
-                Founder CEO NetSyde
+                Founder & CEO NetSyde
               </Typography>
             </div>
           </div>
@@ -147,6 +158,6 @@ const Register = () => {
       </Card>
     </Page>
   );
-};
+}));
 
 export default Register;

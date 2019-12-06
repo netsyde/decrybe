@@ -19,7 +19,9 @@ class UserStore {
 	@observable location = "";
 	@observable storage;
 	@observable online = false
-	@observable tasks = []
+	@observable tasks = [];
+	@observable avatarColor = ""
+	@observable showRegister = false
 	dapp: string = "3N9kox62MPg67TokQMTTZJKTYQBPwtJL2Tk";
 	wavesKeeper;
 	cookies = new Cookies()
@@ -129,6 +131,7 @@ class UserStore {
 						this.root.settings.setTags(this.tags)
 						this.avatar = userDataFromDapp.avatar
 						this.root.settings.setAvatar(this.avatar)
+						this.avatarColor = userDataFromDapp.avatarColor // ava color
 						this.location = userDataFromDapp.location
 						this.root.settings.setLocation(this.location)
 						let userTasks = await nodeInt.getAllUserTasks(this.storage, this.address, this.dapp, state.network.server)
@@ -140,6 +143,7 @@ class UserStore {
 						console.log('userData kick')
 					}
 				} else {
+					this.showRegister = true;
 					console.log('User not signup')
 				}
 				await this.root.tasks.loadTasks(this.isUserLogin, this.getDapp, this.getUserNetwork)
@@ -218,6 +222,15 @@ class UserStore {
 	@computed get getUserData() {
 		return this.userData
 	}
+
+	@action("set network")
+	setShowRegister (boolean) {
+		this.showRegister = boolean;
+	}
+
+	@computed get getShowRegister() {
+		return this.showRegister
+	}
 	
 	@computed get getWavesKeeper() {
 		return this.wavesKeeper
@@ -287,6 +300,15 @@ class UserStore {
 	@action("set user avatar")
 	setUserAvatar (avatar) {
 		this.avatar = avatar;
+	}
+
+	@computed get getUserAvatarColor() {
+		return this.avatarColor
+	}
+
+	@action("set user avatar")
+	setUserAvatarColor (avatarColor) {
+		this.avatarColor = avatarColor;
 	}
 
 	@computed get getUserLocation() {

@@ -1,3 +1,12 @@
+### V0.3.8
+
+###### 6-11-2019
+
+#### New
+
+- Added new `Register` page
+- Added material avatars
+
 ### V0.3.7
 
 ###### 5-11-2019
