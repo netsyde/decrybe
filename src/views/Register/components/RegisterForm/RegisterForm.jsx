@@ -66,30 +66,36 @@ const RegisterForm = inject('rootStore')(observer(({ rootStore }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-   
-    let data = {
-      name: values.name,
-      bio: values.bio,
-      location: "",
-      tags: [],
-      address: rootStore.user.getUserAddress,
-      createTime: Date.now(),
-      status: "registered",
-      socials: {
-        telegram: "",
-        twitter: "",
-        github: ""
-      },
-      avatar: values.avatar
-    }
-    console.log(data)
-    let signTx = await dAppInt.signUp(data, rootStore.user.getWavesKeeper)
-    if (signTx.status) {
-      createSnackbar('success', 'You have successfully registered!')
-      rootStore.user.actionAfterSignup()
-      history.push('/')
+    let api = await rootStore.user.getWavesKeeper.initialPromise
+    if (api) {
+      const state = await rootStore.user.getWavesKeeper.publicState();
+      let data = {
+        name: values.name,
+        bio: values.bio,
+        location: "",
+        tags: [],
+        address: state.account.address,
+        createTime: Date.now(),
+        status: "registered",
+        socials: {
+          telegram: "",
+          twitter: "",
+          github: ""
+        },
+        avatar: values.avatar
+      }
+      console.log(data)
+
+      let signTx = await dAppInt.signUp(data, rootStore.user.getWavesKeeper)
+      if (signTx.status) {
+        createSnackbar('success', 'You have successfully registered!')
+        rootStore.user.actionAfterSignup()
+        history.push('/')
+      } else {
+        createSnackbar('error', signTx.error.data ? signTx.error.data : signTx.error.message)
+      }
     } else {
-      createSnackbar('error', signTx.error.data ? signTx.error.data : signTx.error.message)
+      console.log('keeper undef')
     }
   };
 
