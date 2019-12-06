@@ -236,6 +236,11 @@ class UserStore {
 		return this.wavesKeeper
 	}
 
+	@action("set waves keeper")
+	setWavesKeeper (keeper) {
+		this.wavesKeeper = keeper;
+	}
+
 	@computed get isUserReg() {
 		return this.isReg
 	}

@@ -38,7 +38,12 @@ autorun(async () => {
         rootStore.user.restoreSession();
       }
     } else {
-      rootStore.user.setShowRegister(true)
+      if(window.WavesKeeper === undefined) {
+        console.log('Waves Keeper not installed')
+      } else {
+        rootStore.user.setWavesKeeper(WavesKeeper)
+        rootStore.user.setShowRegister(true)
+      }
     }
   }
 });
