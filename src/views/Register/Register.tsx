@@ -111,7 +111,7 @@ const Register = inject('rootStore')(observer(({ rootStore }) => {
             color="secondary"
             component={RouterLink}
             onClick={() => rootStore.user.login()}
-            to={""}
+            to={"#"}
             underline="always"
             variant="subtitle2"
           >

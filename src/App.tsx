@@ -6,7 +6,9 @@ import theme from './theme';
 import routes from './Routes';
 import './assets/scss/index.scss';
 import { renderRoutes } from 'react-router-config';
-
+import { Provider, observer, inject } from 'mobx-react';
+import rootStore from './store/RootStore'
+const stores = { rootStore };
 const browserHistory = createBrowserHistory();
 import {
   ScrollReset,
@@ -15,12 +17,14 @@ import {
 export default class App extends Component {
   render() {
     return (
-      <ThemeProvider theme={theme}>
-        <Router history={browserHistory}>
-        <ScrollReset />
-          {renderRoutes(routes)}
-        </Router>
-      </ThemeProvider>
+      <Provider { ...stores }>
+        <ThemeProvider theme={theme}>
+          <Router history={browserHistory}>
+          <ScrollReset />
+            {renderRoutes(routes)}
+          </Router>
+        </ThemeProvider>
+      </Provider>
     );
   }
 }

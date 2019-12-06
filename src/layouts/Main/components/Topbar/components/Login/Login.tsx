@@ -19,10 +19,6 @@ const Login = inject('rootStore')(observer(({ rootStore }) => {
   const classes = useStyles(1);
   const history = useRouter();
 
-  if (rootStore.user.getShowRegister) {
-    return <Redirect to={`/register`} />;
-  }
-
   if (!rootStore.user.isUserLogin) {
     return (
       <Button onClick={() => rootStore.user.login()} variant="contained" color="primary">Sign In</Button>

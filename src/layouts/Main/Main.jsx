@@ -7,6 +7,7 @@ import { LinearProgress } from '@material-ui/core';
 const stores = { rootStore };
 import { renderRoutes } from 'react-router-config';
 import { Snackbar } from '../../components'
+import { Redirect } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -51,9 +52,12 @@ const Main = observer((props) => {
   const handleNavBarMobileClose = () => {
     setOpenNavBarMobile(false);
   };
+
+  if (rootStore.user.getShowRegister) {
+    return <Redirect to={`/register`} />;
+  }
   
   return (
-    <Provider { ...stores }>
       <div className={classes.root}>
       <Topbar
         className={classes.topBar}
@@ -72,7 +76,6 @@ const Main = observer((props) => {
         </main>
       </div>
     </div>
-    </Provider>
   );
 });
 
