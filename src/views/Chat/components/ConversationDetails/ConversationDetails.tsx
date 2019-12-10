@@ -19,7 +19,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const ConversationDetails = props => {
-  const { conversation, className, ...rest } = props;
+  const { conversation, className, rootStore, ...rest } = props;
 
   const classes = useStyles(props);
 
@@ -30,9 +30,9 @@ const ConversationDetails = props => {
     >
       <ConversationToolbar conversation={conversation} />
       <Divider />
-      <ConversationMessages messages={conversation.messages} />
+      <ConversationMessages messages={conversation.messages} rootStore={rootStore}/>
       <Divider />
-      <ConversationForm />
+      <ConversationForm rootStore={rootStore} conversation={conversation}/>
     </div>
   );
 };

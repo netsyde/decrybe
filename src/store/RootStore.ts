@@ -46,6 +46,23 @@ autorun(async () => {
       }
     }
   }
+  window.WavesKeeper.on("update", state => {
+    console.log('waves keeper update')
+    if (rootStore.user.checkSession()) {
+      if(window.WavesKeeper === undefined) {
+        console.log('Waves Keeper not installed')
+      } else {
+        rootStore.user.restoreSession();
+      }
+    } else {
+      if(window.WavesKeeper === undefined) {
+        console.log('Waves Keeper not installed')
+      } else {
+        rootStore.user.setWavesKeeper(WavesKeeper)
+        rootStore.user.setShowRegister(true)
+      }
+    }
+});
 });
 
 export default rootStore;

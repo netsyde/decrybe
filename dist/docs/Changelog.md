@@ -1,3 +1,12 @@
+### V0.4.0
+
+###### 10-11-2019
+
+#### New
+
+- Added state update when changing accounts in Waves Keeper
+- Chat between the customer and the freelancer now works (to start chatting, click `apply a role` on the `Task` page)
+
 ### V0.3.8
 
 ###### 6-11-2019

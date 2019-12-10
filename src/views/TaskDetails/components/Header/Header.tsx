@@ -98,9 +98,10 @@ const Header = observer((props) => {
       </Grid>
       <Application
         author={project.author ? project.author : "Undefined"}
-        onApply={handleApplicationClose}
         onClose={handleApplicationClose}
         open={openApplication}
+        rootStore={rootStore}
+        project={project}
       />
     </div>
   );

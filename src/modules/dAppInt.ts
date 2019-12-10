@@ -1,5 +1,4 @@
-const dAppAddress = "3N9kox62MPg67TokQMTTZJKTYQBPwtJL2Tk";
-let CryptoJS = require("crypto-js");
+const dAppAddress = "3N3PDiDHb1AJU8tTXJLcvoDNP29fdGNNWqs";
 const {nodeInteraction} =  require('@waves/waves-transactions');
 
 /**
@@ -115,6 +114,7 @@ export let createTask = async (item, expiration, data, wavesKeeper) => {
  */
 export let taskUpdate = async (taskId, data, wavesKeeper, type = "featured") => {
     const state = await wavesKeeper.publicState();
+    
     try {
         let tx = await wavesKeeper.signAndPublishTransaction({
             type: 16,
@@ -199,7 +199,7 @@ export let userUpdate = async (user, data, wavesKeeper) => {
         } else {
             return false
         }
-    } catch(error) {
+    } catch (error) {
         console.error("Error ", error);
         return false
    }
@@ -208,36 +208,133 @@ export let userUpdate = async (user, data, wavesKeeper) => {
 /**
  * Take the task
  * @param taskId - task UUID
- * @param comment - message from the freelancer to the customer
- * @param key - key
+ * @param message - message
+ * @param publicKey - public key of customer
  * @param wavesKeeper - class
  */
-export let takeTask = async (taskId, comment, key, wavesKeeper) => {
-    let ciphertext = CryptoJS.AES.encrypt(comment, key).toString();
-    wavesKeeper.signAndPublishTransaction({
-        type: 16,
-        data: {
-             fee: {
-                 "tokens": "0.05",
-                 "assetId": "WAVES"
-             },
-             dApp: dAppAddress,
-             call: {
-             	function: 'takeTask',
-             	args: [
-                    {
-                        type: "string", value: taskId
-                    },
-                    {
-                        type: "string", value: ciphertext
-                    },
-                ]
-            },
-            payment: []
+export let takeTask = async (taskId, message, publicKey, wavesKeeper) => {
+    const state = await wavesKeeper.publicState();
+
+    let ciphertext = await encryptMessage(message, publicKey, wavesKeeper)
+
+    console.log(ciphertext)
+    try {
+        let tx = await wavesKeeper.signAndPublishTransaction({
+            type: 16,
+            data: {
+                 fee: {
+                     "tokens": "0.05",
+                     "assetId": "WAVES"
+                 },
+                 dApp: dAppAddress,
+                 call: {
+                 	function: 'takeTask',
+                 	args: [
+                        {
+                            type: "string", value: taskId
+                        },
+                        {
+                            type: "string", value: ciphertext
+                        },
+                    ]
+                },
+                payment: []
+            }
+        })
+        tx = JSON.parse(tx)
+        if (tx) {
+            console.log(tx.id)
+            let wait = await nodeInteraction.waitForTx(tx.id, {apiBase: state.network.server})
+            if (wait) {
+                return true
+            }
+        } else {
+            return false
         }
-   }).then((tx) => {
-        console.log("Success!");
-   }).catch((error) => {
+    } catch (error) {
         console.error("Error ", error);
-   });  
+        return false
+   }
+}
+
+export let encryptMessage = async (message, publicKey, wavesKeeper) => {
+    try {
+        return await wavesKeeper.encryptMessage(message, publicKey, 'decrybe')
+        
+    } catch (e) {
+        console.error("Error ", e);
+        return false
+    }
+}
+
+export let decryptMessage = async (message, publicKey, wavesKeeper) => {
+    try {
+        return await wavesKeeper.decryptMessage(message, publicKey, 'decrybe')
+       
+    } catch (e) {
+        console.error("Error ", e);
+        return false
+    }
+}
+
+/**
+ * send message
+ * @param taskId - task UUID
+ * @param to - recipient address
+ * @param message - message
+ * @param publicKey - public key of recipient
+ * @param wavesKeeper - class
+ */
+export let sendMessage = async (taskId, to, message, publicKey, date, wavesKeeper) => {
+    const state = await wavesKeeper.publicState();
+
+    let ciphertext = await encryptMessage(message, publicKey, wavesKeeper) // recipient public key
+    let data = {
+        message: ciphertext,
+        task: taskId,
+        sender: state.account.address,
+        recipient: to,
+        date: date
+    }
+    console.log(ciphertext)
+    try {
+        let tx = await wavesKeeper.signAndPublishTransaction({
+            type: 16,
+            data: {
+                 fee: {
+                     "tokens": "0.05",
+                     "assetId": "WAVES"
+                 },
+                 dApp: dAppAddress,
+                 call: {
+                 	function: 'sendMessage',
+                 	args: [
+                        {
+                            type: "string", value: taskId
+                        },
+                        {
+                            type: "string", value: to
+                        },
+                        {
+                            type: "string", value: JSON.stringify(data)
+                        },
+                    ]
+                },
+                payment: []
+            }
+        })
+        tx = JSON.parse(tx)
+        if (tx) {
+            console.log(tx.id)
+            let wait = await nodeInteraction.waitForTx(tx.id, {apiBase: state.network.server})
+            if (wait) {
+                return true
+            }
+        } else {
+            return false
+        }
+    } catch (error) {
+        console.error("Error ", error);
+        return false
+   }
 }

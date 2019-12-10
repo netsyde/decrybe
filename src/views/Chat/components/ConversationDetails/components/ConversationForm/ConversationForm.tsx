@@ -13,6 +13,10 @@ import {
 import SendIcon from '@material-ui/icons/Send';
 import AddPhotoIcon from '@material-ui/icons/AddPhotoAlternate';
 import AttachFileIcon from '@material-ui/icons/AttachFile';
+import { observer } from 'mobx-react';
+import * as dAppInt from '../../../../../../modules/dAppInt'
+import getInitials from '../../../../../../utils/getInitials'
+import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -38,8 +42,8 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const ConversationForm = props => {
-  const { className, ...rest } = props;
+const ConversationForm = observer((props) => {
+  const { className, conversation, rootStore, ...rest } = props;
 
   const classes = useStyles(props);
 
@@ -55,38 +59,59 @@ const ConversationForm = props => {
     event.persist();
 
     setValue(event.target.value);
+
   };
 
   const handleAttach = () => {
     fileInputRef.current.click();
   };
 
+  const onApply = async event => {
+    //await dAppInt.takeTask(project.uuid, value, project.author.publicKey, rootStore.user.getWavesKeeper)
+    let message = await dAppInt.sendMessage(conversation.id, conversation.user.address, value, conversation.user.publicKey, Date.now(), rootStore.user.getWavesKeeper)
+    if (message) {
+      setValue('')
+      await rootStore.user.updateStorage()
+    }
+  };
+
+  const handleBrokenImage = e => (e.target.src = "/img/gag.png");
+
   return (
-    <div
+    <ValidatorForm onSubmit={onApply} onError={errors => console.log(errors)}
       {...rest}
       className={clsx(classes.root, className)}
     >
       <Avatar
         alt="Person"
-        src={sender.avatar}
-      />
+        src={rootStore.user.getUserAvatar || ""}
+        imgProps={{ onError: handleBrokenImage }}
+      >
+        {rootStore.user.getUserName ? getInitials(rootStore.user.getUserName) : ""}
+      </Avatar>
       <Paper
         className={classes.paper}
         elevation={1}
       >
-        <Input
+        <TextValidator
           className={classes.input}
-          disableUnderline
+          //disableUnderline
+          value={value}
           onChange={handleChange}
           placeholder="Leave a message"
+          validators={['required', 'minStringLength:1', 'maxStringLength:500', 'trim']}
+              errorMessages={['This field is required', 'Minimum 1 character', 'Maximum 500 characters', 'Please enter words']}
         />
       </Paper>
       <Tooltip title="Send">
-        <IconButton color={value.length > 0 ? 'primary' : 'default'}>
+        <IconButton 
+          color={value.length > 0 ? 'primary' : 'default'}
+          type="submit"
+          >
           <SendIcon />
         </IconButton>
       </Tooltip>
-      <Divider className={classes.divider} />
+     {/* { <Divider className={classes.divider} />
       <Tooltip title="Attach photo">
         <IconButton
           edge="end"
@@ -107,13 +132,9 @@ const ConversationForm = props => {
         className={classes.fileInput}
         ref={fileInputRef}
         type="file"
-      />
-    </div>
+      />} */}
+    </ValidatorForm>
   );
-};
-
-ConversationForm.propTypes = {
-  className: PropTypes.string
-};
+});
 
 export default ConversationForm;

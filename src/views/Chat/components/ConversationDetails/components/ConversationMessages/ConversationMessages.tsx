@@ -18,7 +18,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const ConversationMessages = props => {
-  const { messages, className, ...rest } = props;
+  const { messages, className, rootStore, ...rest } = props;
 
   const classes = useStyles(props);
 
@@ -34,6 +34,7 @@ const ConversationMessages = props => {
               <ConversationMessage
                 key={message.id}
                 message={message} //
+                rootStore={rootStore}
               />
             );
           })}

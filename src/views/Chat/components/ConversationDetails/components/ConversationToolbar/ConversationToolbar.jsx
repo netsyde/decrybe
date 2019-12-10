@@ -98,7 +98,7 @@ const ConversationToolbar = props => {
         </IconButton>
       </Tooltip>
       <div className={classes.user}>
-        <Typography variant="h6">{conversation.otherUser.name}</Typography>
+        <Typography variant="h6">{conversation.user.name}</Typography>
       </div>
       <Tooltip title="More options">
         <IconButton

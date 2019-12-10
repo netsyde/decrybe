@@ -52,10 +52,10 @@ const ConversationList = props => {
       <List disablePadding>
         {conversations.map((conversation, i) => (
           <ConversationListItem
-            active={conversation.id === selectedConversation}
+            active={conversation.uid === selectedConversation}
             conversation={conversation}
             divider={i < conversations.length - 1}
-            key={conversation.id}
+            key={i}
           />
         ))}
       </List>

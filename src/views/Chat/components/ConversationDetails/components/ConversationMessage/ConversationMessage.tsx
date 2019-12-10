@@ -5,6 +5,8 @@ import clsx from 'clsx';
 import moment from 'moment';
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography, Link, Avatar, colors } from '@material-ui/core';
+import { observer } from 'mobx-react';
+import getInitials from '../../../../../../utils/getInitials'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -50,69 +52,67 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const ConversationMessage = props => {
-  const { message, className, ...rest } = props;
-
+const ConversationMessage = observer((props) => {
+  const { message, className, rootStore,...rest } = props;
+  const handleBrokenImage = e => (e.target.src = "/img/gag.png");
   const classes = useStyles(props);
-
-  return (
-    <div
-      {...rest}
-      className={clsx(
-        classes.root,
-        {
-          [classes.authUser]: message.sender.authUser
-        },
-        className
-      )}
-    >
-      <div className={classes.inner}>
-        <Avatar
-          className={classes.avatar}
-          component={RouterLink}
-          src={message.sender.avatar}
-          to="/profile/1"
-        />
-        <div>
-          <div className={classes.body}>
-            <div>
-              <Link
-                color="inherit"
-                component={RouterLink}
-                to="/profile/1"
-                variant="h6"
-              >
-                {message.sender.authUser ? 'Me' : message.sender.name}
-              </Link>
-            </div>
-            <div className={classes.content}>
-              {message.contentType === 'image' ? (
-                <img
-                  alt="Attachment"
-                  className={classes.image}
-                  src={message.content}
-                />
-              ) : (
-                <Typography
+  if (rootStore.user.isUserLogin && rootStore.user.isUserReg) {
+    return (
+      <div
+        {...rest}
+        className={clsx(
+          classes.root,
+          {
+            [classes.authUser]: message.sender.address == rootStore.user.getUserAddress
+          },
+          className
+        )}
+      >
+        <div className={classes.inner}>
+          <Avatar
+            className={classes.avatar}
+            component={RouterLink}
+            src={message.sender.avatar || ""}
+            imgProps={{ onError: handleBrokenImage }}
+            to={`/profile/${message.sender.address}`}
+          >
+            {message.sender.name ? getInitials(message.sender.name) : ""}
+            </Avatar>
+          <div>
+            <div className={classes.body}>
+              <div>
+                <Link
                   color="inherit"
-                  variant="body1"
+                  component={RouterLink}
+                  to={`/profile/${message.sender.address}`}
+                  variant="h6"
                 >
-                  {message.content}
-                </Typography>
-              )}
+                  {message.sender.name == rootStore.user.getUserName ? 'Me' : message.sender.name}
+                </Link>
+              </div>
+              <div className={classes.content}>
+                  <Typography
+                    color="inherit"
+                    variant="body1"
+                  >
+                    {message.content}
+                  </Typography>
+              </div>
             </div>
-          </div>
-          <div className={classes.footer}>
-            <Typography
-              variant="body2"
-            >
-              {moment(message.created_at).fromNow()}
-            </Typography>
+            <div className={classes.footer}>
+              <Typography
+                variant="body2"
+              >
+                {message.created_at ? moment(message.created_at).fromNow() : ""}
+              </Typography>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  );
-};
+    );
+    } else {
+      return null
+    }
+});
 
 export default ConversationMessage;

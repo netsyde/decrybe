@@ -72,7 +72,8 @@ const GeneralSettings = observer((props) => {
         github: rootStore.settings.getGithub
       },
       avatar: rootStore.settings.getAvatar,
-      cover: rootStore.settings.getCover
+      cover: rootStore.settings.getCover,
+      publicKey: rootStore.user.getUserPublicKey
 
     }
     let tx = await userUpdate(rootStore.user.getUserAddress, data, rootStore.user.getWavesKeeper)

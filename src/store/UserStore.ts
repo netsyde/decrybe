@@ -22,7 +22,10 @@ class UserStore {
 	@observable tasks = [];
 	@observable avatarColor = ""
 	@observable showRegister = false
-	dapp: string = "3N9kox62MPg67TokQMTTZJKTYQBPwtJL2Tk";
+	@observable publicKey = ""
+	@observable conversations = []
+	@observable locked = true
+	dapp: string = "3N3PDiDHb1AJU8tTXJLcvoDNP29fdGNNWqs";
 	wavesKeeper;
 	cookies = new Cookies()
 	constructor(public root: RootStore) {
@@ -66,6 +69,10 @@ class UserStore {
 	async updateStorage () {
 		this.storage = await nodeInt.getAllData(this.dapp, this.network);
 		await this.root.tasks.loadTasks(this.isUserLogin, this.getDapp, this.getUserNetwork)
+		let conversations = await nodeInt.getConversationData(this.getStorage, this.getUserAddress, this.getDapp, this.getUserNetwork, this.getWavesKeeper)
+		if (conversations) {
+			this.conversations = conversations
+		}
 		console.log('storage update')
 	}
 
@@ -106,18 +113,24 @@ class UserStore {
 				this.address = state.account.address;
 				this.balance = state.account.balance.available;
 				this.network = state.network.server;
+				this.publicKey = state.account.publicKey;
+				this.locked = state.locked
 				this.userData = state;
 				
 				this.storage = await nodeInt.getAllData(this.dapp, state.network.server);
 				console.log(this.storage)
 				this.isLogin = true;
 				this.isReg = await nodeInt.checkReg(this.storage, state.account.address, this.dapp, state.network.server);
-				
-				console.log(this.isReg)
+
 				if (this.isReg) {
 					this.cookies.set('address', this.getUserAddress, { path: '/' });
 					this.cookies.set('network', this.getUserNetwork, { path: '/' });
 					let userDataFromDapp = await nodeInt.getUserData(this.storage, state.account.address, this.dapp, state.network.server);
+					let conversations = await nodeInt.getConversationData(this.getStorage, this.getUserAddress, this.getDapp, this.getUserNetwork, this.getWavesKeeper)
+					console.log(conversations)
+					if (conversations) {
+						this.conversations = conversations
+					}
 					if (userDataFromDapp) {
 						this.name = userDataFromDapp.name;
 						this.root.settings.setName(this.name)
@@ -177,6 +190,7 @@ class UserStore {
 		this.tags = []
 		this.avatar = ""
 		this.location = ""
+		this.publicKey = ""
 		// firefox fix
 		this.cookies.set('address', '', { path: '/' });
 		this.cookies.set('network', '', { path: '/' });
@@ -189,8 +203,17 @@ class UserStore {
 	@computed get getStorage() {
 		return this.storage
 	}
+
+	@computed get getConversations() {
+		return this.conversations
+	}
+
 	@computed get isUserLogin() {
 		return this.isLogin
+	}
+
+	@computed get isKeeperLocked() {
+		return this.locked
 	}
 
 	@computed get isUserOnline() {
@@ -199,6 +222,10 @@ class UserStore {
 	
 	@computed get getUserAddress() {
 		return this.address
+	}
+
+	@computed get getUserPublicKey() {
+		return this.publicKey
 	}
 
 	@action("set network")

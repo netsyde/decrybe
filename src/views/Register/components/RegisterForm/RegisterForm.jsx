@@ -75,6 +75,7 @@ const RegisterForm = inject('rootStore')(observer(({ rootStore }) => {
         location: "",
         tags: [],
         address: state.account.address,
+        publicKey: state.account.publicKey,
         createTime: Date.now(),
         status: "registered",
         socials: {

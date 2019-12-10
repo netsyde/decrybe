@@ -1,5 +1,5 @@
 import {broadcast, waitForTx, invokeScript} from '@waves/waves-transactions';
-const dAppAddress = "3NBngsNecsVX8HzVFTyEQSVGbL9Xia8hBb4";
+const dAppAddress = "3N3PDiDHb1AJU8tTXJLcvoDNP29fdGNNWqs";
 let seed = "melody eye stock ostrich camera talk unlock royal insane pipe step squeeze";
 
 const uuid = require('uuid/v4');
@@ -204,5 +204,7 @@ export let takeTask = async (taskId, comment, key, nodeUrl) => {
     let tx = await broadcast(ts, nodeUrl);
     console.log(tx.id)    
 }
+
+
 let mess = "Veloce are offering great discounts to fast bookings made in advance and in fall and winter time."
 //takeTask("fbe2dd88-68bf-41d5-a60e-114c89b4371b", mess, "bitcoin", "https://testnodes.wavesnodes.com")

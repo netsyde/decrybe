@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import clsx from 'clsx';
-import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Avatar,
@@ -10,7 +9,9 @@ import {
   Typography,
   colors
 } from '@material-ui/core';
-
+import * as dAppInt from '../../../../../../modules/dAppInt'
+import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator';
+import { Redirect } from 'react-router-dom';
 const useStyles = makeStyles(theme => ({
   root: {
     width: 960
@@ -61,7 +62,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Application = props => {
-  const { author, open, onClose, onApply, className, ...rest } = props;
+  const { author, open, onClose, rootStore, project, className, ...rest } = props;
 
   const [value, setValue] = useState('');
 
@@ -72,6 +73,21 @@ const Application = props => {
 
     setValue(event.target.value);
   };
+  const [messageSended, setMessageSended] = useState(false);
+  
+  const onApply = async event => {
+    let message = await dAppInt.sendMessage(project.uuid, project.author.address, value, project.author.publicKey, Date.now(), rootStore.user.getWavesKeeper)
+    if (message) {
+      await rootStore.user.updateStorage()
+      setValue('')
+      setMessageSended(true)
+    }
+  };
+
+  if (messageSended) {
+    //console.log('taskCreated')
+    return <Redirect to={`/chat`} />
+  }
 
 
   const handleBrokenImage = e => (e.target.src = "/img/gag.png");
@@ -81,7 +97,7 @@ const Application = props => {
       onClose={onClose}
       open={open}
     >
-      <div
+      <ValidatorForm onSubmit={onApply} onError={errors => console.log(errors)}
         {...rest}
         className={clsx(classes.root, className)}
       >
@@ -104,7 +120,7 @@ const Application = props => {
           </Typography>
         </div>
         <div className={classes.content}>
-          <TextField
+          <TextValidator
             autoFocus
             className={classes.textField}
             // eslint-disable-next-line react/jsx-sort-props
@@ -115,6 +131,8 @@ const Application = props => {
             multiline
             onChange={handleChange}
             placeholder="Tell the customer about yourself"
+            validators={['required', 'minStringLength:20', 'maxStringLength:200', 'trim']}
+              errorMessages={['This field is required', 'Minimum 20 characters', 'Maximum 200 characters', 'Please enter words']}
             rows={5}
             value={value}
             variant="outlined"
@@ -123,27 +141,27 @@ const Application = props => {
             <Avatar
               alt="Author"
               className={classes.avatar}
-              src={author.avatar || "/img/gag.png"}
+              src={author.avatar || ""}
               imgProps={{ onError: handleBrokenImage }}
             >
               {author.name ? author.name : ""}
             </Avatar>
             <div>
-              <Typography variant="h3">{author.name ? author.name : "Undefined"}</Typography>
-              <Typography variant="subtitle2">{author.bio ? author.bio : "Undefined"}</Typography>
+              <Typography variant="h3">{author ? author.name : "Undefined"}</Typography>
+              <Typography variant="subtitle2">{author ? author.bio : "Undefined"}</Typography>
             </div>
           </div>
         </div>
         <div className={classes.actions}>
           <Button
             className={classes.applyButton}
-            onClick={onApply}
             variant="contained"
+            type="submit"
           >
             Apply for a role
           </Button>
         </div>
-      </div>
+      </ValidatorForm>
     </Dialog>
   );
 };

@@ -69,13 +69,12 @@ export let getAllData = async (address: String, nodeUrl: String) => {
  * @param nodeUrl - node url
  * @returns {String}
  */
-export let getDataByKey = async (data, key: String, dAppAddress: String, nodeUrl: String) => {
+export let getDataByKey = async (data, key: String) => {
     try {
         let response;
         
 		for (let i in data) {
 			if (data[i].key == key) {
-				//console.log(data[i].value);
 				response = data[i].value;
 			} else {
 				if (!response) {
@@ -99,7 +98,7 @@ export let getDataByKey = async (data, key: String, dAppAddress: String, nodeUrl
 export let checkReg = async (alldata, address: String, dAppAddress: String, nodeUrl: String) => {
     try {
         let fAddress = `user_sts_${address}`
-        let data = await getDataByKey(alldata, fAddress, dAppAddress, nodeUrl)
+        let data = await getDataByKey(alldata, fAddress)
         if (data) {
             //console.log(true)
             return true;
@@ -142,7 +141,7 @@ export let getAllTasks = async (data, dAppAddress: String, nodeUrl: String) => {
  * @param nodeUrl - node url
  * @returns {Object}
  */
-export let getAllUsers = async (alldata, dAppAddress: String, nodeUrl: String) => {
+export let getAllUsers = async (alldata) => {
     try {
         let users = await Promise.all(
             Object.keys(alldata)
@@ -164,7 +163,7 @@ export let getAllUsers = async (alldata, dAppAddress: String, nodeUrl: String) =
  */
 export let getUserData = async (alldata, address: String, dAppAddress: String, nodeUrl: String) => {
     try {
-        let userData = await getDataByKey(alldata, "user_bio_" + address, dAppAddress, nodeUrl)
+        let userData = await getDataByKey(alldata, "user_bio_" + address)
         if (userData) {
             userData = JSON.parse(userData)
             let userDataObj = {
@@ -178,7 +177,8 @@ export let getUserData = async (alldata, address: String, dAppAddress: String, n
                 address: address,
                 avatarColor: color[getRandomArbitary(0, color.length - 1)],
                 location: "location" in userData ? userData.location : "",
-                cover: "cover" in userData ? userData.cover : "/img/cover.png"
+                cover: "cover" in userData ? userData.cover : "/img/cover.png",
+                publicKey: "publicKey" in userData ? userData.publicKey : ""
             }
             return userDataObj;
         } else {
@@ -201,14 +201,16 @@ export let getUserData = async (alldata, address: String, dAppAddress: String, n
  */
 export let getTaskData = async (alldata, id: String, dAppAddress: String, nodeUrl: String) => {
     try {
-        let taskData = await getDataByKey(alldata, "datajson_" + id, dAppAddress, nodeUrl)
+        let taskData = await getDataByKey(alldata, "datajson_" + id)
         taskData = JSON.parse(taskData)
         let userData = await getUserData(alldata, taskData.author, dAppAddress, nodeUrl)
         taskData.author = {
             address: taskData.author,
+            publicKey: userData ? userData.publicKey : "",
             name: userData ? userData.name : "",
             avatar: userData ? userData.avatar : "",
             avatarColor: color[getRandomArbitary(0, color.length - 1)],
+            bio: userData ? userData.bio : ""
         }
 
         for (let i = 0; i < taskData.tags.length; i++) {
@@ -302,7 +304,7 @@ export let getTasksAllData = async (alldata, dAppAddress: String, nodeUrl: Strin
 
 export let getUsersAllData = async (alldata, dAppAddress: String, nodeUrl: String) => {
     try {
-        let allUsers = await getAllUsers(alldata, dAppAddress, nodeUrl)
+        let allUsers = await getAllUsers(alldata)
         let users = [];
         if (allUsers) {
             for(let i = 0; i < allUsers.length; i++) {
@@ -346,4 +348,268 @@ function ucFirst(str) {
     if (!str) return str;
   
     return str[0].toUpperCase() + str.slice(1);
+}
+
+export let getTaskUserMessage = async (alldata, id) => {
+    try {
+        let message = await getDataByKey(alldata, id)
+        message = JSON.parse(message)
+        return message
+    } catch (e) {
+        console.log(`ERROR in nodeInt.getAllUserTasks! ${e.name}: ${e.message}\n${e.stack}`);
+        return false;
+    }
+}
+
+export let getTaskUserMessageBlock = async (alldata, id) => {
+    try {
+        let block = await getDataByKey(alldata, id)
+        block = JSON.parse(block)
+        return block
+    } catch (e) {
+        console.log(`ERROR in nodeInt.getAllUserTasks! ${e.name}: ${e.message}\n${e.stack}`);
+        return false;
+    }
+}
+
+/*
+Output:
+[
+    fsfds: [{
+        id: 1,
+        message: ""
+    },
+    {
+        id: 2,
+        message: ""
+    }],
+    leva: []
+]
+
+
+*/
+
+/*
+INPUT:
+[
+    {
+        task: "fdsfds",
+        id: 1,
+        message: ""
+    },
+    {
+        task: "fdsfds",
+        id: 2,
+        message: ""
+    },
+    {
+        task: "fdsfds",
+        id: 2,
+        message: ""
+    },
+]
+
+
+
+
+*/
+let array = [
+    {
+        task: "fsfds"
+    },
+    {
+        task: "fsfds"
+    },
+    {
+        task: "leva"
+    }
+]
+
+
+export let getConversationData = async (data, user, dAppAddress, nodeUrl, wavesKeeper) => {
+    try {
+        let allConversation = await getUserConversationList(data, user, nodeUrl)
+        let conversationsData = []
+        if (allConversation) {
+            for (let i = 0; i < allConversation.length; i++) {
+                let userConversationMessages = await getUserConversationMessages(data, allConversation[i])
+                if (userConversationMessages) {
+                    let conversationData = []
+                    for (let x = 0; x < userConversationMessages.length; x++) {
+                        let message = await getTaskUserMessage(data, userConversationMessages[x].message)
+                        let check = message.sender == user ? message.recipient : message.sender;
+                        let userData = await getUserData(data, check, dAppAddress, nodeUrl)
+                        let userDataSender = await getUserData(data, message.sender, dAppAddress, nodeUrl)
+                        if (userData) {
+                            let decrypted = message.message ? await wavesKeeper.decryptMessage(message.message, userData.publicKey, 'decrybe') : ""
+                            let block = await getTaskUserMessageBlock(data, userConversationMessages[x].block)
+                            conversationData.push(
+                                {
+                                    content: decrypted,
+                                    block: block,
+                                    sender: userDataSender,
+                                    task: message.task,
+                                    id: userConversationMessages[x].message,
+                                    created_at: message.date
+                                }
+                            )
+                        }
+                    }
+                    let variant = allConversation[i].sender == user ? allConversation[i].recipient : allConversation[i].sender
+                    let uData = await getUserData(data, variant, dAppAddress, nodeUrl)
+                    conversationData = conversationData.sort(compareNumeric);
+                    let task = await getTaskData(data, allConversation[i].task, dAppAddress, nodeUrl)
+                    let regex = new RegExp(allConversation[i].task)
+
+                    conversationsData.push({
+                        messages: conversationData.filter( message  => regex.test(message.task)),
+                        id: allConversation[i].task,
+                        uid: allConversation[i].id,
+                        task: task,
+                        user: uData,
+                    })
+                }
+            }
+        }
+        return conversationsData
+    } catch (e) {
+        console.log(`ERROR in nodeInt.getConversationData! ${e.name}: ${e.message}\n${e.stack}`);
+        return false;
+    }
+}
+
+// добавить сортировку по таскам сразу в чатик
+
+
+/*
+export let getAllTaskMessages = async (data, task, user1, user2, dAppAddress, nodeUrl) => {
+    try {
+        let messages1 = await getAllTaskUserMessagesData(data, task, user1, user2, dAppAddress, nodeUrl)
+        let messages2 = await getAllTaskUserMessagesData(data, task, user2, user1, dAppAddress, nodeUrl)
+        if (messages1 && messages2) {
+            let messages = messages1.concat(messages2)
+            messages.sort(compareNumeric)
+            return messages
+        } else if (messages1 && !messages2) {
+            return messages1
+        } else if (!messages1 && messages2) {
+            return messages2
+        } else {
+            return false
+        }
+    } catch (e) {
+        console.log(`ERROR in nodeInt.getUsersAllData! ${e.name}: ${e.message}\n${e.stack}`);
+        return false;
+    }
+}
+*/
+
+let compareNumeric = (a, b) => {
+    if (Number(a.block) > Number(b.block)) return 1;
+    if (Number(a.block) == Number(b.block)) return 0;
+    if (Number(a.block) < Number(b.block)) return -1;
   }
+  function contains(arr, elem) {
+    for (var i = 0; i < arr.length; i++) {
+        if (arr[i] === elem) {
+            return true;
+        }
+    }
+    return false;
+}
+// получение всех юзеров, с которыми у юзера была переписка
+export let getUserConversationList = async (data, user, nodeUrl) => {
+    try {
+        //let data = await getAllData("3N3PDiDHb1AJU8tTXJLcvoDNP29fdGNNWqs", nodeUrl)
+        let taskIds = []
+        let result = await Promise.all(
+            Object.keys(data)
+                .map(async key => {
+                    const match = /^msg_([0-9a-z-]+)_([0-9a-z-]+)_id:([0-9]+)/i.exec(key);
+                    // добавить получение каждого таска и если сообщение id таска = таску из daapp
+                    //console.log(match)
+
+                    // обавить запись id сообщения в таск_мсг и потом вставлять его где id
+                    if (match && (match[1] === user || match[2] === user)) {
+                        let realUser = user === match[1] ? match[2] : match[1]
+                        let task = await getDataByKey(data, `msg_${match[1]}_${match[2]}_id:${match[3]}`)
+                        task = JSON.parse(task)
+                        if (!contains(taskIds, `${task.task}_${realUser}`)) {
+                            taskIds.push(`${task.task}_${realUser}`)
+                            let id = `${task.task}_${realUser}`
+                            return {
+                                message: `msg_${match[1]}_${match[2]}_id:${match[3]}`,
+                                block: `block_msg_${match[1]}_${match[2]}_id:${match[3]}`,
+                                sender: match[1],
+                                recipient: match[2],
+                                task: task.task,
+                                id: id
+    
+                            }
+                        }
+                        
+                    }
+                    //return false
+                })
+        );
+        //console.log(taskIds)
+        result = result.filter(Boolean)
+        //console.log(result)
+        
+        // for (let i = 0; i < result.length; i++) {
+        //     for(let x = 0; x < result.length; x++) {
+        //         if (result[i].sender == result[x].recipient && result[i].recipient == result[x].sender) {
+        //             result.splice(x, 1);
+        //         }
+        //     }
+        // }
+        
+        
+
+        return result
+        //console.log
+    } catch (e) {
+        console.log(`ERROR in nodeInt.getUsersAllData! ${e.name}: ${e.message}\n${e.stack}`);
+        return false;
+    }
+}
+
+//let allData = getAllData("3N3PDiDHb1AJU8tTXJLcvoDNP29fdGNNWqs", nodeUrl)
+//getUserConversationsMessages("ds", "3N67wqt9Xvvn1Qtgz6KvyEcdmr8AL7EVaQM")
+//getUserConversationList("ds", "3N67wqt9Xvvn1Qtgz6KvyEcdmr8AL7EVaQM")
+//"msg_3NBdfiSHLWVRUW4EPHcrtX47pky4TzKq8fb_3N67wqt9Xvvn1Qtgz6KvyEcdmr8AL7EVaQM_id:1"
+// получение сообщений от единичного юзера - работает
+export let getUserConversationMessages = async (allData, conversation) => {
+    try {
+        if (conversation) {
+            let result = await Promise.all(
+                Object.keys(allData)
+                    .map(async key => {
+                        const match = /^msg_([0-9a-z-]+)_([0-9a-z-]+)_id:([0-9]+)/i.exec(key);
+                        //console.log(match)
+                        if (match && ((match[1] === conversation.sender && match[2] == conversation.recipient) || (match[2] === conversation.sender && match[1] == conversation.recipient))) {
+                            let task = await getDataByKey(allData, `msg_${match[1]}_${match[2]}_id:${match[3]}`)
+                            return {
+                                message: `msg_${match[1]}_${match[2]}_id:${match[3]}`,
+                                block: `block_msg_${match[1]}_${match[2]}_id:${match[3]}`,
+                                task: JSON.parse(task),
+                                sender: match[1],
+                                recipient: match[2],
+                            }
+                        } //else
+                        //return false
+                    })
+                    
+            );
+            result = result.filter(Boolean)
+            return result
+        }
+        
+    } catch (e) {
+        console.log(`ERROR in nodeInt.getUsersAllData! ${e.name}: ${e.message}\n${e.stack}`);
+        return false;
+    }
+}
+//let conv = getUserConversationList("ds", "3N67wqt9Xvvn1Qtgz6KvyEcdmr8AL7EVaQM")
+//getUserConversationMessages("dsad", "3N67wqt9Xvvn1Qtgz6KvyEcdmr8AL7EVaQM")
+

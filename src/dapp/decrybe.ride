@@ -27,55 +27,76 @@ func getNumberByKey(key: String) = {
     num
 }
 
-# Item Data
-func getKeyItemData(item: String) = {
-    "datajson_" + item
+func getKeyUserMessagesCnt(from: String, to: String) = {
+    "msg_cnt_" + from + "_" + to
 }
 
-func getValueItemData(item: String) = {
-    getStrByKey(getKeyItemData(item))
+func getValueUserMessagesCnt(from: String, to: String) = {
+    getNumberByKey(getKeyUserMessagesCnt(from, to))
+}
+
+# Task Message
+func getKeyUserMessage(from: String, to: String, id: String) = {
+    "msg_" + from + "_" + to + "_id:" + id
+}
+
+func getValueUserMessage(from: String, to: String, cnt: String) = {
+    getStrByKey(getKeyUserMessage(from, to, cnt))
+}
+
+func getKeyUserMessageBlock(from: String, to: String, cnt: String) = {
+    "block_msg_" + from + "_" + to + "_id:" + cnt
+}
+# Task Data
+func getKeyTaskData(task: String) = {
+    "datajson_" + task
+}
+
+func getValueTaskData(task: String) = {
+    getStrByKey(getKeyTaskData(task))
 }
 
 # Task author section
-func getKeyItemAuthor (item: String) = {
-    "author_" + item
+func getKeyTaskAuthor (task: String) = {
+    "author_" + task
 }
 
-func getValueItemAuthor(item: String) = {
-    getStrByKey(getKeyItemAuthor(item))
+func getValueTaskAuthor(task: String) = {
+    
+    getStrByKey(getKeyTaskAuthor(task))
 }
 
-# Item Block
-func getKeyItemBlock(item: String) = {
-    "block_" + item
+# Task Block
+func getKeyTaskBlock(task: String) = {
+    "block_" + task
 }
 
-# Item Bank
-func getKeyItemBank(item: String) = {
-    "bank_" + item
+# Task Bank
+func getKeyTaskBank(task: String) = {
+    "bank_" + task
 }
 
-# Item Freelancer
-func getKeyItemFreelancer(item: String, account: String) = {
-    "freelancer_" + item + "_" + account
+# Task Freelancer
+func getKeyTaskFreelancer(task: String, account: String) = {
+    "freelancer_" + task + "_" + account
 }
 
-func getValueItemFreelancer(item: String, account: String) = {
-    getStrByKey(getKeyItemFreelancer(item, account))
+func getValueTaskFreelancer(task: String, account: String) = {
+    getStrByKey(getKeyTaskFreelancer(task, account))
 }
 
-# Item Status
-func getKeyItemStatus(item: String) = {
-    "status_" + item
+# Task Status
+func getKeyTaskStatus(task: String) = {
+    "status_" + task
 }
 
-func getValueItemStatus(item: String) = {
-    getStrByKey(getKeyItemStatus(item))
+func getValueTaskStatus(task: String) = {
+    getStrByKey(getKeyTaskStatus(task))
 }
 
-# Item Expiration
-func getKeyItemExpiration(item: String) = {
-    "expiration_block_" + item
+# Task Expiration
+func getKeyTaskExpiration(task: String) = {
+    "expiration_block_" + task
 }
 
 # User Bio
@@ -102,21 +123,21 @@ func getKeyUserBlock(account: String) = {
 }
 
 @Callable(i)
-func createTask(item: String, expiration: Int, data: String) = {
+func createTask(task: String, expiration: Int, data: String) = {
     let account = toBase58String(i.caller.bytes)
     let pmt = extract(i.payment)
     if (isDefined(pmt.assetId)) then throw("Can use waves only at the moment")
     else {
         if (pmt.amount != LISTINGFEE) then throw("Please pay exact amount for the listing: " + toString(LISTINGFEE) + ", actual payment is: " + toString(pmt.amount))
-        else if (getValueItemAuthor(item) != NONE) then throw("Task already exist")
+        else if (getValueTaskAuthor(task) != NONE) then throw("Task already exist")
         else if (getValueUserBio(account) == NONE) then throw("User not signup")
         else WriteSet([
-            DataEntry(getKeyItemAuthor(item), account),
-            DataEntry(getKeyItemBlock(item), height),
-            DataEntry(getKeyItemExpiration(item), height + expiration),
-            DataEntry(getKeyItemBank(item), LISTINGFEE),
-            DataEntry(getKeyItemStatus(item), FEATURED),
-            DataEntry(getKeyItemData(item), data)
+            DataEntry(getKeyTaskAuthor(task), account),
+            DataEntry(getKeyTaskBlock(task), height),
+            DataEntry(getKeyTaskExpiration(task), height + expiration),
+            DataEntry(getKeyTaskBank(task), LISTINGFEE),
+            DataEntry(getKeyTaskStatus(task), FEATURED),
+            DataEntry(getKeyTaskData(task), data)
         ])
     }
 }
@@ -138,28 +159,44 @@ func signUp(data: String) = {
 }
 
 @Callable(i)
-func takeTask(item: String, comment: String) = {
+func takeTask(task: String, comment: String) = {
     let account = toBase58String(i.caller.bytes)
-    if (getValueItemData(item) == NONE) then throw("Task doesnt exist")
+    if (getValueTaskData(task) == NONE) then throw("Task doesnt exist")
     else if (getValueUserBio(account) == NONE) then throw("User not signup")
-    else if (getValueItemAuthor(item) == account) then throw("You're author")
-    else if (getValueItemStatus(item) == INPROGRESS) then throw("Freelancer is no longer required (the task is already in progress)") 
+    else if (getValueTaskAuthor(task) == account) then throw("You're author")
+    else if (getValueTaskStatus(task) == INPROGRESS) then throw("Freelancer is no longer required (the task is already in progress)") 
     else {
         WriteSet([
-            DataEntry(getKeyItemFreelancer(item, account), comment)
+            DataEntry(getKeyTaskFreelancer(task, account), comment)
         ])
     }
 }
 
 @Callable(i)
-func taskUpdate(item: String, data: String, type: String) = {
+func sendMessage(task: String, to: String, message: String) = {
     let account = toBase58String(i.caller.bytes)
-    if (getValueItemData(item) == NONE) then throw("Task doesnt exist")
-    else if (getValueItemAuthor(item) != account) then throw("You're not author")
+    let cnt = getValueUserMessagesCnt(account, to) + 1
+    if (getValueTaskData(task) == NONE) then throw("Task doesnt exist")
+    else if (getValueUserBio(account) == NONE) then throw("User not signup")
+    else if (getValueTaskStatus(task) == INPROGRESS) then throw("Freelancer is no longer required (the task is already in progress)") 
     else {
         WriteSet([
-            DataEntry(getKeyItemData(item), data),
-            DataEntry(getKeyItemStatus(item), if (type == INPROGRESS) then INPROGRESS else FEATURED)
+            DataEntry(getKeyUserMessagesCnt(account, to), cnt),
+            DataEntry(getKeyUserMessage(account, to, toString(cnt)), message),
+            DataEntry(getKeyUserMessageBlock(account, to, toString(cnt)), height)
+        ])
+    }
+}
+
+@Callable(i)
+func taskUpdate(task: String, data: String, type: String) = {
+    let account = toBase58String(i.caller.bytes)
+    if (getValueTaskData(task) == NONE) then throw("Task doesnt exist")
+    else if (getValueTaskAuthor(task) != account) then throw("You're not author")
+    else {
+        WriteSet([
+            DataEntry(getKeyTaskData(task), data),
+            DataEntry(getKeyTaskStatus(task), if (type == INPROGRESS) then INPROGRESS else FEATURED)
         ])
     }
 }

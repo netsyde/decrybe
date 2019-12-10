@@ -41,7 +41,7 @@ export default [
           <Label
             color={colors.red[500]}
           >
-            prototype
+            alpha
           </Label>
         )
       },
@@ -65,7 +65,7 @@ export default [
         title: 'Changelog',
         href: '/changelog',
         icon: ViewModuleIcon,
-        label: () => <Label color={colors.blue['500']}>v0.3.8</Label>
+        label: () => <Label color={colors.blue['500']}>v0.4.0</Label>
       }
     ]
   }

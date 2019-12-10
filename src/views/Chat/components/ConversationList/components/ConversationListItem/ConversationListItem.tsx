@@ -12,7 +12,7 @@ import {
   Avatar,
   colors
 } from '@material-ui/core';
-
+import getInitials from '../../../../../../utils/getInitials'
 import { Label } from '../../../../../../components';
 
 const useStyles = makeStyles(theme => ({
@@ -43,7 +43,7 @@ const ConversationListItem = props => {
 
   const classes = useStyles(props);
   const lastMessage = conversation.messages[conversation.messages.length - 1];
-
+  const handleBrokenImage = e => (e.target.src = "/img/gag.png");
   return (
     <ListItem
       {...rest}
@@ -55,22 +55,25 @@ const ConversationListItem = props => {
         className
       )}
       component={RouterLink}
-      to={`/chat/${conversation.id}`}
+      to={`/chat/${conversation.uid}`}
     >
       <ListItemAvatar>
         <Avatar
           alt="Person"
           className={classes.avatar}
-          src={conversation.otherUser.avatar}
-        />
+          src={conversation.user.avatar || ""}
+          imgProps={{ onError: handleBrokenImage }}
+        >
+          {conversation.user.name ? getInitials(conversation.user.name) : ""}
+        </Avatar>
       </ListItemAvatar>
       <ListItemText
-        primary={conversation.otherUser.name}
+        primary={conversation.task.title}
         primaryTypographyProps={{
           noWrap: true,
           variant: 'h6'
         }}
-        secondary={`${lastMessage.sender.name}: ${lastMessage.content}`}
+        secondary={`${lastMessage ? lastMessage.sender.name : ""}: ${lastMessage ? lastMessage.content : ""}`}
         secondaryTypographyProps={{
           noWrap: true,
           variant: 'body1'
@@ -81,28 +84,13 @@ const ConversationListItem = props => {
           noWrap
           variant="body2"
         >
-          {moment(lastMessage.created_at).isSame(moment(), 'day')
+          {lastMessage.created_at ? (moment(lastMessage.created_at).isSame(moment(), 'day')
             ? moment(lastMessage.created_at).format('LT')
-            : moment(lastMessage.created_at).fromNow()}
+            : moment(lastMessage.created_at).fromNow()) : ""}
         </Typography>
-        {conversation.unread > 0 && (
-          <Label
-            className={classes.unread}
-            color={colors.red[500]}
-            shape="rounded"
-          >
-            {conversation.unread}
-          </Label>
-        )}
       </div>
     </ListItem>
   );
-};
-
-ConversationListItem.propTypes = {
-  active: PropTypes.bool,
-  className: PropTypes.string,
-  conversation: PropTypes.object.isRequired
 };
 
 export default ConversationListItem;
