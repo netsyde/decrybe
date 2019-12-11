@@ -51,6 +51,10 @@ const TaskCreate = inject('rootStore')(observer(({ rootStore }) => {
       return false
     }
   }
+
+  let formRef = React.createRef();
+  const [isValid, setValid] = React.useState(false);
+
   const [taskCreated, setTaskCreated] = useState(false);
   const [task, setTask] = useState('');
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -82,53 +86,52 @@ const TaskCreate = inject('rootStore')(observer(({ rootStore }) => {
   
   };
 
-  const createTask = async () => {
-      let store = rootStore.taskCreate;
-      // console.log(`${store.getTitle}\n${store.getPrice}\n${store.getCategory}`)
-      // console.log(`${store.getEndDate}\n${store.getBriefDescription}\n${store.getTags}`)
-      // console.log(`${store.getDescription}\n${store.getCurrency}\n${store.getAuthor}\n${store.getStatus}`)
-      /* if (len(store.getTitle) && store.getPrice > 0 && len(store.getCategory) && 
-        len(store.getEndDate) && len(store.getBriefDescription) && len(store.getTags) &&
-        len(store.getDescription) && len(store.getCurrency) && len(store.getAuthor) &&
-        len(store.getStatus)) { */
-          let now = Date.now()
-          let expiration = store.getEndDate - now
-          let taskId = uuid()
-          let data = {
-            title: store.getTitle,
-            createTime: now,
-            expireTime: store.getEndDate,
-            price: store.getPrice,
-            currency: store.getCurrency,
-            author: rootStore.user.getUserAddress,
-            brief: store.getBriefDescription,
-            uuid: taskId,
-            tags: store.getTags,
-            updatedAt: now,
-            members: store.getMembers,
-            freelancers: store.getFreelancers,
-            status: store.getStatus,
-            description: store.getDescription,
-            category: store.getCategory
-          }
-        
-          let tx = await dAppInt.createTask(taskId, expiration, data, rootStore.user.getWavesKeeper)
-          
-          if (tx) {
-            createSnackbar('success', 'Task successfully created!')
-            rootStore.taskCreate.clean();
-            await rootStore.user.updateStorage()
-            setTask(taskId)
-            setTaskCreated(true)
-            
-          } else {
-            createSnackbar('error', 'Error: transaction is rejected')
-          }
+  let validatorListener = async () => {
+    const valid = await formRef.current.isFormValid();
+    setValid(valid)
   }
+
+  const createTask = async () => {
+    let store = rootStore.taskCreate;
+    let now = Date.now()
+    let expiration = store.getEndDate - now
+    let taskId = uuid()
+    let data = {
+      title: store.getTitle,
+      createTime: now,
+      expireTime: store.getEndDate,
+      price: store.getPrice,
+      currency: store.getCurrency,
+      author: rootStore.user.getUserAddress,
+      brief: store.getBriefDescription,
+      uuid: taskId,
+      tags: store.getTags,
+      updatedAt: now,
+      members: store.getMembers,
+      freelancers: store.getFreelancers,
+      status: store.getStatus,
+      description: store.getDescription,
+      category: store.getCategory
+    }
+        
+    let tx = await dAppInt.createTask(taskId, expiration, data, rootStore.user.getWavesKeeper)
+       
+    if (tx) {
+      createSnackbar('success', 'Task successfully created!')
+      rootStore.taskCreate.clean();
+      await rootStore.user.updateStorage()
+      setTask(taskId)
+      setTaskCreated(true)
+            
+    } else {
+      createSnackbar('error', 'Error: transaction is rejected')
+    }
+  }
+
   if (taskCreated) {
-    //console.log('taskCreated')
     return <Redirect to={`/tasks/${task}/overview`} />
   }
+
   if (rootStore.user.isUserLogin && rootStore.user.isUserReg) {
     return (
       <Page
@@ -137,13 +140,16 @@ const TaskCreate = inject('rootStore')(observer(({ rootStore }) => {
       >
 
         <Header />
-        <ValidatorForm onSubmit={handleSubmit} onError={errors => console.log(errors)}>
-          <AboutTask className={classes.aboutProject} rootStore={rootStore}/>
+        <ValidatorForm onSubmit={handleSubmit} onError={errors => console.log(errors)}
+          ref={formRef}
+        >
+          <AboutTask className={classes.aboutProject} rootStore={rootStore} validatorListener={validatorListener}/>
           <div className={classes.actions}>
             <Button
               color="primary"
               variant="contained"
               type="submit"
+              disabled={!isValid}
             >
               Create task
             </Button>

@@ -14,6 +14,7 @@ import {
   colors
 } from '@material-ui/core';
 import { userUpdate } from '../../../../../../modules/dAppInt'
+import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator';
 
 import SuccessSnackbar from '../SuccessSnackbar';
 
@@ -32,6 +33,7 @@ const GeneralSettings = observer((props) => {
   const { profile, rootStore, className, ...rest } = props;
 
   const classes = useStyles(props);
+  const [isValid, setValid] = React.useState(false);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [values, setValues] = useState({
     name: "",
@@ -43,6 +45,8 @@ const GeneralSettings = observer((props) => {
     isPublic: true,
     canHire: false
   });
+
+  let formRef = React.createRef();
 
   const handleChange = event => {
     event.persist();
@@ -98,12 +102,19 @@ const GeneralSettings = observer((props) => {
     setOpenSnackbar(false);
   };
 
+  let validatorListener = async () => {
+    const valid = await formRef.current.isFormValid();
+    setValid(valid)
+  }
+
   return (
     <Card
       {...rest}
       className={clsx(classes.root, className)}
     >
-      <form onSubmit={handleSubmit}>
+      <ValidatorForm onSubmit={handleSubmit} onError={errors => console.log(errors)}
+        ref={formRef}
+      >
         <CardHeader title="Profile" />
         <Divider />
         <CardContent>
@@ -116,15 +127,17 @@ const GeneralSettings = observer((props) => {
               md={6}
               xs={12}
             >
-              <TextField
+              <TextValidator
                 fullWidth
                 helperText="Please specify the name"
                 label="Name"
                 name="name"
                 onChange={event => rootStore.settings.setName(event.target.value)}
-                required
                 value={rootStore.settings.getName || ""}
                 variant="outlined"
+                validators={['required', 'minStringLength:3', 'maxStringLength:15', 'trim']}
+                errorMessages={['This field is required', 'Minimum 3 characters', 'Maximum 15 characters', 'Please enter words']}
+                validatorListener={validatorListener}
               />
             </Grid>
             <Grid
@@ -132,15 +145,18 @@ const GeneralSettings = observer((props) => {
               md={6}
               xs={12}
             >
-              <TextField
+              <TextValidator
                 fullWidth
-                helperText="Please enter the https link"
+                helperText="Please enter only https link"
                 label="Avatar"
                 name="avatar"
                 onChange={event => rootStore.settings.setAvatar(event.target.value)}
                 required
                 value={rootStore.settings.getAvatar || ""}
                 variant="outlined"
+                validators={['matchRegexp:^https://']}
+                errorMessages={['Use only https link']}
+                validatorListener={validatorListener}
               />
             </Grid>
             <Grid
@@ -148,14 +164,16 @@ const GeneralSettings = observer((props) => {
               md={6}
               xs={12}
             >
-              <TextField
+              <TextValidator
                 fullWidth
                 label="Location"
                 name="location"
                 onChange={event => rootStore.settings.setLocation(event.target.value)}
-                required
                 value={rootStore.settings.getLocation || ""}
                 variant="outlined"
+                validators={['minStringLength:2', 'maxStringLength:15', 'trim']}
+                errorMessages={['Minimum 2 characters', 'Maximum 15 characters', 'Please enter words']}
+                validatorListener={validatorListener}
               />
             </Grid>
             <Grid
@@ -163,8 +181,7 @@ const GeneralSettings = observer((props) => {
               md={6}
               xs={12}
             >
-              <TextField
-                required
+              <TextValidator
                 fullWidth
                 helperText="Any information about you (70 characters)"
                 label="Bio"
@@ -173,6 +190,9 @@ const GeneralSettings = observer((props) => {
                 type="text"
                 value={rootStore.settings.getBio || ""}
                 variant="outlined"
+                validators={['required', 'minStringLength:5', 'maxStringLength:70', 'trim']}
+                errorMessages={['This field is required', 'Minimum 5 characters', 'Maximum 70 characters', 'Please enter words']}
+                validatorListener={validatorListener}
               />
             </Grid>
             <Grid
@@ -180,7 +200,7 @@ const GeneralSettings = observer((props) => {
               md={4}
               xs={12}
             >
-              <TextField
+              <TextValidator
                 fullWidth
                 label="Telegram"
                 name="telegram"
@@ -189,6 +209,9 @@ const GeneralSettings = observer((props) => {
                 value={rootStore.settings.getTelegram || ""}
                 variant="outlined"
                 helperText="Please enter the link"
+                validators={['matchRegexp:^https://']}
+                errorMessages={['Use only https link']}
+                validatorListener={validatorListener}
               />
             </Grid>
             <Grid
@@ -196,7 +219,7 @@ const GeneralSettings = observer((props) => {
               md={4}
               xs={12}
             >
-              <TextField
+              <TextValidator
                 fullWidth
                 label="Twitter"
                 name="twitter"
@@ -205,6 +228,9 @@ const GeneralSettings = observer((props) => {
                 value={rootStore.settings.getTwitter || ""}
                 variant="outlined"
                 helperText="Please enter the link"
+                validators={['matchRegexp:^https://']}
+                errorMessages={['Use only https link']}
+                validatorListener={validatorListener}
               />
             </Grid>
             <Grid
@@ -212,7 +238,7 @@ const GeneralSettings = observer((props) => {
               md={4}
               xs={12}
             >
-              <TextField
+              <TextValidator
                 fullWidth
                 label="Github"
                 name="github"
@@ -221,6 +247,9 @@ const GeneralSettings = observer((props) => {
                 value={rootStore.settings.getGithub || ""}
                 variant="outlined"
                 helperText="Please enter the link"
+                validators={['matchRegexp:^https://']}
+                errorMessages={['Use only https link']}
+                validatorListener={validatorListener}
               />
             </Grid>
             <Grid
@@ -228,53 +257,19 @@ const GeneralSettings = observer((props) => {
               md={12}
               xs={12}
             >
-              <TextField
+              <TextValidator
                 fullWidth
                 helperText="Please enter the https link"
                 label="Profile cover"
                 name="profile_cover"
                 onChange={event => rootStore.settings.setCover(event.target.value)}
-                //required
                 value={rootStore.settings.getCover || ""}
                 variant="outlined"
+                validators={['matchRegexp:^https://']}
+                errorMessages={['Use only https link']}
+                validatorListener={validatorListener}
               />
             </Grid>
-            {/*<Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <Typography variant="h6">Make Contact Info Public</Typography>
-              <Typography variant="body2">
-                Means that anyone viewing your profile will be able to see your
-                contacts details
-              </Typography>
-              <Switch
-                checked={values.isPublic}
-                color="secondary"
-                edge="start"
-                name="isPublic"
-                onChange={handleChange}
-              />
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <Typography variant="h6">Available to hire</Typography>
-              <Typography variant="body2">
-                Toggling this will let your teamates know that you are available
-                for acquireing new projects
-              </Typography>
-              <Switch
-                checked={values.canHire}
-                color="secondary"
-                edge="start"
-                name="canHire"
-                onChange={handleChange}
-              />
-            </Grid>*/}
           </Grid>
         </CardContent>
         <Divider />
@@ -283,11 +278,12 @@ const GeneralSettings = observer((props) => {
             className={classes.saveButton}
             type="submit"
             variant="contained"
+            disabled={!isValid}
           >
             Save Changes
           </Button>
         </CardActions>
-      </form>
+      </ValidatorForm>
       <SuccessSnackbar
         onClose={handleSnackbarClose}
         open={openSnackbar}

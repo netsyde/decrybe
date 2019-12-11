@@ -96,7 +96,7 @@ const categories = [
   },
 ];
 const AboutTask = observer((props) => {
-  const { className, rootStore, ...rest } = props;
+  const { className, rootStore, validatorListener, ...rest } = props;
 
   const classes = useStyles(1);
 
@@ -164,7 +164,8 @@ const AboutTask = observer((props) => {
               value={rootStore.taskCreate.getTitle}
               variant="outlined"
               validators={['required', 'minStringLength:5', 'maxStringLength:50', 'trim']}
-              errorMessages={['This field is required', 'Minimum 5 char', 'Maximum 50 char', 'Please enter words']}
+              errorMessages={['This field is required', 'Minimum 5 characters', 'Maximum 50 characters', 'Please enter words']}
+              validatorListener={validatorListener}
             />
           </Grid>
           <Grid item lg={4} md={6} sm={12} xs={12}>
@@ -181,6 +182,7 @@ const AboutTask = observer((props) => {
               }
               value={rootStore.taskCreate.getPrice}
               variant="outlined"
+              validatorListener={validatorListener}
             />
           </Grid>
           <Grid item lg={4} md={6} sm={12} xs={12}>
@@ -203,12 +205,14 @@ const AboutTask = observer((props) => {
               variant="outlined"
               validators={['required']}
               errorMessages={['This field is required']}
+              validatorListener={validatorListener}
             >
               {categories.map(option => (
                 <MenuItem key={option.value} value={option.value}>
                   {option.label}
                 </MenuItem>
               ))}
+              
             </TextValidator>
           </Grid>
           <Grid item lg={4} md={12} sm={12} xs={12}>
@@ -222,6 +226,7 @@ const AboutTask = observer((props) => {
               onClick={() => handleCalendarOpen('endDate')}
               value={moment(rootStore.taskCreate.getEndDate).format('DD/MM/YYYY')}
               variant="outlined"
+              validatorListener={validatorListener}
             />
           </Grid>
           </Grid>
@@ -231,25 +236,29 @@ const AboutTask = observer((props) => {
               label="Brief description"
               name="briefDescription"
               validators={['required', 'minStringLength:15', 'maxStringLength:80', 'trim']}
-              errorMessages={['This field is required', 'Minimum 15 char', 'Maximum 80 char', 'Please enter words']}
+              errorMessages={['This field is required', 'Minimum 15 characters', 'Maximum 80 characters', 'Please enter words']}
               onChange={event =>
                 rootStore.taskCreate.setBriefDescription(event.target.value)
               }
               value={rootStore.taskCreate.getBriefDescription}
               variant="outlined"
+              validatorListener={validatorListener}
             />
           </div>
           <div className={classes.formGroup}>
             <div className={classes.fieldGroup}>
-              <TextField
+              <TextValidator
                 className={classes.flexGrow}
                 label="Task Tags"
                 name="tag"
                 onChange={event =>
                   rootStore.taskCreate.setTag(event.target.value)
                 }
+                validators={['maxStringLength:15']}
+                errorMessages={['Maximum 15 characters']}
                 value={rootStore.taskCreate.getTag}
                 variant="outlined"
+                validatorListener={validatorListener}
               />
               <Button
                 className={classes.addButton}

@@ -65,9 +65,9 @@ const Application = props => {
   const { author, open, onClose, rootStore, project, className, ...rest } = props;
 
   const [value, setValue] = useState('');
-
+  const [isValid, setValid] = React.useState(false);
   const classes = useStyles(props);
-
+  let formRef = React.createRef();
   const handleChange = event => {
     event.persist();
 
@@ -83,6 +83,11 @@ const Application = props => {
       setMessageSended(true)
     }
   };
+
+  let validatorListener = async () => {
+    const valid = await formRef.current.isFormValid();
+    setValid(valid)
+  }
 
   if (messageSended) {
     //console.log('taskCreated')
@@ -100,6 +105,7 @@ const Application = props => {
       <ValidatorForm onSubmit={onApply} onError={errors => console.log(errors)}
         {...rest}
         className={clsx(classes.root, className)}
+        ref={formRef}
       >
         <div className={classes.header}>
           <Typography
@@ -136,6 +142,7 @@ const Application = props => {
             rows={5}
             value={value}
             variant="outlined"
+            validatorListener={validatorListener}
           />
           <div className={classes.author}>
             <Avatar
@@ -157,6 +164,7 @@ const Application = props => {
             className={classes.applyButton}
             variant="contained"
             type="submit"
+            disabled={!isValid}
           >
             Apply for a role
           </Button>

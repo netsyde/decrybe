@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
-import { makeStyles } from '@material-ui/core/styles';
-import moment from 'moment';
+import { makeStyles } from '@material-ui/core/styles'
 import { observer, inject } from 'mobx-react';
 import useRouter from '../../utils/useRouter';
 import { Page } from '../../components';
