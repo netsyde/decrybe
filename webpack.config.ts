@@ -1,5 +1,7 @@
 const TerserPlugin = require('terser-webpack-plugin');
 const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
+var debug = process.env.NODE_ENV !== "production";
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 module.exports = {
 	entry: [
 		'./src/index.tsx'
@@ -58,7 +60,21 @@ module.exports = {
 			  },
 		]
 	},
-	plugins: [
-		//new HardSourceWebpackPlugin()
-	]
+	plugins: !debug ? [
+		new UglifyJsPlugin({
+	 
+		  // Eliminate comments
+			 comments: false,
+	 
+		 // Compression specific options
+			compress: {
+			  // remove warnings
+				 warnings: false,
+	 
+			  // Drop console statements
+				 drop_console: true
+			},
+		 })
+	 ]
+	 : []
 };

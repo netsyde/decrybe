@@ -1,5 +1,4 @@
-const {broadcast, data, nodeInteraction, seedUtils} =  require('@waves/waves-transactions');
-const {address} = require('@waves/ts-lib-crypto');
+const { broadcast, data, nodeInteraction } =  require('@waves/waves-transactions');
 const axios = require('axios');
 
 const dApp = "3N9kox62MPg67TokQMTTZJKTYQBPwtJL2Tk"
@@ -372,60 +371,6 @@ export let getTaskUserMessageBlock = async (alldata, id) => {
     }
 }
 
-/*
-Output:
-[
-    fsfds: [{
-        id: 1,
-        message: ""
-    },
-    {
-        id: 2,
-        message: ""
-    }],
-    leva: []
-]
-
-
-*/
-
-/*
-INPUT:
-[
-    {
-        task: "fdsfds",
-        id: 1,
-        message: ""
-    },
-    {
-        task: "fdsfds",
-        id: 2,
-        message: ""
-    },
-    {
-        task: "fdsfds",
-        id: 2,
-        message: ""
-    },
-]
-
-
-
-
-*/
-let array = [
-    {
-        task: "fsfds"
-    },
-    {
-        task: "fsfds"
-    },
-    {
-        task: "leva"
-    }
-]
-
-
 export let getConversationData = async (data, user, dAppAddress, nodeUrl, wavesKeeper) => {
     try {
         let allConversation = await getUserConversationList(data, user, nodeUrl)
@@ -457,12 +402,16 @@ export let getConversationData = async (data, user, dAppAddress, nodeUrl, wavesK
                     }
                     let variant = allConversation[i].sender == user ? allConversation[i].recipient : allConversation[i].sender
                     let uData = await getUserData(data, variant, dAppAddress, nodeUrl)
-                    conversationData = conversationData.sort(compareNumeric);
-                    let task = await getTaskData(data, allConversation[i].task, dAppAddress, nodeUrl)
+                    console.log(conversationData)
                     let regex = new RegExp(allConversation[i].task)
+                    conversationData = conversationData.filter( message  => regex.test(message.task)),
+                    //conversationData = conversationData.sort(compareBlock);
+                    conversationData = conversationData.sort(compareNumeric);
+                    console.log(conversationData)
+                    let task = await getTaskData(data, allConversation[i].task, dAppAddress, nodeUrl)
 
                     conversationsData.push({
-                        messages: conversationData.filter( message  => regex.test(message.task)),
+                        messages: conversationData,//conversationData.filter( message  => regex.test(message.task)),
                         id: allConversation[i].task,
                         uid: allConversation[i].id,
                         task: task,
@@ -478,37 +427,20 @@ export let getConversationData = async (data, user, dAppAddress, nodeUrl, wavesK
     }
 }
 
-// добавить сортировку по таскам сразу в чатик
-
-
-/*
-export let getAllTaskMessages = async (data, task, user1, user2, dAppAddress, nodeUrl) => {
-    try {
-        let messages1 = await getAllTaskUserMessagesData(data, task, user1, user2, dAppAddress, nodeUrl)
-        let messages2 = await getAllTaskUserMessagesData(data, task, user2, user1, dAppAddress, nodeUrl)
-        if (messages1 && messages2) {
-            let messages = messages1.concat(messages2)
-            messages.sort(compareNumeric)
-            return messages
-        } else if (messages1 && !messages2) {
-            return messages1
-        } else if (!messages1 && messages2) {
-            return messages2
-        } else {
-            return false
-        }
-    } catch (e) {
-        console.log(`ERROR in nodeInt.getUsersAllData! ${e.name}: ${e.message}\n${e.stack}`);
-        return false;
-    }
-}
-*/
 
 let compareNumeric = (a, b) => {
+    if (Number(a.created_at) > Number(b.created_at)) return 1;
+    if (Number(a.created_at) == Number(b.created_at)) return 0;
+    if (Number(a.created_at) < Number(b.created_at)) return -1;
+}
+
+let compareBlock = (a, b) => {
     if (Number(a.block) > Number(b.block)) return 1;
     if (Number(a.block) == Number(b.block)) return 0;
     if (Number(a.block) < Number(b.block)) return -1;
-  }
+}
+
+
   function contains(arr, elem) {
     for (var i = 0; i < arr.length; i++) {
         if (arr[i] === elem) {

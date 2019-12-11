@@ -53,6 +53,7 @@
         "sass-loader": "^8.0.0",
         "style-loader": "^1.0.0",
         "terser-webpack-plugin": "^2.2.1",
+        "uglifyjs-webpack-plugin": "^2.2.0",
         "universal-cookie": "^4.0.2",
         "uuid": "^3.3.3",
         "ws": "^7.1.1",

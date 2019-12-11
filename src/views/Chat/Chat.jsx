@@ -16,7 +16,7 @@ import { CustomSnackbar } from '../../components'
 const useStyles = makeStyles(theme => ({
   root: {
     height: '100%',
-    cursor: 'pointer',
+    //cursor: 'pointer',
     display: 'flex',
     overflow: 'hidden',
     '@media (max-width: 863px)': {
