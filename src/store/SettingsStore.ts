@@ -12,6 +12,7 @@ class SettingsStore {
 	@observable twitter: string = ""
 	@observable github: string = ""
 	@observable cover: string = ""
+	@observable address: string = ""
 	
     constructor(public root: RootStore) {
 		this.root = root
@@ -24,6 +25,14 @@ class SettingsStore {
 
 	@computed get getName() {
 		return this.name
+	}
+
+	@computed get getAddress() {
+		return this.address
+	}
+	@action("set avatar (settings")
+	setAddress (address: string) {
+		this.address = address
 	}
 
 	@action("set avatar (settings")

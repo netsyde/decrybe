@@ -141,7 +141,8 @@ class UserStore {
 						this.avatar = userDataFromDapp.avatar
 						this.avatarColor = userDataFromDapp.avatarColor // ava color
 						this.location = userDataFromDapp.location
-						if ((state.account.address != this.getUserAddress) || (this.root.settings.getName.length == 0)) {
+						if (!this.root.settings.getAddress || this.root.settings.getAddress != this.address) { // true || true
+							this.root.settings.setAddress(this.address)
 							this.root.settings.setName(this.name)
 							this.root.settings.setSocials(this.socials)
 							this.root.settings.setBio(this.bio)
