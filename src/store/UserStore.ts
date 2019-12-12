@@ -133,20 +133,22 @@ class UserStore {
 					}
 					if (userDataFromDapp) {
 						this.name = userDataFromDapp.name;
-						this.root.settings.setName(this.name)
 						this.socials = userDataFromDapp.socials;
-						this.root.settings.setSocials(this.socials)
 						this.bio = userDataFromDapp.bio;
-						this.root.settings.setBio(this.bio)
 						this.status = userDataFromDapp.status;
 						this.createTime = userDataFromDapp.createTime;
 						this.tags = userDataFromDapp.tags;
-						this.root.settings.setTags(this.tags)
 						this.avatar = userDataFromDapp.avatar
-						this.root.settings.setAvatar(this.avatar)
 						this.avatarColor = userDataFromDapp.avatarColor // ava color
 						this.location = userDataFromDapp.location
-						this.root.settings.setLocation(this.location)
+						if ((state.account.address != this.getUserAddress) || (this.root.settings.getName.length == 0)) {
+							this.root.settings.setName(this.name)
+							this.root.settings.setSocials(this.socials)
+							this.root.settings.setBio(this.bio)
+							this.root.settings.setTags(this.tags)
+							this.root.settings.setAvatar(this.avatar)
+							this.root.settings.setLocation(this.location)
+						}
 						let userTasks = await nodeInt.getAllUserTasks(this.storage, this.address, this.dapp, state.network.server)
 						if (userTasks) {
 							this.tasks = userTasks;
