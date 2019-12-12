@@ -203,6 +203,9 @@ const Editor = observer((props) => {
   const [values, setValues] = useState({ ...initialValues });
   const [calendarTrigger, setCalendarTrigger] = useState(null);
 
+  let formRef = React.createRef();
+  const [isValid, setValid] = React.useState(false);
+
   const handleTagAdd = () => {
       if (rootStore.taskEdit.getTag && !rootStore.taskEdit.getTags.includes(rootStore.taskEdit.getTag)) {
         rootStore.taskEdit.tags = [...rootStore.taskEdit.tags];
@@ -234,8 +237,14 @@ const Editor = observer((props) => {
       : moment(values.startDate).add(1, 'day');
   const calendarValue = values[calendarTrigger];
 
+  let validatorListener = async () => {
+    const valid = await formRef.current.isFormValid();
+    setValid(valid)
+  }
+
   return (
-    <ValidatorForm onSubmit={handleSubmit} onError={errors => console.log(errors)}>
+    <ValidatorForm onSubmit={handleSubmit} onError={errors => console.log(errors)}
+    ref={formRef}>
       <Card
         {...rest}
         className={clsx(classes.root, className)}
@@ -254,36 +263,38 @@ const Editor = observer((props) => {
                 }
                 value={rootStore.taskEdit.getTitle}
                 variant="outlined"
-                validators={['required', 'minStringLength:5', 'maxStringLength:50', 'trim', 'matchRegexp:^((?!\s{2}).)*$']}
-                errorMessages={['This field is required', 'Minimum 5 char', 'Maximum 50 char', 'Please enter words', 'Do not use two spaces in a row']}
+                validators={['required', 'minStringLength:5', 'maxStringLength:50', 'trim']}
+                errorMessages={['This field is required', 'Minimum 5 characters', 'Maximum 50 characters', 'Please enter words']}
+                validatorListener={validatorListener}
               />
             </Grid>
             <Grid item lg={4} md={6} sm={12} xs={12}>
               <TextValidator
                 fullWidth
-                required
                 type="number"
                 label="Price"
                 name="price"
-                validators={['minNumber:1']}
-                errorMessages={['Minimum price is 1']}
+                validators={['minNumber:1', 'maxNumber: 100000', 'required']}
+                errorMessages={['Minimum price is 1', 'Maximum price is 100k', 'This field is required']}
                 className={classes.textField}
                 onChange={event =>
                   rootStore.taskEdit.setPrice(event.target.value)
                 }
                 value={rootStore.taskEdit.getPrice}
                 variant="outlined"
+                validatorListener={validatorListener}
               />
             </Grid>
             <Grid item lg={4} md={6} sm={12} xs={12}>
               <TextValidator
                 fullWidth
-                required
                 id="category"
                 select
                 label="Category"
                 className={classes.textField}
                 value={rootStore.taskEdit.getCategory}
+                validators={['required']}
+                errorMessages={['This field is required']}
                 onChange={event =>
                   rootStore.taskEdit.setCategory(event.target.value)
                 }
@@ -294,6 +305,7 @@ const Editor = observer((props) => {
                 }}
                 margin="normal"
                 variant="outlined"
+                validatorListener={validatorListener}
               >
                 {categories.map(option => (
                   <MenuItem key={option.value} value={option.value}>
@@ -305,7 +317,6 @@ const Editor = observer((props) => {
             <Grid item lg={4} md={12} sm={12} xs={12}>
               <TextValidator
                 fullWidth
-                required
                 className={classes.dateField}
                 label="End Date"
                 name="endDate"
@@ -318,21 +329,21 @@ const Editor = observer((props) => {
             <div className={classes.formGroup}>
               <TextValidator
                 fullWidth
-                required
                 label="Brief description"
                 name="briefDescription"
-                validators={['required', 'minStringLength:15', 'maxStringLength:80', 'trim', 'matchRegexp:^((?!\s{2}).)*$']}
-                errorMessages={['This field is required', 'Minimum 15 char', 'Maximum 80 char', 'Please enter words', 'Do not use two spaces in a row']}
+                validators={['required', 'minStringLength:15', 'maxStringLength:80', 'trim']}
+                errorMessages={['This field is required', 'Minimum 15 characters', 'Maximum 80 characters', 'Please enter words']}
                 onChange={event =>
                   rootStore.taskEdit.setBriefDescription(event.target.value)
                 }
                 value={rootStore.taskEdit.getBriefDescription}
                 variant="outlined"
+                validatorListener={validatorListener}
               />
             </div>
             <div className={classes.formGroup}>
               <div className={classes.fieldGroup}>
-                <TextField
+                <TextValidator
                   className={classes.flexGrow}
                   label="Task Tags"
                   name="tag"
@@ -341,6 +352,9 @@ const Editor = observer((props) => {
                   }
                   value={rootStore.taskEdit.getTag}
                   variant="outlined"
+                  validators={['maxStringLength:15']}
+                  errorMessages={['Maximum 15 characters']}
+                  validatorListener={validatorListener}
                 />
                 <Button
                   className={classes.addButton}
@@ -389,6 +403,7 @@ const Editor = observer((props) => {
           color="primary"
           variant="contained"
           type="submit"
+          disabled={!isValid}
         >
           Save
         </Button>
