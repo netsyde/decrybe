@@ -1,3 +1,23 @@
+### V0.4.2
+
+###### 12-11-2019
+
+#### New
+
+- Now in the chat you can hire a freelancer who wrote to you about the job
+- You can no longer edit a task after hiring a freelancer
+- Now you can not leave messages to the customer after he hired a freelancer
+
+### V0.4.1
+
+###### 12-11-2019
+
+#### New
+
+- Updated form validator
+- Updated `Chat`
+- Updated `Settings` page
+
 ### V0.4.0
 
 ###### 10-11-2019

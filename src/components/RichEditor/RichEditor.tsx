@@ -101,10 +101,10 @@ const RichEditor = observer((props) => {
 
   useEffect(() => {
     if (store.getDescription.length > 0) {
-      console.log('editor ready')
+      console.log('DEBUG: Editor ready')
       setEditorState(EditorState.createWithContent(convertFromRaw(mdToDraftjs(store.getDescription))))
     } else {
-      console.log('waiting editor')
+      console.log('DEBUG: Waiting editor')
       setTimeout(() => {
         setEditorState(EditorState.createWithContent(convertFromRaw(mdToDraftjs(store.getDescription))))
       }, 1000);
@@ -144,7 +144,7 @@ const RichEditor = observer((props) => {
       convertToRaw(editorState.getCurrentContent())
     )
 
-    console.log(JSON.stringify(markdown))
+    //console.log(JSON.stringify(markdown))
 
     store.setDescription(markdown)
     setEditorState(editorState);

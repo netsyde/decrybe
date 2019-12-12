@@ -76,9 +76,7 @@ const TaskCreate = inject('rootStore')(observer(({ rootStore }) => {
         len(store.getBriefDescription) && len(store.getTags) &&
         len(store.getDescription) && store.getCurrency &&
         len(store.getStatus) && store.getEndDate) {
-      //     console.log(`title: ${len(store.getTitle)}; price: ${store.getPrice}; category: ${store.getCategory}
-      // endDate: ${store.getEndDate}; brief: ${len(store.getBriefDescription)}; tags: ${len(store.getTags)}; desc: ${len(store.getDescription)};
-      // currency: ${len(store.getCurrency)}; author: ${len(store.getAuthor)}; status: ${len(store.getStatus)}`)
+
       createTask()
     } else {
       createSnackbar('info', 'You have not filled in all the fields')
@@ -108,7 +106,7 @@ const TaskCreate = inject('rootStore')(observer(({ rootStore }) => {
       tags: store.getTags,
       updatedAt: now,
       members: store.getMembers,
-      freelancers: store.getFreelancers,
+      freelancer: store.getFreelancer,
       status: store.getStatus,
       description: store.getDescription,
       category: store.getCategory

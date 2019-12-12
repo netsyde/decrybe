@@ -1,30 +1,18 @@
-import React, { Fragment, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import moment from 'moment';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   IconButton,
-  Input,
-  ListItemIcon,
-  ListItemText,
-  Menu,
-  MenuItem,
-  Paper,
   Toolbar,
   Tooltip,
-  Typography
+  Typography,
+  Button
 } from '@material-ui/core';
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
-import SearchIcon from '@material-ui/icons/Search';
-import BlockIcon from '@material-ui/icons/Block';
-import DeleteIcon from '@material-ui/icons/DeleteOutlined';
-import ArchiveIcon from '@material-ui/icons/ArchiveOutlined';
-import NotificationsOffIcon from '@material-ui/icons/NotificationsOffOutlined';
-import MoreIcon from '@material-ui/icons/MoreVert';
-
-import { StatusBullet } from '../../../../../../components';
+import { observer } from 'mobx-react';
+import * as dAppInt from '../../../../../../modules/dAppInt'
+import * as nodeInt from '../../../../../../modules/nodeInt'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -64,11 +52,14 @@ const useStyles = makeStyles(theme => ({
   },
   searchInput: {
     flexGrow: 1
+  },
+  button: {
+    marginRight: theme.spacing(1),
   }
 }));
 
-const ConversationToolbar = props => {
-  const { conversation, className, ...rest } = props;
+const ConversationToolbar = observer((props) => {
+  const { conversation, className, rootStore, ...rest } = props;
 
   const classes = useStyles(props);
   const moreRef = useRef(null);
@@ -80,6 +71,15 @@ const ConversationToolbar = props => {
 
   const handleMenuClose = () => {
     setOpenMenu(false);
+  };
+
+  const handleClick = async (event) => {
+    event.preventDefault();
+    let data = await nodeInt.getClearTaskData(rootStore.user.getStorage, conversation.task.uuid);
+    data.freelancer = conversation.user.address;
+    data.status = "in progress"
+    let tx = await dAppInt.hireFreelancer(conversation.task.uuid, conversation.user.address, data, rootStore.user.getWavesKeeper)
+    console.log(tx)
   };
 
   return (
@@ -100,35 +100,27 @@ const ConversationToolbar = props => {
       <div className={classes.user}>
         <Typography variant="h6">{conversation.user.name}</Typography>
       </div>
-      <Tooltip title="More options">
-        <IconButton
-          onClick={handleMenuOpen}
-          ref={moreRef}
-        >
-          <MoreIcon />
-        </IconButton>
-      </Tooltip>
-      <Menu
-        anchorEl={moreRef.current}
-        keepMounted
-        onClose={handleMenuClose}
-        open={openMenu}
+
+      {rootStore.user.getUserAddress == conversation.task.author.address  && !conversation.task.freelancer ? <Button
+        color="primary"
+        variant="contained"
+        type="submit"
+        onClick={handleClick}
+        //className={classes.button}
+        //disabled={!isValid}
       >
-        <MenuItem>
-          <ListItemIcon>
-            <BlockIcon />
-          </ListItemIcon>
-          <ListItemText primary="Block user" />
-        </MenuItem>
-        <MenuItem>
-          <ListItemIcon>
-            <DeleteIcon />
-          </ListItemIcon>
-          <ListItemText primary="Delete conversation" />
-        </MenuItem>
-      </Menu>
+       Hire
+      </Button> : null}
+    {/* {<Button
+      color="primary"
+      variant="contained"
+      type="submit"
+      //disabled={!isValid}
+    >
+      Report
+    </Button>} */}
     </Toolbar>
   );
-};
+});
 
 export default ConversationToolbar;

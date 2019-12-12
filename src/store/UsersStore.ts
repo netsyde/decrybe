@@ -15,16 +15,16 @@ class UsersStore {
 		if (isLogin) {
 			let allUsersData = await nodeInt.getUsersAllData(this.root.user.getStorage, dapp, network)
 			
-			console.log('users loaded')
+			console.log('DEBUG: Users loaded')
 			if (allUsersData) {
 				this.allUsers = allUsersData
 				this.count = allUsersData.length
 			} else {
-				console.log('allUsersData is false')
+				console.log('BEBUG: Users not loaded')
 			}
 			
 		} else {
-			console.log('user not login')
+			console.log('DEBUG: User not logged in')
         }
         
         
@@ -44,7 +44,7 @@ class UsersStore {
 	}
 
 	async getUserData (address) {
-		let userData = await nodeInt.getUserData(this.root.user.storage, address, this.root.user.getDapp, this.root.user.getUserNetwork);
+		let userData = await nodeInt.getUserData(this.root.user.storage, address);
 		return userData
 	} 
 }

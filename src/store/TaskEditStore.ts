@@ -15,7 +15,7 @@ class TaskEditStore {
 	@observable author: String = "";
 	@observable updatedAt: Number;
 	@observable members: Array<String> = [];
-	@observable freelancers: Array<String> = [];
+	@observable freelancer: String = "";
 	@observable status: String = "featured";
 
 	constructor(public root: RootStore) {
@@ -25,7 +25,7 @@ class TaskEditStore {
 	@action("set task title")
 	setTitle (title: String) {
 		this.title = title.replace(/(\s\s)/g, ' ')
-		console.log(this.title)
+		//console.log(this.title)
 	}
 
 	@computed get getTitle() {
@@ -52,7 +52,7 @@ class TaskEditStore {
 
 	@action("set task end date")
 	setEndDate (date: Date) {
-		console.log(date)
+		//console.log(date)
 		if (date) {
 			this.endDate = date.getTime();
 		}
@@ -60,7 +60,7 @@ class TaskEditStore {
 
 	@action("set task end date from blockchain")
 	setEndDateFromBlockchain (date) {
-		console.log(date)
+		//console.log(date)
 		this.endDate = date
 	}
 
@@ -161,15 +161,15 @@ class TaskEditStore {
 		return this.members
 	}
 
-	@action("set task freelancers")
-	setFreelancers (freelancers: Array<String>) {
-		if (freelancers) {
-			this.freelancers = freelancers;
+	@action("set task freelancer")
+	setFreelancer (freelancer: String) {
+		if (freelancer) {
+			this.freelancer = freelancer;
 		}
 	}
 
-	@computed get getFreelancers() {
-		return this.freelancers
+	@computed get getFreelancer() {
+		return this.freelancer
 	}
 
 	@action("Clean task creator")

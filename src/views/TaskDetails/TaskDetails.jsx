@@ -54,7 +54,7 @@ const Task = observer((props) => {
       props.rootStore.taskEdit.setAuthor(data.author.address)
       props.rootStore.taskEdit.setStatus(data.status)
       props.rootStore.taskEdit.setMembers(data.members)
-      props.rootStore.taskEdit.setFreelancers(data.freelancers)
+      props.rootStore.taskEdit.setFreelancer(data.freelancer)
     }
   }
 
@@ -97,6 +97,8 @@ const Task = observer((props) => {
   if (!project) {
     return null;
   }
+
+  console.log(project.status)
   
   if (project) {
     return (
@@ -120,7 +122,7 @@ const Task = observer((props) => {
               value={tab.value}
             />
           ))}
-          {props.rootStore.user.getUserAddress == project.author.address ?
+          {((props.rootStore.user.getUserAddress == project.author.address) && (project.status == "Featured")) ?
           (
             <Tab
               key={'edit'}
@@ -134,7 +136,7 @@ const Task = observer((props) => {
         <Divider className={classes.divider} />
         <div className={classes.content}>
           {tab === 'overview' && <Overview project={project} />}
-          {props.rootStore.user.getUserAddress == project.author.address ? (tab === 'edit' && <Editor project={project} updateTask={updateTask} history={props.history} rootStore={props.rootStore} id={id}/>) : null}
+          {((props.rootStore.user.getUserAddress == project.author.address) && (project.status == "Featured")) ? (tab === 'edit' && <Editor project={project} updateTask={updateTask} history={props.history} rootStore={props.rootStore} id={id}/>) : null}
         </div>
       </Page>
     );

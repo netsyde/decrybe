@@ -9,7 +9,7 @@ let LISTINGFEE = (1 * 100000000)
 let MOD = "mod"
 let REGISTERED = "registered"
 let ADMIN = "admin"
-let INPROGRESS = "inprogress"
+let INPROGRESS = "in progress"
 
 func getStrByKey(key: String) = {
     let str = match getString(this, key) {
@@ -77,12 +77,12 @@ func getKeyTaskBank(task: String) = {
 }
 
 # Task Freelancer
-func getKeyTaskFreelancer(task: String, account: String) = {
-    "freelancer_" + task + "_" + account
+func getKeyTaskFreelancer(task: String) = {
+    "freelancer_" + task
 }
 
-func getValueTaskFreelancer(task: String, account: String) = {
-    getStrByKey(getKeyTaskFreelancer(task, account))
+func getValueTaskFreelancer(task: String) = {
+    getStrByKey(getKeyTaskFreelancer(task))
 }
 
 # Task Status
@@ -159,15 +159,19 @@ func signUp(data: String) = {
 }
 
 @Callable(i)
-func takeTask(task: String, comment: String) = {
+func hireFreelancer(task: String, freelancer: String, data: String) = {
     let account = toBase58String(i.caller.bytes)
     if (getValueTaskData(task) == NONE) then throw("Task doesnt exist")
-    else if (getValueUserBio(account) == NONE) then throw("User not signup")
-    else if (getValueTaskAuthor(task) == account) then throw("You're author")
+    else if (getValueUserBio(account) == NONE) then throw("Customer not signup")
+    else if (getValueUserBio(freelancer) == NONE) then throw("Freelancer not signup")
+    else if (getValueTaskAuthor(task) != account) then throw("You're not author")
     else if (getValueTaskStatus(task) == INPROGRESS) then throw("Freelancer is no longer required (the task is already in progress)") 
+    else if (freelancer == account) then throw("You can't hire yourself")
     else {
         WriteSet([
-            DataEntry(getKeyTaskFreelancer(task, account), comment)
+            DataEntry(getKeyTaskFreelancer(task), freelancer),
+            DataEntry(getKeyTaskData(task), data),
+            DataEntry(getKeyTaskStatus(task), INPROGRESS)
         ])
     }
 }
@@ -177,7 +181,9 @@ func sendMessage(task: String, to: String, message: String) = {
     let account = toBase58String(i.caller.bytes)
     let cnt = getValueUserMessagesCnt(account, to) + 1
     if (getValueTaskData(task) == NONE) then throw("Task doesnt exist")
-    else if (getValueUserBio(account) == NONE) then throw("User not signup")
+    else if (account == to) then throw("You can't hire yourself")
+    else if (getValueUserBio(account) == NONE) then throw("Sender not signup")
+    else if (getValueUserBio(to) == NONE) then throw("Recipient not singup")
     else if (getValueTaskStatus(task) == INPROGRESS) then throw("Freelancer is no longer required (the task is already in progress)") 
     else {
         WriteSet([
@@ -193,10 +199,10 @@ func taskUpdate(task: String, data: String, type: String) = {
     let account = toBase58String(i.caller.bytes)
     if (getValueTaskData(task) == NONE) then throw("Task doesnt exist")
     else if (getValueTaskAuthor(task) != account) then throw("You're not author")
+    else if (getValueTaskStatus(task) == INPROGRESS) then throw("Editing tasks is not available after hiring a freelancer") 
     else {
         WriteSet([
-            DataEntry(getKeyTaskData(task), data),
-            DataEntry(getKeyTaskStatus(task), if (type == INPROGRESS) then INPROGRESS else FEATURED)
+            DataEntry(getKeyTaskData(task), data)
         ])
     }
 }

@@ -2,6 +2,7 @@ import { observable, action, computed } from "mobx"
 import * as nodeInt from '../modules/nodeInt'
 import {RootStore} from './RootStore'
 import Cookies from 'universal-cookie';
+import moment from 'moment'
 class UserStore {
 	@observable isLogin: boolean = false;
 	@observable address: string = "";
@@ -40,7 +41,7 @@ class UserStore {
 				let nodeUrl = this.cookies.get("network")
 				this.setUserNetwork(nodeUrl)
 				this.setUserAddress(address)
-				console.log('restore session')
+				console.log('DEBUG: Restore session')
 		
 				await this.getState()
 			} else {
@@ -58,7 +59,7 @@ class UserStore {
 	checkSession() {
 		let address = this.cookies.get("address")
 		let nodeUrl = this.cookies.get("network")
-		console.log('checkSession')
+		console.log('DEBUG: Check session')
 		if (address && nodeUrl) {
 			return true
 		} else {
@@ -73,7 +74,7 @@ class UserStore {
 		if (conversations) {
 			this.conversations = conversations
 		}
-		console.log('storage update')
+		console.log('DEBUG: Storage update')
 	}
 
 	@action("login")
@@ -101,14 +102,13 @@ class UserStore {
 
 	async getState () {
 		try {
-			console.log('get state')
+			console.log('DEBUG: Get state')
 			this.online = true
 			this.wavesKeeper = WavesKeeper;
 			let api = await WavesKeeper.initialPromise
 			if (api) {
 				const state = await WavesKeeper.publicState();
-				console.log(state)
-				
+				//console.log(state)
 				
 				this.address = state.account.address;
 				this.balance = state.account.balance.available;
@@ -118,18 +118,18 @@ class UserStore {
 				this.userData = state;
 				
 				this.storage = await nodeInt.getAllData(this.dapp, state.network.server);
-				console.log(this.storage)
+				//console.log(this.storage)
 				this.isLogin = true;
-				this.isReg = await nodeInt.checkReg(this.storage, state.account.address, this.dapp, state.network.server);
+				this.isReg = await nodeInt.checkReg(this.storage, state.account.address);
 
 				if (this.isReg) {
 					this.cookies.set('address', this.getUserAddress, { path: '/' });
 					this.cookies.set('network', this.getUserNetwork, { path: '/' });
-					let userDataFromDapp = await nodeInt.getUserData(this.storage, state.account.address, this.dapp, state.network.server);
+					let userDataFromDapp = await nodeInt.getUserData(this.storage, state.account.address);
 					let conversations = await nodeInt.getConversationData(this.getStorage, this.getUserAddress, this.getDapp, this.getUserNetwork, this.getWavesKeeper)
-					console.log(conversations)
 					if (conversations) {
 						this.conversations = conversations
+						console.log("DEBUG: Conversations loaded")
 					}
 					if (userDataFromDapp) {
 						this.name = userDataFromDapp.name;
@@ -151,18 +151,18 @@ class UserStore {
 						if (userTasks) {
 							this.tasks = userTasks;
 						}
-						console.log("userData success")
+						console.log("DEBUG: User data loaded")
 					} else {
-						console.log('userData kick')
+						console.log('DEBUG: User data not loaded')
 					}
 				} else {
 					this.showRegister = true;
-					console.log('User not signup')
+					console.log('DEBUG: User is not registered')
 				}
 				await this.root.tasks.loadTasks(this.isUserLogin, this.getDapp, this.getUserNetwork)
 				await this.root.users.loadUsers(this.isUserLogin, this.getDapp, this.getUserNetwork)
 			} else {
-				console.log('Waves keeper is undef')
+				console.log('DEBUG: Waves Keeper is undefined')
 			}
 		} catch (e) {
 			console.log(`ERROR in UserStore.getState! ${e.name}: ${e.message}\n${e.stack}`);
@@ -214,6 +214,10 @@ class UserStore {
 
 	@computed get isKeeperLocked() {
 		return this.locked
+	}
+
+	setKeeperLocked(boolean) {
+		this.locked = boolean
 	}
 
 	@computed get isUserOnline() {

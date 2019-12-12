@@ -94,7 +94,7 @@ export let getDataByKey = async (data, key: String) => {
  * @param nodeUrl - node url
  * @returns {boolean}
  */
-export let checkReg = async (alldata, address: String, dAppAddress: String, nodeUrl: String) => {
+export let checkReg = async (alldata, address: String) => {
     try {
         let fAddress = `user_sts_${address}`
         let data = await getDataByKey(alldata, fAddress)
@@ -118,7 +118,7 @@ export let checkReg = async (alldata, address: String, dAppAddress: String, node
  * @param nodeUrl - node url
  * @returns {Object}
  */
-export let getAllTasks = async (data, dAppAddress: String, nodeUrl: String) => {
+export let getAllTasks = async (data) => {
     try {
         let tasks = await Promise.all(
             Object.keys(data)
@@ -160,7 +160,7 @@ export let getAllUsers = async (alldata) => {
  * @param nodeUrl - node url
  * @returns {Object}
  */
-export let getUserData = async (alldata, address: String, dAppAddress: String, nodeUrl: String) => {
+export let getUserData = async (alldata, address: String) => {
     try {
         let userData = await getDataByKey(alldata, "user_bio_" + address)
         if (userData) {
@@ -190,7 +190,16 @@ export let getUserData = async (alldata, address: String, dAppAddress: String, n
 }
 
 //getUserData("3N67wqt9Xvvn1Qtgz6KvyEcdmr8AL7EVaQM", dApp, nodeUrl)
-
+export let getClearTaskData = async (alldata, id: String) => {
+    try {
+        let taskData = await getDataByKey(alldata, "datajson_" + id)
+        taskData = JSON.parse(taskData)
+        
+        return taskData;
+    } catch (e) {
+        return false;
+    }
+}
 /**
  * Return task data
  * @param id - task id
@@ -202,7 +211,7 @@ export let getTaskData = async (alldata, id: String, dAppAddress: String, nodeUr
     try {
         let taskData = await getDataByKey(alldata, "datajson_" + id)
         taskData = JSON.parse(taskData)
-        let userData = await getUserData(alldata, taskData.author, dAppAddress, nodeUrl)
+        let userData = await getUserData(alldata, taskData.author)
         taskData.author = {
             address: taskData.author,
             publicKey: userData ? userData.publicKey : "",
@@ -211,6 +220,7 @@ export let getTaskData = async (alldata, id: String, dAppAddress: String, nodeUr
             avatarColor: color[getRandomArbitary(0, color.length - 1)],
             bio: userData ? userData.bio : ""
         }
+        taskData.freelancer = "freelancer" in taskData ? taskData.freelancer : ""
 
         for (let i = 0; i < taskData.tags.length; i++) {
             taskData.tags[i] = {
@@ -273,7 +283,7 @@ export let getTaskData = async (alldata, id: String, dAppAddress: String, nodeUr
 
 export let getTasksAllData = async (alldata, dAppAddress: String, nodeUrl: String) => {
     try {
-        let allTasks = await getAllTasks(alldata, dAppAddress, nodeUrl)
+        let allTasks = await getAllTasks(alldata)
         let tasks = [];
         if (allTasks) {
             for(let i = 0; i < allTasks.length; i++) {
@@ -307,7 +317,7 @@ export let getUsersAllData = async (alldata, dAppAddress: String, nodeUrl: Strin
         let users = [];
         if (allUsers) {
             for(let i = 0; i < allUsers.length; i++) {
-                let userData = await getUserData(alldata, allUsers[i], dAppAddress, nodeUrl)
+                let userData = await getUserData(alldata, allUsers[i])
                 users.push(userData)
             }
             //console.log(tasks)
@@ -383,8 +393,8 @@ export let getConversationData = async (data, user, dAppAddress, nodeUrl, wavesK
                     for (let x = 0; x < userConversationMessages.length; x++) {
                         let message = await getTaskUserMessage(data, userConversationMessages[x].message)
                         let check = message.sender == user ? message.recipient : message.sender;
-                        let userData = await getUserData(data, check, dAppAddress, nodeUrl)
-                        let userDataSender = await getUserData(data, message.sender, dAppAddress, nodeUrl)
+                        let userData = await getUserData(data, check)
+                        let userDataSender = await getUserData(data, message.sender)
                         if (userData) {
                             let decrypted = message.message ? await wavesKeeper.decryptMessage(message.message, userData.publicKey, 'decrybe') : ""
                             let block = await getTaskUserMessageBlock(data, userConversationMessages[x].block)
@@ -401,13 +411,14 @@ export let getConversationData = async (data, user, dAppAddress, nodeUrl, wavesK
                         }
                     }
                     let variant = allConversation[i].sender == user ? allConversation[i].recipient : allConversation[i].sender
-                    let uData = await getUserData(data, variant, dAppAddress, nodeUrl)
-                    console.log(conversationData)
+                    let uData = await getUserData(data, variant)
+                    //console.log(conversationData)
                     let regex = new RegExp(allConversation[i].task)
-                    conversationData = conversationData.filter( message  => regex.test(message.task)),
+                    conversationData = conversationData.sort(compareBlock);
+                    conversationData = conversationData.filter( message  => regex.test(message.task))
                     //conversationData = conversationData.sort(compareBlock);
-                    conversationData = conversationData.sort(compareNumeric);
-                    console.log(conversationData)
+                    
+                    //console.log(conversationData)
                     let task = await getTaskData(data, allConversation[i].task, dAppAddress, nodeUrl)
 
                     conversationsData.push({
@@ -436,7 +447,9 @@ let compareNumeric = (a, b) => {
 
 let compareBlock = (a, b) => {
     if (Number(a.block) > Number(b.block)) return 1;
-    if (Number(a.block) == Number(b.block)) return 0;
+    if (Number(a.block) == Number(b.block)) {
+        return compareNumeric(a,b)
+    };
     if (Number(a.block) < Number(b.block)) return -1;
 }
 

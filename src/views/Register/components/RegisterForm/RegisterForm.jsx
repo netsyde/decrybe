@@ -41,8 +41,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const RegisterForm = inject('rootStore')(observer(({ rootStore }) => {
-  //const { className, ...rest } = props;
-
   const classes = useStyles();
   const { history } = useRouter();
 
@@ -85,7 +83,7 @@ const RegisterForm = inject('rootStore')(observer(({ rootStore }) => {
         },
         avatar: values.avatar
       }
-      console.log(data)
+      //console.log(data)
 
       let signTx = await dAppInt.signUp(data, rootStore.user.getWavesKeeper)
       if (signTx.status) {
@@ -96,7 +94,7 @@ const RegisterForm = inject('rootStore')(observer(({ rootStore }) => {
         createSnackbar('error', signTx.error.data ? signTx.error.data : signTx.error.message)
       }
     } else {
-      console.log('keeper undef')
+      console.log('DEBUG: Waves Keeper is ndefined')
     }
   };
 

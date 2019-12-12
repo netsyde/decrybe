@@ -2,19 +2,12 @@ import React, { useState } from 'react';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import {
-  Checkbox,
-  Chip,
-  Divider,
-  FormControlLabel,
   Input,
   Card,
   colors
 } from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
 import SearchIcon from '@material-ui/icons/Search';
 import { observer } from 'mobx-react';
-
-import { MultiSelect } from './components';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -49,32 +42,6 @@ const useStyles = makeStyles(theme => ({
     width: "100%"
   }
 }));
-
-const selects = [
-  {
-    label: 'Type',
-    options: ['Freelance', 'Full Time', 'Part Time', 'Internship']
-  },
-  {
-    label: 'Level',
-    options: ['Novice', 'Expert']
-  },
-  {
-    label: 'Location',
-    options: [
-      'Africa',
-      'Asia',
-      'Australia',
-      'Europe',
-      'North America',
-      'South America'
-    ]
-  },
-  {
-    label: 'Roles',
-    options: ['Android', 'Web Developer', 'iOS']
-  }
-];
 
 const Filter = observer((props) => {
   const { className, rootStore,  ...rest } = props;

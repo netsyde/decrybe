@@ -85,7 +85,7 @@ const Header = observer((props) => {
             Share
           </Button>
 
-          {rootStore.user.getUserAddress != project.author.address ?
+          {((rootStore.user.getUserAddress != project.author.address) && (project.status == "Featured"))?
             <Button
               className={classes.applyButton}
               onClick={handleApplicationOpen}

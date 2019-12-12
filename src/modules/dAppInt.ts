@@ -212,12 +212,9 @@ export let userUpdate = async (user, data, wavesKeeper) => {
  * @param publicKey - public key of customer
  * @param wavesKeeper - class
  */
-export let takeTask = async (taskId, message, publicKey, wavesKeeper) => {
+export let hireFreelancer = async (taskId, freelancer, data, wavesKeeper) => {
     const state = await wavesKeeper.publicState();
 
-    let ciphertext = await encryptMessage(message, publicKey, wavesKeeper)
-
-    console.log(ciphertext)
     try {
         let tx = await wavesKeeper.signAndPublishTransaction({
             type: 16,
@@ -228,13 +225,16 @@ export let takeTask = async (taskId, message, publicKey, wavesKeeper) => {
                  },
                  dApp: dAppAddress,
                  call: {
-                 	function: 'takeTask',
+                 	function: 'hireFreelancer',
                  	args: [
                         {
                             type: "string", value: taskId
                         },
                         {
-                            type: "string", value: ciphertext
+                            type: "string", value: freelancer
+                        },
+                        {
+                            type: "string", value: JSON.stringify(data)
                         },
                     ]
                 },

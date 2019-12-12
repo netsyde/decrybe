@@ -18,26 +18,26 @@ class TasksStore {
 		if (isLogin) {
 			let allTasksData = await nodeInt.getTasksAllData(this.root.user.getStorage, dapp, network)
 			
-			console.log('tasks loaded')
 			if (allTasksData) {
 				this.allTasksData = allTasksData;
-				console.log(this.getFilteredTasks)
+				//console.log(this.getFilteredTasks)
+				console.log('DEBUG: Tasks loaded')
 				this.length = allTasksData.length
 			} else {
-				console.log('allTasksData is false')
+				console.log('DEBUG: allTasksData is false')
 			}
 			
 		} else {
-			console.log('user not login')
+			console.log('DEBUG: User not login')
 		}
 	}
 
 	async updateTasks(isLogin, dapp, network) {
 		if (isLogin) {
 			let allTasksData = await nodeInt.getTasksAllData(this.root.user.getStorage, dapp, network)
-			console.log(allTasksData)
-			console.log('tasks loaded')
+			//console.log(allTasksData)
 			if (allTasksData) {
+				console.log('DEBUG: Tasks loaded')
 				this.allTasksData = allTasksData
 			} else {
 				console.log('allTasksData is false')
@@ -81,9 +81,13 @@ class TasksStore {
 
 	@computed get getFilteredTasks () {
 		if (this.filteredTasks) {
-			return toJS(this.filteredTasks);
+			let matchesFilter = new RegExp("Featured", "i")
+			let filtered = this.filteredTasks.filter( task  => matchesFilter.test(task.status))
+			return toJS(filtered);
 		} else {
-			return toJS(this.allTasksData);
+			let matchesFilter = new RegExp("Featured", "i")
+			let filtered = this.allTasksData.filter( task  => matchesFilter.test(task.status))
+			return toJS(filtered);
 		}
 	}
 

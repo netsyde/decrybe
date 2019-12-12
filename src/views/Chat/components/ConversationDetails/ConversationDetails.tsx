@@ -28,7 +28,7 @@ const ConversationDetails = props => {
       {...rest}
       className={clsx(classes.root, className)}
     >
-      <ConversationToolbar conversation={conversation} />
+      <ConversationToolbar conversation={conversation} rootStore={rootStore}/>
       <Divider />
       <ConversationMessages messages={conversation.messages} rootStore={rootStore}/>
       <Divider />

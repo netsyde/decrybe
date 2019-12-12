@@ -87,7 +87,6 @@ const SettingsContainer = props => {
 class Settings extends React.Component {
   constructor(props) {
     super(props)
-    console.log(this.props.rootStore.user.isUserLogin)
   }
   
   render() {

@@ -83,7 +83,7 @@ const Register = inject('rootStore')(observer(({ rootStore }) => {
 
   if (rootStore.user.isUserReg) {
     rootStore.user.setShowRegister(false)
-    console.log('user reg')
+    console.log('DEBUG: User is already registered')
     return <Redirect to={`/overview`} />
   }
   
