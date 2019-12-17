@@ -13,7 +13,7 @@ class UsersStore {
 
     async loadUsers(isLogin, dapp, network) {
 		if (isLogin) {
-			let allUsersData = await nodeInt.getUsersAllData(this.root.user.getStorage, dapp, network)
+			let allUsersData = await nodeInt.getUsersAllData(this.root.user.getStorage)
 			
 			console.log('DEBUG: Users loaded')
 			if (allUsersData) {
@@ -39,7 +39,7 @@ class UsersStore {
 	}
 	
 	async getTasks (id) {
-		let userTasks = await nodeInt.getAllUserTasks(this.root.user.getStorage, id, this.root.user.getDapp, this.root.user.getUserNetwork)
+		let userTasks = await nodeInt.getAllUserTasks(this.root.user.getStorage, id)
 		return userTasks
 	}
 

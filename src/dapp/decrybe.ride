@@ -128,14 +128,14 @@ func createTask(task: String, expiration: Int, data: String) = {
     let pmt = extract(i.payment)
     if (isDefined(pmt.assetId)) then throw("Can use waves only at the moment")
     else {
-        if (pmt.amount != LISTINGFEE) then throw("Please pay exact amount for the listing: " + toString(LISTINGFEE) + ", actual payment is: " + toString(pmt.amount))
-        else if (getValueTaskAuthor(task) != NONE) then throw("Task already exist")
+        #if (pmt.amount != LISTINGFEE) then throw("Please pay exact amount for the listing: " + toString(LISTINGFEE) + ", actual payment is: " + toString(pmt.amount))
+        if (getValueTaskAuthor(task) != NONE) then throw("Task already exist")
         else if (getValueUserBio(account) == NONE) then throw("User not signup")
         else WriteSet([
             DataEntry(getKeyTaskAuthor(task), account),
             DataEntry(getKeyTaskBlock(task), height),
             DataEntry(getKeyTaskExpiration(task), height + expiration),
-            DataEntry(getKeyTaskBank(task), LISTINGFEE),
+            DataEntry(getKeyTaskBank(task), pmt.amount),
             DataEntry(getKeyTaskStatus(task), FEATURED),
             DataEntry(getKeyTaskData(task), data)
         ])

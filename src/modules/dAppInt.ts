@@ -86,7 +86,7 @@ export let createTask = async (item, expiration, data, wavesKeeper) => {
                         }
                     ]
                 },
-                payment: [{assetId: "WAVES", tokens: 1}]
+                payment: [{assetId: "WAVES", tokens: data.price*0.2}]
             }
         })
         tx = JSON.parse(tx)

@@ -70,7 +70,7 @@ class UserStore {
 	async updateStorage () {
 		this.storage = await nodeInt.getAllData(this.dapp, this.network);
 		await this.root.tasks.loadTasks(this.isUserLogin, this.getDapp, this.getUserNetwork)
-		let conversations = await nodeInt.getConversationData(this.getStorage, this.getUserAddress, this.getDapp, this.getUserNetwork, this.getWavesKeeper)
+		let conversations = await nodeInt.getConversationData(this.getStorage, this.getUserAddress, this.getWavesKeeper)
 		if (conversations) {
 			this.conversations = conversations
 		}
@@ -121,12 +121,11 @@ class UserStore {
 				//console.log(this.storage)
 				this.isLogin = true;
 				this.isReg = await nodeInt.checkReg(this.storage, state.account.address);
-
 				if (this.isReg) {
 					this.cookies.set('address', this.getUserAddress, { path: '/' });
 					this.cookies.set('network', this.getUserNetwork, { path: '/' });
 					let userDataFromDapp = await nodeInt.getUserData(this.storage, state.account.address);
-					let conversations = await nodeInt.getConversationData(this.getStorage, this.getUserAddress, this.getDapp, this.getUserNetwork, this.getWavesKeeper)
+					let conversations = await nodeInt.getConversationData(this.getStorage, this.getUserAddress, this.getWavesKeeper)
 					if (conversations) {
 						this.conversations = conversations
 						console.log("DEBUG: Conversations loaded")
@@ -150,7 +149,7 @@ class UserStore {
 							this.root.settings.setAvatar(this.avatar)
 							this.root.settings.setLocation(this.location)
 						}
-						let userTasks = await nodeInt.getAllUserTasks(this.storage, this.address, this.dapp, state.network.server)
+						let userTasks = await nodeInt.getAllUserTasks(this.storage, this.address)
 						if (userTasks) {
 							this.tasks = userTasks;
 						}
