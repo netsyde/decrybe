@@ -201,7 +201,6 @@ export let getClearTaskData = async (alldata, id: String) => {
     try {
         let taskData = await getDataByKey(alldata, "datajson_" + id)
         taskData = JSON.parse(taskData)
-        
         return taskData;
     } catch (e) {
         return false;
@@ -209,11 +208,21 @@ export let getClearTaskData = async (alldata, id: String) => {
 }
 
 /**
- * Return task data
+ * Return task status
  * @param alldata - all dApp storage data
  * @param id - task id
  * @returns {Object}
  */
+export let getTaskStatus = async (alldata, id: String) => {
+    try {
+        let fullKey = "status_" + id
+        let status = await getDataByKey(alldata, fullKey)
+        return status
+    } catch (e) {
+        return false;
+    }
+}
+
 export let getTaskData = async (alldata, id: String) => {
     try {
         let taskData = await getDataByKey(alldata, "datajson_" + id)
@@ -271,7 +280,8 @@ export let getTaskData = async (alldata, id: String) => {
                 name: "Other"
             }
         }
-        taskData.status = ucFirst(taskData.status)
+        let status = await getTaskStatus(alldata, id)
+        taskData.status = ucFirst(status)
         return taskData;
     } catch (e) {
         return false;

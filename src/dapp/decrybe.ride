@@ -288,7 +288,9 @@ func acceptWork (task: String, complete: Boolean) = {
                     ])
                 )
             } else {
-                throw("Cancel")
+                WriteSet([
+                        DataEntry(getKeyTaskStatus(task), REVISION)
+                ])
             }
         } else throw("Freelancer doesnt complete the task")
     } else if (getValueTaskData(task) == NONE) then throw("Task doesnt exist")

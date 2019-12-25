@@ -23,8 +23,14 @@ import SearchIcon from '@material-ui/icons/Search';
 import BlockIcon from '@material-ui/icons/Block';
 import DeleteIcon from '@material-ui/icons/DeleteOutlined';
 import ArchiveIcon from '@material-ui/icons/ArchiveOutlined';
+import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import NotificationsOffIcon from '@material-ui/icons/NotificationsOffOutlined';
 import MoreIcon from '@material-ui/icons/MoreVert';
+import ReportIcon from '@material-ui/icons/Report';
+import AddAlarmIcon from '@material-ui/icons/AddAlarm';
+import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
+import ThumbDownIcon from '@material-ui/icons/ThumbDown';
+import GavelIcon from '@material-ui/icons/Gavel';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -77,6 +83,7 @@ const ConversationToolbar = observer((props) => {
   //const moreRef = useRef(null);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [openMenu, setOpenMenu] = useState(false);
+  const [selectedIndex, setSelectedIndex] = React.useState(1);
 
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -86,6 +93,32 @@ const ConversationToolbar = observer((props) => {
   const handleMenuClose = (event) => {
     setAnchorEl(null);
     setOpenMenu(false);
+  };
+
+  const handleMenuItemClick = (event, index) => {
+    switch (index) {
+      case 0:
+        console.log('completition')
+        break;
+      case 1:
+        console.log("accept")
+        break;
+      case 2:
+        console.log("reject")
+        break
+      case 3:
+        console.log("move deadline")
+        break
+      case 4:
+        console.log("dispute")
+        break
+      case 5:
+        console.log("report")
+        break
+
+    }
+    setOpenMenu(false);
+    //console.log(index)
   };
 
   const handleClick = async (event) => {
@@ -136,27 +169,65 @@ const ConversationToolbar = observer((props) => {
       </Tooltip>
       <Menu
         anchorEl={anchorEl}
+        disableScrollLock={true}
         keepMounted
         onClose={handleMenuClose}
         open={openMenu}
       >
-        <MenuItem>
+
+        {rootStore.user.getUserAddress == conversation.task.freelancer ? <MenuItem
+          onClick={event => handleMenuItemClick(event, 0)}
+          //selected={0 === selectedIndex}
+        >
           <ListItemIcon>
-            <DeleteIcon />
+            <AssignmentTurnedInIcon />
           </ListItemIcon>
           <ListItemText primary="Report completion of the task" />
-        </MenuItem>
-        <MenuItem>
+        </MenuItem> : null}
+       { rootStore.user.getUserAddress == conversation.task.author.address && conversation.task.freelancer == conversation.user.address ? <MenuItem
+          onClick={event => handleMenuItemClick(event, 1)}
+          //selected={1 === selectedIndex}
+        >
           <ListItemIcon>
-            <ArchiveIcon />
+            <ThumbUpIcon />
+          </ListItemIcon>
+          <ListItemText primary="Accept work" />
+        </MenuItem> : null}
+        { rootStore.user.getUserAddress == conversation.task.author.address && conversation.task.freelancer == conversation.user.address ? <MenuItem
+          onClick={event => handleMenuItemClick(event, 2)}
+          //selected={1 === selectedIndex}
+        >
+          <ListItemIcon>
+            <ThumbDownIcon />
+          </ListItemIcon>
+          <ListItemText primary="Reject work" />
+        </MenuItem> : null}
+        {rootStore.user.getUserAddress == conversation.task.author.address && conversation.task.freelancer == conversation.user.address ? <MenuItem
+          onClick={event => handleMenuItemClick(event, 3)}
+          //selected={2 === selectedIndex}
+        >
+          <ListItemIcon>
+            <AddAlarmIcon />
+          </ListItemIcon>
+          <ListItemText primary="Move the deadline" />
+        </MenuItem> : null}
+        {((rootStore.user.getUserAddress == conversation.task.author.address && conversation.task.freelancer == conversation.user.address) || (rootStore.user.getUserAddress == conversation.task.freelancer)) ? <MenuItem
+          onClick={event => handleMenuItemClick(event, 4)}
+          //selected={2 === selectedIndex}
+        >
+          <ListItemIcon>
+            <GavelIcon />
+          </ListItemIcon>
+          <ListItemText primary="Open dispute" />
+        </MenuItem> : null}
+        <MenuItem
+          onClick={event => handleMenuItemClick(event, 5)}
+          //selected={2 === selectedIndex}
+        >
+          <ListItemIcon>
+            <ReportIcon />
           </ListItemIcon>
           <ListItemText primary="Report user" />
-        </MenuItem>
-        <MenuItem>
-          <ListItemIcon>
-            <NotificationsOffIcon />
-          </ListItemIcon>
-          <ListItemText primary="Block user" />
         </MenuItem>
       </Menu>
     </Toolbar>

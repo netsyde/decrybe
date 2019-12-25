@@ -68,7 +68,7 @@ const ConversationListItem = props => {
         </Avatar>
       </ListItemAvatar>
       <ListItemText
-        primary={conversation.task.title}
+        primary={conversation.task.title.length > 20 ? conversation.task.title.substr(0, 20) + "..." : conversation.task.title}
         primaryTypographyProps={{
           noWrap: true,
           variant: 'h6',

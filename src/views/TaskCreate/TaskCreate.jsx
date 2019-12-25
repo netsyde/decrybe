@@ -108,7 +108,7 @@ const TaskCreate = inject('rootStore')(observer(({ rootStore }) => {
       updatedAt: now,
       members: store.getMembers,
       freelancer: store.getFreelancer,
-      status: store.getStatus,
+      //status: store.getStatus, // from blockchain now
       description: store.getDescription,
       category: store.getCategory
     }

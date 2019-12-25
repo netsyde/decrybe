@@ -338,3 +338,82 @@ export let sendMessage = async (taskId, to, message, publicKey, date, wavesKeepe
         return false
    }
 }
+
+export let reportCompleteTask = async (taskId, wavesKeeper) => {
+    const state = await wavesKeeper.publicState();
+    try {
+        let tx = await wavesKeeper.signAndPublishTransaction({
+            type: 16,
+            data: {
+                 fee: {
+                     "tokens": "0.05",
+                     "assetId": "WAVES"
+                 },
+                 dApp: dAppAddress,
+                 call: {
+                 	function: 'sendMessage',
+                 	args: [
+                        {
+                            type: "string", value: taskId
+                        }
+                    ]
+                },
+                payment: []
+            }
+        })
+        tx = JSON.parse(tx)
+        if (tx) {
+            console.log(tx.id)
+            let wait = await nodeInteraction.waitForTx(tx.id, {apiBase: state.network.server})
+            if (wait) {
+                return true
+            }
+        } else {
+            return false
+        }
+    } catch (error) {
+        console.error("Error ", error);
+        return false
+   }
+}
+
+export let acceptWork = async (taskId, complete, wavesKeeper) => {
+    const state = await wavesKeeper.publicState();
+    try {
+        let tx = await wavesKeeper.signAndPublishTransaction({
+            type: 16,
+            data: {
+                 fee: {
+                     "tokens": "0.05",
+                     "assetId": "WAVES"
+                 },
+                 dApp: dAppAddress,
+                 call: {
+                 	function: 'sendMessage',
+                 	args: [
+                        {
+                            type: "string", value: taskId
+                        },
+                        {
+                            type: "boolean", value: complete
+                        }
+                    ]
+                },
+                payment: []
+            }
+        })
+        tx = JSON.parse(tx)
+        if (tx) {
+            console.log(tx.id)
+            let wait = await nodeInteraction.waitForTx(tx.id, {apiBase: state.network.server})
+            if (wait) {
+                return true
+            }
+        } else {
+            return false
+        }
+    } catch (error) {
+        console.error("Error ", error);
+        return false
+   }
+}
