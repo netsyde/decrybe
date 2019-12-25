@@ -14,7 +14,8 @@ const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
     flexDirection: 'column',
-    backgroundColor: '#ffffff'
+    backgroundColor: '#ffffff',
+    flexGrow: 1
   }
 }));
 

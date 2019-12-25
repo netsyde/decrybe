@@ -71,7 +71,7 @@ const ConversationListItem = props => {
         primary={conversation.task.title}
         primaryTypographyProps={{
           noWrap: true,
-          variant: 'h6'
+          variant: 'h6',
         }}
         secondary={`${lastMessage ? lastMessage.sender.name : ""}: ${lastMessage ? lastMessage.content : ""}`}
         secondaryTypographyProps={{

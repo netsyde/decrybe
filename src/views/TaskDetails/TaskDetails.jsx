@@ -65,10 +65,16 @@ const Task = observer((props) => {
     }
   }
   useEffect(() => {
-    
-    if (props.rootStore.user.isLogin) {
-      getTask()
+    let mounted = true;
+    if (mounted) {
+      if (props.rootStore.user.isLogin) {
+        getTask()
+      }
     }
+
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   const handleAlertClose = () => {

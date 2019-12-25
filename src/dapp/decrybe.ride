@@ -5,11 +5,15 @@
 let NONE = "none"
 let FEATURED = "featured"
 let DAPP = ""
-let LISTINGFEE = (1 * 100000000)
 let MOD = "mod"
 let REGISTERED = "registered"
 let ADMIN = "admin"
 let INPROGRESS = "in progress"
+let COMPLETED = "completed"
+let PENDING = "pending"
+let INDISPUTE = "in dispute"
+let REVISION = "revision"
+let DECRYBEFEE = 5
 
 func getStrByKey(key: String) = {
     let str = match getString(this, key) {
@@ -47,6 +51,10 @@ func getValueUserMessage(from: String, to: String, cnt: String) = {
 func getKeyUserMessageBlock(from: String, to: String, cnt: String) = {
     "block_msg_" + from + "_" + to + "_id:" + cnt
 }
+
+func getValueUserMessageBlock(from: String, to: String, cnt: String) = {
+    getStrByKey(getKeyUserMessageBlock(from, to, cnt))
+}
 # Task Data
 func getKeyTaskData(task: String) = {
     "datajson_" + task
@@ -74,6 +82,10 @@ func getKeyTaskBlock(task: String) = {
 # Task Bank
 func getKeyTaskBank(task: String) = {
     "bank_" + task
+}
+
+func getValueTaskBank(task: String) = {
+    getNumberByKey(getKeyTaskBank(task))
 }
 
 # Task Freelancer
@@ -122,14 +134,32 @@ func getKeyUserBlock(account: String) = {
     "user_blk_" + account
 }
 
+# Task Report Complete
+func getKeyTaskReportComplete(freelancer: String, task: String, stage: String) = {
+    "rc_" + task + "_" + freelancer + "_stage:" + stage
+}
+
+func getValueTaskReportComplete(freelancer: String, task: String, stage: String) = {
+    getStrByKey(getKeyTaskReportComplete(freelancer, task, stage))
+}
+
+func getKeyTaskReportCompleteCnt(task: String, freelancer: String) = {
+    "rc_cnt_" + task + "_" + freelancer
+}
+
+func getValueTaskReportCompleteCnt(task: String, freelancer: String) = {
+    getNumberByKey(getKeyTaskReportCompleteCnt(task, freelancer))
+}
+
 @Callable(i)
 func createTask(task: String, expiration: Int, data: String) = {
     let account = toBase58String(i.caller.bytes)
     let pmt = extract(i.payment)
+    let pmtAmount = pmt.amount
     if (isDefined(pmt.assetId)) then throw("Can use waves only at the moment")
     else {
-        #if (pmt.amount != LISTINGFEE) then throw("Please pay exact amount for the listing: " + toString(LISTINGFEE) + ", actual payment is: " + toString(pmt.amount))
-        if (getValueTaskAuthor(task) != NONE) then throw("Task already exist")
+        if (pmtAmount == 0) then throw("Amount must be higher then 0")
+        else if (getValueTaskAuthor(task) != NONE) then throw("Task already exist")
         else if (getValueUserBio(account) == NONE) then throw("User not signup")
         else WriteSet([
             DataEntry(getKeyTaskAuthor(task), account),
@@ -142,8 +172,6 @@ func createTask(task: String, expiration: Int, data: String) = {
     }
 }
 
-
-# add check user reg
 @Callable(i)
 func signUp(data: String) = { 
     let account = toBase58String(i.caller.bytes)
@@ -184,7 +212,7 @@ func sendMessage(task: String, to: String, message: String) = {
     else if (account == to) then throw("You can't hire yourself")
     else if (getValueUserBio(account) == NONE) then throw("Sender not signup")
     else if (getValueUserBio(to) == NONE) then throw("Recipient not singup")
-    else if (getValueTaskStatus(task) == INPROGRESS) then throw("Freelancer is no longer required (the task is already in progress)") 
+    else if (getValueTaskStatus(task) == INPROGRESS) then throw("The task is already in progress/pending/completed/in dispute") 
     else {
         WriteSet([
             DataEntry(getKeyUserMessagesCnt(account, to), cnt),
@@ -217,4 +245,53 @@ func userUpdate(address: String, data: String) = {
             DataEntry(getKeyUserBio(account), data)
         ])
     }
+}
+
+@Callable(i)
+func reportCompleteTask(task: String) = {
+    let account = toBase58String(i.caller.bytes)
+    let stage = getValueTaskReportCompleteCnt(task, account) + 1
+    let taskCreator = getValueTaskAuthor(task)
+    let freelancerMessagesCnt = getValueUserMessagesCnt(account, taskCreator)
+    let lastFreelancerMessage = getValueUserMessage(account, taskCreator, toString(freelancerMessagesCnt))
+    if (getValueTaskFreelancer(task) == account) then {
+        WriteSet([
+            DataEntry(getKeyTaskReportComplete(account, task, toString(stage)), freelancerMessagesCnt),
+            DataEntry(getKeyTaskStatus(task), PENDING)
+        ])
+    }
+    else if (getValueTaskFreelancer(task) == NONE) then throw("Task freelancer doesnt exist")
+    else if (getValueTaskAuthor(task) == account) then throw("You are author")
+    else throw("Error #1")
+
+}
+
+@Callable(i)
+func acceptWork (task: String, complete: Boolean) = {
+    let account = toBase58String(i.caller.bytes)
+    let creator = getValueTaskAuthor(task)
+    let freelancer = getValueTaskFreelancer(task)
+    let stage = getValueTaskReportCompleteCnt(task, freelancer)
+    let bank = getValueTaskBank(task)
+    let payment = bank - (bank * DECRYBEFEE / 100)
+    let pmt = extract(i.payment)
+    let pmtAmount = pmt.amount
+    if (account == creator) then {
+        if (stage != 0) then {
+            if (complete) then {
+                ScriptResult(
+                    WriteSet([
+                        DataEntry(getKeyTaskStatus(task), COMPLETED)
+                    ]),
+                    TransferSet([
+                        ScriptTransfer(addressFromStringValue(freelancer), payment, unit)
+                    ])
+                )
+            } else {
+                throw("Cancel")
+            }
+        } else throw("Freelancer doesnt complete the task")
+    } else if (getValueTaskData(task) == NONE) then throw("Task doesnt exist")
+    else if (getValueUserBio(account) == NONE) then throw("Sender not signup")
+    else throw("You are not author")
 }

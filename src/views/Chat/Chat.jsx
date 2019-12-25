@@ -62,7 +62,6 @@ const Chat = inject('rootStore')(observer(({ rootStore }) => {
       c => c.uid === router.match.params.id
     );
   }
-
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarType, setSnackbarType] = useState("")

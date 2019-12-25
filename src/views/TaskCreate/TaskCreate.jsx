@@ -4,6 +4,7 @@ import { Button } from '@material-ui/core';
 import { Page } from '../../components'
 import { observer, inject } from 'mobx-react';
 import * as dAppInt from '../../modules/dAppInt'
+import * as nodeInt from '../../modules/nodeInt'
 import {
   Header,
   AboutTask,
@@ -92,7 +93,7 @@ const TaskCreate = inject('rootStore')(observer(({ rootStore }) => {
   const createTask = async () => {
     let store = rootStore.taskCreate;
     let now = Date.now()
-    let expiration = store.getEndDate - now
+    let expiration = nodeInt.dateToHeight(store.getEndDate)
     let taskId = uuid()
     let data = {
       title: store.getTitle,
@@ -111,6 +112,7 @@ const TaskCreate = inject('rootStore')(observer(({ rootStore }) => {
       description: store.getDescription,
       category: store.getCategory
     }
+    console.log(data.price)
         
     let tx = await dAppInt.createTask(taskId, expiration, data, rootStore.user.getWavesKeeper)
        

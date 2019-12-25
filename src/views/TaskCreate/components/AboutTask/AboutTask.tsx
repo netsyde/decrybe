@@ -183,6 +183,7 @@ const AboutTask = observer((props) => {
               value={rootStore.taskCreate.getPrice}
               variant="outlined"
               validatorListener={validatorListener}
+              helperText={`Price including commision: ${rootStore.taskCreate.getPriceCommision}`}
             />
           </Grid>
           <Grid item lg={4} md={6} sm={12} xs={12}>

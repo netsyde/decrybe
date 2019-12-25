@@ -8,7 +8,7 @@ let color = ["#1abc9c", "#2ecc71", "#3498db", "#9b59b6", "#34495e", "#16a085",
                     "#27ae60", "#2980b9", "#8e44ad", "#2c3e50", "#e67e22", "#e74c3c",
                     "#ff7979", "#badc58", "#f9ca24", "#f0932b",
                     "#eb4d4b", "#6ab04c", "#e056fd", "#686de0", "#30336b", "#130f40"]
-
+import moment from 'moment'
 /**
  * Get user balance
  * @param address - user address
@@ -21,6 +21,13 @@ export let getBalance = async (address: String, nodeUrl: String) => {
     } catch (e) {
         console.log(`ERROR in nodeInt.getBalance! ${e.name}: ${e.message}\n${e.stack}`);
     }
+}
+
+export let dateToHeight = (date) => {
+    let days = -1 * Math.floor(moment().diff(date, 'days', true));
+        // In test mode one block = 1 day
+        // return days;
+        return Math.round(days * 1440);
 }
 
 /**
@@ -56,16 +63,15 @@ export let getAllData = async (address: String, nodeUrl: String) => {
         //console.log(data)
         return data;
     } catch (e) {
-        return false
         console.log(`ERROR in nodeInt.getAllData! ${e.name}: ${e.message}\n${e.stack}`);
+        return false
     }
 }
 
 /**
  * Receive data from task
+ * @param data - all dApp storage data
  * @param key - task id
- * @param dAppAddress - dApp address
- * @param nodeUrl - node url
  * @returns {String}
  */
 export let getDataByKey = async (data, key: String) => {
@@ -89,9 +95,8 @@ export let getDataByKey = async (data, key: String) => {
 
 /**
  * Check user registration
+ * @param alldata - all dApp storage data
  * @param address - user address
- * @param dAppAddress - dApp address
- * @param nodeUrl - node url
  * @returns {boolean}
  */
 export let checkReg = async (alldata, address: String) => {
@@ -114,8 +119,7 @@ export let checkReg = async (alldata, address: String) => {
 
 /**
  * Return all projects
- * @param dAppAddress - dApp address
- * @param nodeUrl - node url
+ * @param data - all dApp storage data
  * @returns {Object}
  */
 export let getAllTasks = async (data) => {
@@ -133,27 +137,10 @@ export let getAllTasks = async (data) => {
         return false;
     }
 }
-/*
 
-[
-    {
-        "type": "string",
-        "value": "abde6f21-ec03-4b0d-8c8d-80e4a4e2e50e"
-    },
-    {
-        "type": "string",
-        "value": "3N6mThpZFR1zoWk2MJHMpHvVVK8KTeuGNHx"
-    },
-    {
-        "type": "string",
-        "value": "{\"message\":\"47h5cikReQstWHNH4ePsnunT6f5uBJjWrpAHnfhCxcad4JyW14SLBvJ8mJPGD4NjGvScsTdg7n9VEMsajJm2f2gz15BhzmQFtPpEGWafywam5JH9z4ikdNoU79GtPCYHZQeRi3MmNHkY3t4WG3wKnhZkyqop1aLaTNFKxL2ScP82a5MH6DfCx6374HjeRpTrwEFYRQBaJT17rLX\",\"task\":\"abde6f21-ec03-4b0d-8c8d-80e4a4e2e50e\",\"sender\":\"3N8Ayob7haCp5N32V6gYcdPsLMKMaS3qH3E\",\"recipient\":\"3N6mThpZFR1zoWk2MJHMpHvVVK8KTeuGNHx\",\"date\":1576288667198}"
-    }
-]
-/
 /**
  * Return all users
- * @param dAppAddress - dApp address
- * @param nodeUrl - node url
+ * @param alldata - all dApp storage data
  * @returns {Object}
  */
 export let getAllUsers = async (alldata) => {
@@ -171,9 +158,8 @@ export let getAllUsers = async (alldata) => {
 
 /**
  * Return user data
+ * @param alldata - all dApp storage data
  * @param address - user address
- * @param dAppAddress - dApp address
- * @param nodeUrl - node url
  * @returns {Object}
  */
 export let getUserData = async (alldata, address: String) => {
@@ -205,7 +191,12 @@ export let getUserData = async (alldata, address: String) => {
     }
 }
 
-//getUserData("3N67wqt9Xvvn1Qtgz6KvyEcdmr8AL7EVaQM", dApp, nodeUrl)
+/**
+ * Return clear task data (without useless information)
+ * @param alldata - all dApp storage data
+ * @param id - task id
+ * @returns {Object}
+ */
 export let getClearTaskData = async (alldata, id: String) => {
     try {
         let taskData = await getDataByKey(alldata, "datajson_" + id)
@@ -216,11 +207,11 @@ export let getClearTaskData = async (alldata, id: String) => {
         return false;
     }
 }
+
 /**
  * Return task data
+ * @param alldata - all dApp storage data
  * @param id - task id
- * @param dAppAddress - dApp address
- * @param nodeUrl - node url
  * @returns {Object}
  */
 export let getTaskData = async (alldata, id: String) => {
@@ -291,9 +282,7 @@ export let getTaskData = async (alldata, id: String) => {
 
 /**
  * Return task data
- * @param id - task id
- * @param dAppAddress - dApp address
- * @param nodeUrl - node url
+ * @param alldata - all dApp storage data
  * @returns {Object}
  */
 
@@ -320,13 +309,10 @@ export let getTasksAllData = async (alldata) => {
 //getTasksAllData(dApp, nodeUrl)
 
 /**
- * Return task data
- * @param id - task id
- * @param dAppAddress - dApp address
- * @param nodeUrl - node url
+ * Return all data about each user
+ * @param alldata - all dApp storage data
  * @returns {Object}
  */
-
 export let getUsersAllData = async (alldata) => {
     try {
         let allUsers = await getAllUsers(alldata)
@@ -347,6 +333,12 @@ export let getUsersAllData = async (alldata) => {
     }
 }
 
+/**
+ * Return all user data
+ * @param alldata - all dApp storage data
+ * @param address - user address
+ * @returns {Object}
+ */
 export let getAllUserTasks = async (alldata, address) => {
     try {
         let data = await getTasksAllData(alldata)
@@ -364,17 +356,33 @@ export let getAllUserTasks = async (alldata, address) => {
     }
 }
 
-function getRandomArbitary(min, max) {
+/**
+ * Return pseudo random number between min and max
+ * @param min - minimal number
+ * @param max - maximum number
+ * @returns {Number}
+ */
+let getRandomArbitary = (min, max) => {
     let rand = Math.random() * (max - min) + min;
     return rand.toFixed(0)
 }
 
-function ucFirst(str) {
+/**
+ * Return string with first upper case character
+ * @param str - string
+ * @returns {string}
+ */
+let ucFirst = (str) => {
     if (!str) return str;
-  
     return str[0].toUpperCase() + str.slice(1);
 }
 
+/**
+ * Return message data
+ * @param alldata - all dApp storage data
+ * @param id - message unique id
+ * @returns {object|boolean}
+ */
 export let getTaskUserMessage = async (alldata, id) => {
     try {
         let message = await getDataByKey(alldata, id)
@@ -386,6 +394,12 @@ export let getTaskUserMessage = async (alldata, id) => {
     }
 }
 
+/**
+ * Return message block (height)
+ * @param alldata - all dApp storage data
+ * @param id - message unique id
+ * @returns {object|boolean}
+ */
 export let getTaskUserMessageBlock = async (alldata, id) => {
     try {
         let block = await getDataByKey(alldata, id)
@@ -397,7 +411,14 @@ export let getTaskUserMessageBlock = async (alldata, id) => {
     }
 }
 
-export let getConversationData = async (data, user, wavesKeeper) => {
+/**
+ * Return conversations data (all messages each conversation)
+ * @param alldata - all dApp storage data
+ * @param user - user (current)
+ * @param wavesKeeper - waves keeper class
+ * @returns {object}
+ */
+export let getConversationsData = async (data, user, wavesKeeper) => {
     try {
         let allConversation = await getUserConversationList(data, user)
         let conversationsData = []
@@ -438,7 +459,7 @@ export let getConversationData = async (data, user, wavesKeeper) => {
                     let task = await getTaskData(data, allConversation[i].task)
 
                     conversationsData.push({
-                        messages: conversationData,//conversationData.filter( message  => regex.test(message.task)),
+                        messages: conversationData, //conversationData.filter( message  => regex.test(message.task)),
                         id: allConversation[i].task,
                         uid: allConversation[i].id,
                         task: task,
@@ -453,14 +474,24 @@ export let getConversationData = async (data, user, wavesKeeper) => {
         return false;
     }
 }
-
-
+/**
+ * Compare time created message
+ * @param a - message a
+ * @param b - message b
+ * @returns {number}
+ */
 let compareNumeric = (a, b) => {
     if (Number(a.created_at) > Number(b.created_at)) return 1;
     if (Number(a.created_at) == Number(b.created_at)) return 0;
     if (Number(a.created_at) < Number(b.created_at)) return -1;
 }
 
+/**
+ * Compare block created message
+ * @param a - message a
+ * @param b - message b
+ * @returns {number}
+ */
 let compareBlock = (a, b) => {
     if (Number(a.block) > Number(b.block)) return 1;
     if (Number(a.block) == Number(b.block)) {
@@ -469,8 +500,13 @@ let compareBlock = (a, b) => {
     if (Number(a.block) < Number(b.block)) return -1;
 }
 
-
-function contains(arr, elem) {
+/**
+ * Returns true, if element consists in array, else false
+ * @param arr - array
+ * @param elem - element
+ * @returns {number}
+ */
+let contains = (arr, elem) => {
     for (var i = 0; i < arr.length; i++) {
         if (arr[i] === elem) {
             return true;
@@ -478,13 +514,13 @@ function contains(arr, elem) {
     }
     return false;
 }
-// получение всех юзеров, с которыми у юзера была переписка
 
-// msg_[отправитель]_[получатель]_id:
-// msg_user1_user2
-// msg_user1_user2
-
-// msg_user2_user1_1
+/**
+ * Return conversation list (id conversations)
+ * @param data - all dApp storage data
+ * @param user - user (current)
+ * @returns {object|boolean}
+ */
 export let getUserConversationList = async (data, user) => {
     try {
         let taskIds = []
@@ -512,36 +548,25 @@ export let getUserConversationList = async (data, user) => {
                         }
                         
                     }
-                    //return false
-                })
+                }
+            )
         );
-        //console.log(taskIds)
+        
         result = result.filter(Boolean)
-        //console.log(result)
-        
-        // for (let i = 0; i < result.length; i++) {
-        //     for(let x = 0; x < result.length; x++) {
-        //         if (result[i].sender == result[x].recipient && result[i].recipient == result[x].sender) {
-        //             result.splice(x, 1);
-        //         }
-        //     }
-        // }
-        
-        
 
         return result
-        //console.log
     } catch (e) {
         console.log(`ERROR in nodeInt.getUsersAllData! ${e.name}: ${e.message}\n${e.stack}`);
         return false;
     }
 }
 
-//let allData = getAllData("3N3PDiDHb1AJU8tTXJLcvoDNP29fdGNNWqs", nodeUrl)
-//getUserConversationsMessages("ds", "3N67wqt9Xvvn1Qtgz6KvyEcdmr8AL7EVaQM")
-//getUserConversationList("ds", "3N67wqt9Xvvn1Qtgz6KvyEcdmr8AL7EVaQM")
-//"msg_3NBdfiSHLWVRUW4EPHcrtX47pky4TzKq8fb_3N67wqt9Xvvn1Qtgz6KvyEcdmr8AL7EVaQM_id:1"
-// получение сообщений от единичного юзера - работает
+/**
+ * Return conversation messages
+ * @param alldata - all dApp storage data
+ * @param conversation - conversation id
+ * @returns {object|boolean}
+ */
 export let getUserConversationMessages = async (allData, conversation) => {
     try {
         if (conversation) {
@@ -572,6 +597,4 @@ export let getUserConversationMessages = async (allData, conversation) => {
         return false;
     }
 }
-//let conv = getUserConversationList("ds", "3N67wqt9Xvvn1Qtgz6KvyEcdmr8AL7EVaQM")
-//getUserConversationMessages("dsad", "3N67wqt9Xvvn1Qtgz6KvyEcdmr8AL7EVaQM")
 

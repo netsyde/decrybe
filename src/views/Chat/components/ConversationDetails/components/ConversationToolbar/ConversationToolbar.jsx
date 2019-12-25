@@ -7,12 +7,24 @@ import {
   Toolbar,
   Tooltip,
   Typography,
-  Button
+  Button,
+  ListItemIcon,
+  ListItemText,
+  Menu,
+  MenuItem,
+  Paper,
+  Input
 } from '@material-ui/core';
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 import { observer } from 'mobx-react';
 import * as dAppInt from '../../../../../../modules/dAppInt'
 import * as nodeInt from '../../../../../../modules/nodeInt'
+import SearchIcon from '@material-ui/icons/Search';
+import BlockIcon from '@material-ui/icons/Block';
+import DeleteIcon from '@material-ui/icons/DeleteOutlined';
+import ArchiveIcon from '@material-ui/icons/ArchiveOutlined';
+import NotificationsOffIcon from '@material-ui/icons/NotificationsOffOutlined';
+import MoreIcon from '@material-ui/icons/MoreVert';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -62,14 +74,17 @@ const ConversationToolbar = observer((props) => {
   const { conversation, className, rootStore, ...rest } = props;
 
   const classes = useStyles(props);
-  const moreRef = useRef(null);
+  //const moreRef = useRef(null);
+  const [anchorEl, setAnchorEl] = React.useState(null);
   const [openMenu, setOpenMenu] = useState(false);
 
-  const handleMenuOpen = () => {
+  const handleMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
     setOpenMenu(true);
   };
 
-  const handleMenuClose = () => {
+  const handleMenuClose = (event) => {
+    setAnchorEl(null);
     setOpenMenu(false);
   };
 
@@ -111,14 +126,39 @@ const ConversationToolbar = observer((props) => {
       >
        Hire
       </Button> : null}
-    {/* {<Button
-      color="primary"
-      variant="contained"
-      type="submit"
-      //disabled={!isValid}
-    >
-      Report
-    </Button>} */}
+      <Tooltip title="More options">
+        <IconButton
+          onClick={handleMenuOpen}
+          //ref={moreRef}
+        >
+          <MoreIcon />
+        </IconButton>
+      </Tooltip>
+      <Menu
+        anchorEl={anchorEl}
+        keepMounted
+        onClose={handleMenuClose}
+        open={openMenu}
+      >
+        <MenuItem>
+          <ListItemIcon>
+            <DeleteIcon />
+          </ListItemIcon>
+          <ListItemText primary="Report completion of the task" />
+        </MenuItem>
+        <MenuItem>
+          <ListItemIcon>
+            <ArchiveIcon />
+          </ListItemIcon>
+          <ListItemText primary="Report user" />
+        </MenuItem>
+        <MenuItem>
+          <ListItemIcon>
+            <NotificationsOffIcon />
+          </ListItemIcon>
+          <ListItemText primary="Block user" />
+        </MenuItem>
+      </Menu>
     </Toolbar>
   );
 });

@@ -1,5 +1,6 @@
 import { observable, action, computed} from "mobx"
 import {RootStore} from './RootStore'
+import * as nodeInt from '../modules/nodeInt'
 
 class TaskCreateStore {
 	@observable title: String = "";
@@ -10,7 +11,7 @@ class TaskCreateStore {
 	@observable tags: Array<String> = ['Decrybe', 'ReactJS'];
 	@observable tag: String = ""
 	@observable description: String = "";
-	@observable price: Number = 1;
+	@observable price = 1;
 	@observable currency: String = "Waves";
 	@observable author: String = this.root.user.getUserAddress;
 	@observable updatedAt: Number;
@@ -34,12 +35,20 @@ class TaskCreateStore {
 	}
 
 	@action("set task price")
-	setPrice (price: Number) {
-		this.price = price;
+	setPrice (price) {
+		this.price = Number(price);
+		console.log(price)
 	}
 
 	@computed get getPrice() {
-		return this.price
+		//console.log(this.price)
+		return Number(this.price)
+	}
+
+	@computed get getPriceCommision() {
+		//console.log(this.price * 0.02)
+		let price = (Number(this.price) * 0.02) + Number(this.price)
+		return price
 	}
 
 	@action("set task category")
@@ -55,7 +64,6 @@ class TaskCreateStore {
 
 	@action("set task end date")
 	setEndDate (date: Date) {
-		console.log(date)
 		if (date) {
 			this.endDate = date.getTime();
 		}

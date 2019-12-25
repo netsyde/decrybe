@@ -66,11 +66,13 @@ class UserStore {
 			return false
 		}
 	}
+
+	
 	@action("update storage")
 	async updateStorage () {
 		this.storage = await nodeInt.getAllData(this.dapp, this.network);
 		await this.root.tasks.loadTasks(this.isUserLogin, this.getDapp, this.getUserNetwork)
-		let conversations = await nodeInt.getConversationData(this.getStorage, this.getUserAddress, this.getWavesKeeper)
+		let conversations = await nodeInt.getConversationsData(this.getStorage, this.getUserAddress, this.getWavesKeeper)
 		if (conversations) {
 			this.conversations = conversations
 		}
@@ -125,7 +127,7 @@ class UserStore {
 					this.cookies.set('address', this.getUserAddress, { path: '/' });
 					this.cookies.set('network', this.getUserNetwork, { path: '/' });
 					let userDataFromDapp = await nodeInt.getUserData(this.storage, state.account.address);
-					let conversations = await nodeInt.getConversationData(this.getStorage, this.getUserAddress, this.getWavesKeeper)
+					let conversations = await nodeInt.getConversationsData(this.getStorage, this.getUserAddress, this.getWavesKeeper)
 					if (conversations) {
 						this.conversations = conversations
 						console.log("DEBUG: Conversations loaded")
