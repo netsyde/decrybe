@@ -10,10 +10,12 @@ import {
   ListItemAvatar,
   ListItemText,
   Avatar,
+  ListItemIcon,
   colors
 } from '@material-ui/core';
 import getInitials from '../../../../../../utils/getInitials'
 import { Label } from '../../../../../../components';
+import CheckIcon from '@material-ui/icons/Check';
 
 const useStyles = makeStyles(theme => ({
   active: {
@@ -39,7 +41,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const ConversationListItem = props => {
-  const { active, conversation, className, ...rest } = props;
+  const { active, rootStore, conversation, className, ...rest } = props;
 
   const classes = useStyles(props);
   const lastMessage = conversation.messages[conversation.messages.length - 1];
@@ -67,6 +69,20 @@ const ConversationListItem = props => {
           {conversation.user.name ? getInitials(conversation.user.name) : ""}
         </Avatar>
       </ListItemAvatar>
+
+      {conversation.task.freelancer == conversation.user.address  || conversation.task.freelancer == rootStore.user.getUserAddress ?
+        <ListItemText
+        primary={conversation.task.title.length > 20 ? ( conversation.task.title.substr(0, 20) + "...") : conversation.task.title}
+        primaryTypographyProps={{
+          noWrap: true,
+          variant: 'h6',
+        }}
+        secondary={`${lastMessage ? lastMessage.sender.name : ""}: ${lastMessage ? lastMessage.content : ""}`}
+        secondaryTypographyProps={{
+          noWrap: true,
+          variant: 'body1'
+        }}
+      /> : 
       <ListItemText
         primary={conversation.task.title.length > 20 ? conversation.task.title.substr(0, 20) + "..." : conversation.task.title}
         primaryTypographyProps={{
@@ -77,17 +93,14 @@ const ConversationListItem = props => {
         secondaryTypographyProps={{
           noWrap: true,
           variant: 'body1'
-        }}
-      />
+        }} />
+      }
       <div className={classes.details}>
-        <Typography
-          noWrap
-          variant="body2"
-        >
-          {lastMessage.created_at ? (moment(lastMessage.created_at).isSame(moment(), 'day')
-            ? moment(lastMessage.created_at).format('LT')
-            : moment(lastMessage.created_at).fromNow()) : ""}
-        </Typography>
+
+      {conversation.task.freelancer == conversation.user.address  || conversation.task.freelancer == rootStore.user.getUserAddress ? 
+      <ListItemIcon>
+        <CheckIcon/>
+      </ListItemIcon> : null}
       </div>
     </ListItem>
   );

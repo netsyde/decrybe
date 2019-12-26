@@ -88,6 +88,7 @@ const Chat = inject('rootStore')(observer(({ rootStore }) => {
         <ConversationList
           className={classes.conversationList}
           conversations={rootStore.user.getConversations}
+          rootStore={rootStore}
         />
         {selectedConversation ? (
           <ConversationDetails

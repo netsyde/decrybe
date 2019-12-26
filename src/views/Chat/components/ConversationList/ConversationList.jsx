@@ -25,7 +25,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const ConversationList = props => {
-  const { conversations, className, ...rest } = props;
+  const { conversations, rootStore, className, ...rest } = props;
 
   const classes = useStyles(props);
   const router = useRouter();
@@ -56,6 +56,7 @@ const ConversationList = props => {
             conversation={conversation}
             divider={i < conversations.length - 1}
             key={i}
+            rootStore={rootStore}
           />
         ))}
       </List>

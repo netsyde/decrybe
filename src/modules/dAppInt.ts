@@ -351,7 +351,7 @@ export let reportCompleteTask = async (taskId, wavesKeeper) => {
                  },
                  dApp: dAppAddress,
                  call: {
-                 	function: 'sendMessage',
+                 	function: 'reportCompleteTask',
                  	args: [
                         {
                             type: "string", value: taskId
@@ -389,7 +389,7 @@ export let acceptWork = async (taskId, complete, wavesKeeper) => {
                  },
                  dApp: dAppAddress,
                  call: {
-                 	function: 'sendMessage',
+                 	function: 'acceptWork',
                  	args: [
                         {
                             type: "string", value: taskId

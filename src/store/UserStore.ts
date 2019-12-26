@@ -128,6 +128,7 @@ class UserStore {
 					this.cookies.set('network', this.getUserNetwork, { path: '/' });
 					let userDataFromDapp = await nodeInt.getUserData(this.storage, state.account.address);
 					let conversations = await nodeInt.getConversationsData(this.getStorage, this.getUserAddress, this.getWavesKeeper)
+					console.log(conversations)
 					if (conversations) {
 						this.conversations = conversations
 						console.log("DEBUG: Conversations loaded")

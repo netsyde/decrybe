@@ -80,10 +80,8 @@ const ConversationToolbar = observer((props) => {
   const { conversation, className, rootStore, ...rest } = props;
 
   const classes = useStyles(props);
-  //const moreRef = useRef(null);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [openMenu, setOpenMenu] = useState(false);
-  const [selectedIndex, setSelectedIndex] = React.useState(1);
 
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -95,16 +93,28 @@ const ConversationToolbar = observer((props) => {
     setOpenMenu(false);
   };
 
-  const handleMenuItemClick = (event, index) => {
+  const handleMenuItemClick = async (event, index) => {
     switch (index) {
       case 0:
         console.log('completition')
+        let completition = await dAppInt.reportCompleteTask(conversation.task.uuid, rootStore.user.getWavesKeeper)
+        if (completition) {
+          console.log("Succesfully completition")
+        }
         break;
       case 1:
         console.log("accept")
+        let accept = await dAppInt.acceptWork(conversation.task.uuid, true, rootStore.user.getWavesKeeper)
+        if (accept) {
+          console.log("Succesfully accept")
+        }
         break;
       case 2:
         console.log("reject")
+        let reject = await dAppInt.acceptWork(conversation.task.uuid, false, rootStore.user.getWavesKeeper)
+        if (reject) {
+          console.log("Succesfully accept")
+        }
         break
       case 3:
         console.log("move deadline")
@@ -175,7 +185,7 @@ const ConversationToolbar = observer((props) => {
         open={openMenu}
       >
 
-        {rootStore.user.getUserAddress == conversation.task.freelancer ? <MenuItem
+        {rootStore.user.getUserAddress == conversation.task.freelancer && conversation.task.status == "In progress" ? <MenuItem
           onClick={event => handleMenuItemClick(event, 0)}
           //selected={0 === selectedIndex}
         >
@@ -184,7 +194,7 @@ const ConversationToolbar = observer((props) => {
           </ListItemIcon>
           <ListItemText primary="Report completion of the task" />
         </MenuItem> : null}
-       { rootStore.user.getUserAddress == conversation.task.author.address && conversation.task.freelancer == conversation.user.address ? <MenuItem
+       { rootStore.user.getUserAddress == conversation.task.author.address && conversation.task.freelancer == conversation.user.address && conversation.task.status == "Pending" ? <MenuItem
           onClick={event => handleMenuItemClick(event, 1)}
           //selected={1 === selectedIndex}
         >
@@ -193,7 +203,7 @@ const ConversationToolbar = observer((props) => {
           </ListItemIcon>
           <ListItemText primary="Accept work" />
         </MenuItem> : null}
-        { rootStore.user.getUserAddress == conversation.task.author.address && conversation.task.freelancer == conversation.user.address ? <MenuItem
+        { rootStore.user.getUserAddress == conversation.task.author.address && conversation.task.freelancer == conversation.user.address && conversation.task.status == "Pending" ? <MenuItem
           onClick={event => handleMenuItemClick(event, 2)}
           //selected={1 === selectedIndex}
         >
@@ -202,7 +212,7 @@ const ConversationToolbar = observer((props) => {
           </ListItemIcon>
           <ListItemText primary="Reject work" />
         </MenuItem> : null}
-        {rootStore.user.getUserAddress == conversation.task.author.address && conversation.task.freelancer == conversation.user.address ? <MenuItem
+        {rootStore.user.getUserAddress == conversation.task.author.address && conversation.task.freelancer == conversation.user.address && conversation.task.status != "Completed" ? <MenuItem
           onClick={event => handleMenuItemClick(event, 3)}
           //selected={2 === selectedIndex}
         >
@@ -211,7 +221,7 @@ const ConversationToolbar = observer((props) => {
           </ListItemIcon>
           <ListItemText primary="Move the deadline" />
         </MenuItem> : null}
-        {((rootStore.user.getUserAddress == conversation.task.author.address && conversation.task.freelancer == conversation.user.address) || (rootStore.user.getUserAddress == conversation.task.freelancer)) ? <MenuItem
+        {(((rootStore.user.getUserAddress == conversation.task.author.address && conversation.task.freelancer == conversation.user.address) || (rootStore.user.getUserAddress == conversation.task.freelancer)) && conversation.task.status != "Completed") ? <MenuItem
           onClick={event => handleMenuItemClick(event, 4)}
           //selected={2 === selectedIndex}
         >
