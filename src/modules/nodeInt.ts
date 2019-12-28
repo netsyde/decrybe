@@ -429,7 +429,7 @@ export let getTaskUserMessageBlock = async (alldata, id) => {
  * @param wavesKeeper - waves keeper class
  * @returns {object}
  */
-export let getConversationsData = async (data, user, wavesKeeper) => {
+export let getConversationsData = async (data, user, keeperOrSigner) => {
     try {
         let allConversation = await getUserConversationList(data, user)
         let conversationsData = []
@@ -444,7 +444,7 @@ export let getConversationsData = async (data, user, wavesKeeper) => {
                         let userData = await getUserData(data, check)
                         let userDataSender = await getUserData(data, message.sender)
                         if (userData) {
-                            let decrypted = message.message ? await wavesKeeper.decryptMessage(message.message, userData.publicKey, 'decrybe') : ""
+                            let decrypted = message.message ? await keeperOrSigner.class.decryptMessage(message.message, userData.publicKey, 'decrybe') : ""
                             let block = await getTaskUserMessageBlock(data, userConversationMessages[x].block)
                             conversationData.push(
                                 {
