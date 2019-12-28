@@ -7,7 +7,7 @@ let FEATURED = "featured"
 let DAPP = ""
 let MOD = "mod"
 let REGISTERED = "registered"
-let ADMIN = "admin"
+let CREATOR = "3MsTLizEg4vqNgD7ZVjhkPaZgsrN11JqzLJ"
 let INPROGRESS = "in progress"
 let COMPLETED = "completed"
 let PENDING = "pending"
@@ -79,6 +79,10 @@ func getKeyTaskBlock(task: String) = {
     "block_" + task
 }
 
+func getValueTaskBlock(task: String) = {
+    getNumberByKey(getKeyTaskBlock(task))
+}
+
 # Task Bank
 func getKeyTaskBank(task: String) = {
     "bank_" + task
@@ -109,6 +113,10 @@ func getValueTaskStatus(task: String) = {
 # Task Expiration
 func getKeyTaskExpiration(task: String) = {
     "expiration_block_" + task
+}
+
+func getValueTaskExpiration(task: String) = {
+    getNumberByKey(getKeyTaskExpiration(task))
 }
 
 # User Bio
@@ -151,11 +159,34 @@ func getValueTaskReportCompleteCnt(task: String, freelancer: String) = {
     getNumberByKey(getKeyTaskReportCompleteCnt(task, freelancer))
 }
 
+func getKeyDecrybeBalance() = {
+    "decrybe_balance"
+}
+
+func getValueDecrybeBalance() = {
+    getNumberByKey(getKeyDecrybeBalance())
+}
+
+@Callable(i)
+func withdrawDecrybeBalance(amount: Int) = {
+    let account = toBase58String(i.caller.bytes)
+    let balance = getValueDecrybeBalance()
+    if (account == CREATOR) then {
+        if (amount <= balance) then {
+            TransferSet([
+                ScriptTransfer(addressFromStringValue(account), amount, unit)
+            ])
+        } else throw("You cannot withdraw an amount greater than " + toString(balance))
+    } else throw("You can't do that")
+}
+
 @Callable(i)
 func createTask(task: String, expiration: Int, data: String) = {
     let account = toBase58String(i.caller.bytes)
     let pmt = extract(i.payment)
     let pmtAmount = pmt.amount
+    let commission = pmtAmount * DECRYBEFEE / 100
+    let payment = pmtAmount - commission
     if (isDefined(pmt.assetId)) then throw("Can use waves only at the moment")
     else {
         if (pmtAmount == 0) then throw("Amount must be higher then 0")
@@ -165,9 +196,10 @@ func createTask(task: String, expiration: Int, data: String) = {
             DataEntry(getKeyTaskAuthor(task), account),
             DataEntry(getKeyTaskBlock(task), height),
             DataEntry(getKeyTaskExpiration(task), height + expiration),
-            DataEntry(getKeyTaskBank(task), pmt.amount),
+            DataEntry(getKeyTaskBank(task), payment),
             DataEntry(getKeyTaskStatus(task), FEATURED),
-            DataEntry(getKeyTaskData(task), data)
+            DataEntry(getKeyTaskData(task), data),
+            DataEntry(getKeyDecrybeBalance(), getValueDecrybeBalance() + commission)
         ])
     }
 }
@@ -261,7 +293,7 @@ func reportCompleteTask(task: String) = {
                 DataEntry(getKeyTaskReportComplete(account, task, toString(stage)), freelancerMessagesCnt),
                 DataEntry(getKeyTaskStatus(task), PENDING)
             ])
-        } else if (status == COMPLETED) throw("You've already been paid for your work")
+        } else if (status == COMPLETED) then throw("You've already been paid for your work")
         else throw("The work is awaiting approval")
     }
     else if (getValueTaskFreelancer(task) == NONE) then throw("Task freelancer doesnt exist")
@@ -278,9 +310,6 @@ func acceptWork (task: String, complete: Boolean) = {
     let stage = getValueTaskReportCompleteCnt(task, freelancer)
     let status = getValueTaskStatus(task)
     let bank = getValueTaskBank(task)
-    let payment = bank - (bank * DECRYBEFEE / 100)
-    let pmt = extract(i.payment)
-    let pmtAmount = pmt.amount
     if (account == creator) then {
         if (status == PENDING) then {
             if (complete) then {
@@ -289,7 +318,7 @@ func acceptWork (task: String, complete: Boolean) = {
                         DataEntry(getKeyTaskStatus(task), COMPLETED)
                     ]),
                     TransferSet([
-                        ScriptTransfer(addressFromStringValue(freelancer), payment, unit)
+                        ScriptTransfer(addressFromStringValue(freelancer), bank, unit)
                     ])
                 )
             } else {
@@ -301,4 +330,23 @@ func acceptWork (task: String, complete: Boolean) = {
     } else if (getValueTaskData(task) == NONE) then throw("Task doesnt exist")
     else if (getValueUserBio(account) == NONE) then throw("Sender not signup")
     else throw("You are not author")
+}
+
+@Callable(i)
+func moveDeadline(task: String, deadline: Int) = {
+    let account = toBase58String(i.caller.bytes)
+    let creator = getValueTaskAuthor(task)
+    let expiration = getValueTaskExpiration(task)
+    let status = getValueTaskStatus(task)
+    if (status != COMPLETED) then throw("The task is completed")
+    else if (status == INDISPUTE) then throw("You can't change the deadline at this time")
+    else if (account != creator) then throw("You are not author of the task")
+    else if (deadline < height) then throw("The deadline must be > the current block")
+    else if (deadline < expiration) then throw("The deadline can only be moved forward")
+    else {
+        WriteSet([
+            DataEntry(getKeyTaskExpiration(task), deadline)
+        ])
+    }
+    
 }

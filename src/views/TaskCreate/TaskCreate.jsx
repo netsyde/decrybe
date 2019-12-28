@@ -113,7 +113,6 @@ const TaskCreate = inject('rootStore')(observer(({ rootStore }) => {
       category: store.getCategory
     }
     console.log(data.price)
-        
     let tx = await dAppInt.createTask(taskId, expiration, data, rootStore.user.getWavesKeeper)
        
     if (tx) {

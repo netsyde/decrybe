@@ -2,12 +2,16 @@ import { observable, action, computed } from "mobx"
 import * as nodeInt from '../modules/nodeInt'
 import {RootStore} from './RootStore'
 import Cookies from 'universal-cookie';
-import moment from 'moment'
+import Waves from "@waves/signer";
+import Provider from "@waves.exchange/provider-web";
+import { libs } from '@waves/waves-transactions';
+import { isThursday } from "date-fns";
+
 class UserStore {
 	@observable isLogin: boolean = false;
 	@observable address: string = "";
 	@observable balance;
-	@observable network: string = "";
+	@observable network: string = "https://pool.testnet.wavesnodes.com"; // ""
 	@observable userData;
 	@observable isReg;
 	@observable name: string = "";
@@ -26,6 +30,8 @@ class UserStore {
 	@observable publicKey = ""
 	@observable conversations = []
 	@observable locked = true
+	@observable loginVariant;
+	@observable waves;
 	dapp: string = "3N3PDiDHb1AJU8tTXJLcvoDNP29fdGNNWqs";
 	wavesKeeper;
 	cookies = new Cookies()
@@ -78,6 +84,36 @@ class UserStore {
 		}
 		console.log('DEBUG: Storage update')
 	}
+	@action("Register without waves keeper")
+
+	async withoutWavesKeeper () {
+		const waves = new Waves({NODE_URL: this.network});
+		const provider = new Provider('https://testnet.waves.exchange/signer');
+		
+		waves.setProvider(provider);
+		this.waves = waves;
+		this.loginVariant = "signer"
+		console.log("withoutWavesKeeper")
+		await this.login()
+	}
+
+	async restoreWithoutWavesKeeper () {
+		const waves = new Waves({NODE_URL: this.network});
+		const provider = new Provider('https://testnet.waves.exchange/signer');
+		
+		waves.setProvider(provider);
+		this.waves = waves;
+
+		let address = this.cookies.get("address")
+		let nodeUrl = this.cookies.get("network")
+		let balance = await nodeInt.getBalance(address, nodeUrl)
+		this.balance = balance
+		this.setUserNetwork(nodeUrl)
+		this.setUserAddress(address)
+		console.log('DEBUG: Restore session')
+		
+		await this.getState()
+	}
 
 	@action("login")
 	async login () {
@@ -90,12 +126,35 @@ class UserStore {
 					await this.getState()
 				})
 			} else {
-				alert("To Auth WavesKeeper should be installed.");
+
+				let login = await this.waves.login()
+				console.log(login)
+				if (login) {
+					console.log('Success login')
+					this.address = login.address
+					this.publicKey = login.publicKey
+					let balance = await this.waves.getBalance();
+					this.balance = balance[0].tokens / 10e7
+					await this.getState()
+				} else {
+					console.log("reject")
+				}
 			}
 			
 		} catch (e) {
 			if (e.message == "WavesKeeper is not defined") {
-				alert("To Auth WavesKeeper should be installed.");
+				let login = await this.waves.login()
+				console.log(login)
+				if (login) {
+					console.log('Success login')
+					this.address = login.address
+					this.publicKey = login.publicKey
+					let balance = await this.waves.getBalance();
+					this.balance = balance / 10e7
+					await this.getState()
+				} else {
+					console.log("reject")
+				}
 			} else {
 				console.log(`ERROR in UserStore.login! ${e.name}: ${e.message}\n${e.stack}`);
 			}
@@ -106,33 +165,91 @@ class UserStore {
 		try {
 			console.log('DEBUG: Get state')
 			this.online = true
-			this.wavesKeeper = WavesKeeper;
-			let api = await WavesKeeper.initialPromise
-			if (api) {
-				const state = await WavesKeeper.publicState();
-				//console.log(state)
-				
-				this.address = state.account.address;
-				this.balance = state.account.balance.available;
-				this.network = state.network.server;
-				this.publicKey = state.account.publicKey;
-				this.locked = state.locked
-				this.userData = state;
-				
-				this.storage = await nodeInt.getAllData(this.dapp, state.network.server);
-				//console.log(this.storage)
+			if (WavesKeeper) {
+				this.wavesKeeper = WavesKeeper;
+				let api = await WavesKeeper.initialPromise
+				if (api) {
+					const state = await WavesKeeper.publicState();
+					//console.log(state)
+					
+					this.address = state.account.address;
+					this.balance = state.account.balance.available;
+					this.network = state.network.server;
+					this.publicKey = state.account.publicKey;
+					this.locked = state.locked
+					this.userData = state;
+					
+					this.storage = await nodeInt.getAllData(this.dapp, state.network.server);
+					//console.log(this.storage)
+					this.isLogin = true;
+					this.isReg = await nodeInt.checkReg(this.storage, state.account.address);
+					if (this.isReg) {
+						this.cookies.set('address', this.getUserAddress, { path: '/' });
+						this.cookies.set('network', this.getUserNetwork, { path: '/' });
+						let userDataFromDapp = await nodeInt.getUserData(this.storage, state.account.address);
+						let conversations = await nodeInt.getConversationsData(this.getStorage, this.getUserAddress, this.getWavesKeeper)
+						console.log(conversations)
+						if (conversations) {
+							this.conversations = conversations
+							console.log("DEBUG: Conversations loaded")
+						}
+						if (userDataFromDapp) {
+							this.name = userDataFromDapp.name;
+							this.socials = userDataFromDapp.socials;
+							this.bio = userDataFromDapp.bio;
+							this.status = userDataFromDapp.status;
+							this.createTime = userDataFromDapp.createTime;
+							this.tags = userDataFromDapp.tags;
+							this.avatar = userDataFromDapp.avatar
+							this.avatarColor = userDataFromDapp.avatarColor // ava color
+							this.location = userDataFromDapp.location
+							if (!this.root.settings.getAddress || this.root.settings.getAddress != this.address) { // true || true
+								this.root.settings.setAddress(this.address)
+								this.root.settings.setName(this.name)
+								this.root.settings.setSocials(this.socials)
+								this.root.settings.setBio(this.bio)
+								this.root.settings.setTags(this.tags)
+								this.root.settings.setAvatar(this.avatar)
+								this.root.settings.setLocation(this.location)
+							}
+							let userTasks = await nodeInt.getAllUserTasks(this.storage, this.address)
+							if (userTasks) {
+								this.tasks = userTasks;
+							}
+							console.log("DEBUG: User data loaded")
+						} else {
+							console.log('DEBUG: User data not loaded')
+						}
+						await this.root.tasks.loadTasks(this.isUserLogin, this.getDapp, this.getUserNetwork)
+						await this.root.users.loadUsers(this.isUserLogin, this.getDapp, this.getUserNetwork)
+					} else {
+						this.showRegister = true;
+						console.log('DEBUG: User is not registered')
+					}
+				} else {
+					console.log('DEBUG: Waves Keeper is undefined - waves')
+				}
+			} else {
+				console.log('waves analog way')
+			}
+		} catch (e) {
+			if (e.message == "WavesKeeper is not defined") {
+				console.log(this.waves)
+				this.storage = await nodeInt.getAllData(this.dapp, this.network);
 				this.isLogin = true;
-				this.isReg = await nodeInt.checkReg(this.storage, state.account.address);
+				this.isReg = await nodeInt.checkReg(this.storage, this.address);
 				if (this.isReg) {
 					this.cookies.set('address', this.getUserAddress, { path: '/' });
 					this.cookies.set('network', this.getUserNetwork, { path: '/' });
-					let userDataFromDapp = await nodeInt.getUserData(this.storage, state.account.address);
+					let userDataFromDapp = await nodeInt.getUserData(this.storage, this.getUserAddress);
+					/*
 					let conversations = await nodeInt.getConversationsData(this.getStorage, this.getUserAddress, this.getWavesKeeper)
 					console.log(conversations)
 					if (conversations) {
 						this.conversations = conversations
 						console.log("DEBUG: Conversations loaded")
 					}
+					*/
 					if (userDataFromDapp) {
 						this.name = userDataFromDapp.name;
 						this.socials = userDataFromDapp.socials;
@@ -160,17 +277,15 @@ class UserStore {
 					} else {
 						console.log('DEBUG: User data not loaded')
 					}
+					await this.root.tasks.loadTasks(this.isUserLogin, this.getDapp, this.getUserNetwork)
+					await this.root.users.loadUsers(this.isUserLogin, this.getDapp, this.getUserNetwork)
 				} else {
 					this.showRegister = true;
 					console.log('DEBUG: User is not registered')
 				}
-				await this.root.tasks.loadTasks(this.isUserLogin, this.getDapp, this.getUserNetwork)
-				await this.root.users.loadUsers(this.isUserLogin, this.getDapp, this.getUserNetwork)
 			} else {
-				console.log('DEBUG: Waves Keeper is undefined')
+				console.log(`ERROR in UserStore.getState! ${e.name}: ${e.message}\n${e.stack}`);
 			}
-		} catch (e) {
-			console.log(`ERROR in UserStore.getState! ${e.name}: ${e.message}\n${e.stack}`);
 		}
 	}
 
@@ -202,6 +317,10 @@ class UserStore {
 		// 
 		this.cookies.remove('address')
 		this.cookies.remove('network')
+
+		if (this.waves) {
+			this.waves.logout()
+		}
 		
 	}
 
@@ -269,7 +388,11 @@ class UserStore {
 	}
 	
 	@computed get getWavesKeeper() {
-		return this.wavesKeeper
+		let keeperOrSigner = {
+			type: this.wavesKeeper ? "keeper" : "signer",
+			class: this.wavesKeeper ? this.wavesKeeper : this.waves
+		}
+		return keeperOrSigner
 	}
 
 	@action("set waves keeper")

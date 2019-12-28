@@ -94,7 +94,32 @@ const RegisterForm = inject('rootStore')(observer(({ rootStore }) => {
         createSnackbar('error', signTx.error.data ? signTx.error.data : signTx.error.message)
       }
     } else {
-      console.log('DEBUG: Waves Keeper is ndefined')
+      let data = {
+        name: values.name,
+        bio: values.bio,
+        location: "",
+        tags: [],
+        address: rootStore.user.getUserAddress,
+        publicKey: rootStore.user.getUserPublicKey,
+        createTime: Date.now(),
+        status: "registered",
+        socials: {
+          telegram: "",
+          twitter: "",
+          github: ""
+        },
+        avatar: values.avatar
+      }
+      //console.log(data)
+
+      let signTx = await dAppInt.signUp(data, rootStore.user.getWavesKeeper)
+      if (signTx.status) {
+        createSnackbar('success', 'You have successfully registered!')
+        rootStore.user.actionAfterSignup()
+        history.push('/')
+      } else {
+        createSnackbar('error', signTx.error.data ? signTx.error.data : signTx.error.message)
+      }
     }
   };
 

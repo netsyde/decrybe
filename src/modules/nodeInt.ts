@@ -17,7 +17,8 @@ import moment from 'moment'
  */
 export let getBalance = async (address: String, nodeUrl: String) => {
     try {
-        return await axios.get(`${nodeUrl}/addresses/balance/${address}`).then(resp => {return resp.data});
+        return nodeInteraction.balance(address, nodeUrl)
+        //return await axios.get(`${nodeUrl}/addresses/balance/${address}`).then(resp => {return resp.data});
     } catch (e) {
         console.log(`ERROR in nodeInt.getBalance! ${e.name}: ${e.message}\n${e.stack}`);
     }

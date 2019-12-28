@@ -1,3 +1,23 @@
+### V0.4.6
+
+##### 28-12-2019
+
+#### New
+
+- Implemented `Waves.Exchange` Signer
+- Now the freelancer can report on the completion of work
+- Now the customer can accept or reject the work
+- Added deadline increase function to smart-contract
+- Updated some smart-contract features
+
+#### Fixed bugs
+
+- Fixed a bug when the scrollbar opened after displaying a popup menu
+
+#### Known issues
+
+- If you use `Waves.Exchange` Signer, then the `Chat`/`Apply for a role` does not work (Waiting for updates Signer from the `Waves` team)
+
 ### V0.4.3
 
 ###### 25-12-2019

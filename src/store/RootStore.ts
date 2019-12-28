@@ -32,19 +32,25 @@ let rootStore = new RootStore()
 autorun(async () => {
   window.onload = () => {
     if (rootStore.user.checkSession()) {
+      console.log('check session true')
       if(window.WavesKeeper === undefined) {
         console.log('Waves Keeper not installed')
+        rootStore.user.restoreWithoutWavesKeeper()
       } else {
         rootStore.user.restoreSession();
       }
     } else {
+      console.log('check session false')
       if(window.WavesKeeper === undefined) {
         console.log('Waves Keeper not installed')
+        rootStore.user.withoutWavesKeeper()
+
       } else {
         rootStore.user.setWavesKeeper(WavesKeeper)
         rootStore.user.setShowRegister(true)
       }
     }
+    /*
     window.WavesKeeper.on("update", state => {
       console.log('waves keeper update')
       if (rootStore.user.checkSession()) {
@@ -62,6 +68,7 @@ autorun(async () => {
         }
       }
   });
+  */
   }
 });
 
