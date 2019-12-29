@@ -91,7 +91,7 @@ const RegisterForm = inject('rootStore')(observer(({ rootStore }) => {
         rootStore.user.actionAfterSignup()
         history.push('/')
       } else {
-        createSnackbar('error', signTx.error.data ? signTx.error.data : signTx.error.message)
+        createSnackbar('error', signTx.error ? (signTx.error.message ? signTx.error.message : (signTx.error.data ? sign.error.data : signTx.error )) : "")
       }
     } else {
       let data = {
@@ -118,7 +118,8 @@ const RegisterForm = inject('rootStore')(observer(({ rootStore }) => {
         rootStore.user.actionAfterSignup()
         history.push('/')
       } else {
-        createSnackbar('error', signTx.error.data ? signTx.error.data : signTx.error.message)
+        console.log(signTx)
+        createSnackbar('error', signTx.error ? (signTx.error.message ? signTx.error.message : (signTx.error.data ? sign.error.data : signTx.error )) : "")
       }
     }
   };
