@@ -32,6 +32,7 @@
         "crypto-js": "^3.1.9-1",
         "css-loader": "^3.2.0",
         "date-fns": "^2.0.0-beta.5",
+        "debug": "^4.1.1",
         "draft-js": "^0.11.1",
         "draftjs-md-converter": "^1.2.0",
         "express": "^4.17.1",
