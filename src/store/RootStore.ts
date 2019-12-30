@@ -50,7 +50,8 @@ autorun(async () => {
         rootStore.user.setShowRegister(true)
       }
     }
-    /*
+    
+    
     window.WavesKeeper.on("update", state => {
       console.log('waves keeper update')
       if (rootStore.user.checkSession()) {
@@ -68,7 +69,7 @@ autorun(async () => {
         }
       }
   });
-  */
+  
   }
 });
 

@@ -80,7 +80,7 @@ const GeneralSettings = observer((props) => {
       publicKey: rootStore.user.getUserPublicKey
 
     }
-    let tx = await userUpdate(rootStore.user.getUserAddress, data, rootStore.user.getWavesKeeper)
+    let tx = await userUpdate(data, rootStore.user.getWavesKeeper)
     if (tx) {
       setOpenSnackbar(true);
       rootStore.user.setUserName(data.name)

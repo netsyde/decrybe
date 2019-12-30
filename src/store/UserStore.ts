@@ -32,7 +32,7 @@ class UserStore {
 	@observable locked = true
 	@observable loginVariant;
 	@observable waves;
-	dapp: string = "3N3PDiDHb1AJU8tTXJLcvoDNP29fdGNNWqs";
+	dapp: string = "3MzSNsJLeYj6Eh6u2QzJrbByPCySgFoCbWC";
 	wavesKeeper;
 	cookies = new Cookies()
 	constructor(public root: RootStore) {

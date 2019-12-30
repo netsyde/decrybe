@@ -31,7 +31,6 @@ import AddAlarmIcon from '@material-ui/icons/AddAlarm';
 import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
 import ThumbDownIcon from '@material-ui/icons/ThumbDown';
 import GavelIcon from '@material-ui/icons/Gavel';
-
 const useStyles = makeStyles(theme => ({
   root: {
     backgroundColor: '#ffffff'
@@ -133,10 +132,8 @@ const ConversationToolbar = observer((props) => {
 
   const handleClick = async (event) => {
     event.preventDefault();
-    let data = await nodeInt.getClearTaskData(rootStore.user.getStorage, conversation.task.uuid);
-    data.freelancer = conversation.user.address;
-    data.status = "in progress"
-    let tx = await dAppInt.hireFreelancer(conversation.task.uuid, conversation.user.address, data, rootStore.user.getWavesKeeper)
+    //let data = await nodeInt.getClearTaskData(rootStore.user.getStorage, conversation.task.uuid);
+    let tx = await dAppInt.hireFreelancer(conversation.task.uuid, conversation.user.address, rootStore.user.getWavesKeeper)
     console.log(tx)
   };
 

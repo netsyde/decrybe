@@ -1,3 +1,11 @@
+### V0.4.7
+
+##### 30-12-2019
+
+#### New
+- Improved smart contract security
+- Created an api for interaction with a smart contract
+
 ### V0.4.6
 
 ##### 28-12-2019

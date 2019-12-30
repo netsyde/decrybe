@@ -13,7 +13,8 @@ let COMPLETED = "completed"
 let PENDING = "pending"
 let INDISPUTE = "in dispute"
 let REVISION = "revision"
-let DECRYBEFEE = 5
+let DECRYBEFEE = 2 / 100
+let WAVESLET = 100000000
 
 func getStrByKey(key: String) = {
     let str = match getString(this, key) {
@@ -185,8 +186,8 @@ func createTask(task: String, expiration: Int, data: String) = {
     let account = toBase58String(i.caller.bytes)
     let pmt = extract(i.payment)
     let pmtAmount = pmt.amount
-    let commission = pmtAmount * DECRYBEFEE / 100
-    let payment = pmtAmount - commission
+    let payment = (pmtAmount / (1*WAVESLET + DECRYBEFEE)) * WAVESLET
+    let commission = pmtAmount - payment
     if (isDefined(pmt.assetId)) then throw("Can use waves only at the moment")
     else {
         if (pmtAmount == 0) then throw("Amount must be higher then 0")
@@ -219,7 +220,7 @@ func signUp(data: String) = {
 }
 
 @Callable(i)
-func hireFreelancer(task: String, freelancer: String, data: String) = {
+func hireFreelancer(task: String, freelancer: String) = {
     let account = toBase58String(i.caller.bytes)
     if (getValueTaskData(task) == NONE) then throw("Task doesnt exist")
     else if (getValueUserBio(account) == NONE) then throw("Customer not signup")
@@ -230,7 +231,6 @@ func hireFreelancer(task: String, freelancer: String, data: String) = {
     else {
         WriteSet([
             DataEntry(getKeyTaskFreelancer(task), freelancer),
-            DataEntry(getKeyTaskData(task), data),
             DataEntry(getKeyTaskStatus(task), INPROGRESS)
         ])
     }
@@ -244,7 +244,6 @@ func sendMessage(task: String, to: String, message: String) = {
     else if (account == to) then throw("You can't send messages to yourself")
     else if (getValueUserBio(account) == NONE) then throw("Sender not signup")
     else if (getValueUserBio(to) == NONE) then throw("Recipient not singup")
-    #else if (getValueTaskStatus(task) == INPROGRESS) then throw("The task is already in progress/pending/completed/in dispute") 
     else {
         WriteSet([
             DataEntry(getKeyUserMessagesCnt(account, to), cnt),
@@ -255,7 +254,7 @@ func sendMessage(task: String, to: String, message: String) = {
 }
 
 @Callable(i)
-func taskUpdate(task: String, data: String, type: String) = {
+func taskUpdate(task: String, data: String) = {
     let account = toBase58String(i.caller.bytes)
     if (getValueTaskData(task) == NONE) then throw("Task doesnt exist")
     else if (getValueTaskAuthor(task) != account) then throw("You're not author")
@@ -268,10 +267,9 @@ func taskUpdate(task: String, data: String, type: String) = {
 }
 
 @Callable(i)
-func userUpdate(address: String, data: String) = {
+func userUpdate(data: String) = {
     let account = toBase58String(i.caller.bytes)
     if (getValueUserBio(account) == NONE) then throw("User not signup")
-    else if (address != account) then throw("You're not the account owner")
     else {
         WriteSet([
             DataEntry(getKeyUserBio(account), data)

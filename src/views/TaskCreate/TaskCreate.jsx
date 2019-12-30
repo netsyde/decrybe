@@ -99,21 +99,15 @@ const TaskCreate = inject('rootStore')(observer(({ rootStore }) => {
       title: store.getTitle,
       createTime: now,
       expireTime: store.getEndDate,
-      price: store.getPrice,
       currency: store.getCurrency,
-      author: rootStore.user.getUserAddress,
       brief: store.getBriefDescription,
       uuid: taskId,
       tags: store.getTags,
       updatedAt: now,
-      members: store.getMembers,
-      freelancer: store.getFreelancer,
-      //status: store.getStatus, // from blockchain now
       description: store.getDescription,
       category: store.getCategory
     }
-    console.log(data.price)
-    let tx = await dAppInt.createTask(taskId, expiration, data, rootStore.user.getWavesKeeper)
+    let tx = await dAppInt.createTask(taskId, expiration, data, store.getPrice, rootStore.user.getWavesKeeper)
        
     if (tx) {
       createSnackbar('success', 'Task successfully created!')

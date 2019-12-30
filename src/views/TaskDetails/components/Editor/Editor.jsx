@@ -170,16 +170,12 @@ const Editor = observer((props) => {
             title: store.getTitle,
             createTime: store.getCreateDate,
             expireTime: store.getEndDate,
-            price: store.getPrice,
             currency: store.getCurrency,
             author: rootStore.user.getUserAddress,
             brief: store.getBriefDescription,
             uuid: taskId,
             tags: store.getTags,
             updatedAt: now,
-            members: store.getMembers,
-            freelancers: store.getFreelancers,
-            status: store.getStatus,
             description: store.getDescription,
             category: store.getCategory
           }

@@ -224,20 +224,73 @@ export let getTaskStatus = async (alldata, id: String) => {
     }
 }
 
+/**
+ * Return task freelancer
+ * @param alldata - all dApp storage data
+ * @param id - task id
+ * @returns {Object}
+ */
+export let getTaskFreelancer = async (alldata, id: String) => {
+    try {
+        let fullKey = "freelancer_" + id
+        let freelancer = await getDataByKey(alldata, fullKey)
+        return freelancer
+    } catch (e) {
+        return false;
+    }
+}
+
+/**
+ * Return task price
+ * @param alldata - all dApp storage data
+ * @param id - task id
+ * @returns {Object}
+ */
+export let getTaskBank = async (alldata, id: String) => {
+    try {
+        let fullKey = "bank_" + id
+        let bank = await getDataByKey(alldata, fullKey)
+        return bank
+    } catch (e) {
+        return false;
+    }
+}
+
+/**
+ * Return task author
+ * @param alldata - all dApp storage data
+ * @param id - task id
+ * @returns {Object}
+ */
+export let getTaskAuthor = async (alldata, id: String) => {
+    try {
+        let fullKey = "author_" + id
+        let author = await getDataByKey(alldata, fullKey)
+        return author
+    } catch (e) {
+        return false;
+    }
+}
+
 export let getTaskData = async (alldata, id: String) => {
     try {
         let taskData = await getDataByKey(alldata, "datajson_" + id)
         taskData = JSON.parse(taskData)
-        let userData = await getUserData(alldata, taskData.author)
+        let taskAuthor = await getTaskAuthor(alldata, id)
+        let userData = await getUserData(alldata, taskAuthor)
         taskData.author = {
-            address: taskData.author,
+            address: taskAuthor ? taskAuthor : "",
             publicKey: userData ? userData.publicKey : "",
             name: userData ? userData.name : "",
             avatar: userData ? userData.avatar : "",
             avatarColor: color[getRandomArbitary(0, color.length - 1)],
             bio: userData ? userData.bio : ""
         }
-        taskData.freelancer = "freelancer" in taskData ? taskData.freelancer : ""
+        let freelancer = await getTaskFreelancer(alldata, id)
+        taskData.freelancer = freelancer ? freelancer : ""
+
+        let bank = await getTaskBank(alldata, id)
+        taskData.price = bank ? bank / 10e7 : "NaN"
 
         for (let i = 0; i < taskData.tags.length; i++) {
             taskData.tags[i] = {
@@ -306,6 +359,7 @@ export let getTasksAllData = async (alldata) => {
                 let taskData = await getTaskData(alldata, allTasks[i])
                 tasks.push(taskData)
             }
+            tasks = tasks.filter(Boolean)
             //console.log(tasks)
             return tasks;
         } else {
@@ -334,6 +388,7 @@ export let getUsersAllData = async (alldata) => {
                 users.push(userData)
             }
             //console.log(tasks)
+            users = users.filter(Boolean)
             return users;
         } else {
             return false;
@@ -356,7 +411,9 @@ export let getAllUserTasks = async (alldata, address) => {
         //console.log(data)
         const matchesFilter = new RegExp(address)
         if (data) {
-            let filteredData = data.filter(task => matchesFilter.test(task.author.address))
+            let filteredData = data.filter(task => matchesFilter.test(task.author.address ? task.author.address : ""))
+            // "avatar" in userData ? userData.avatar : "",
+            console.log(filteredData)
             return filteredData;
         } else {
             return false
@@ -400,7 +457,7 @@ export let getTaskUserMessage = async (alldata, id) => {
         message = JSON.parse(message)
         return message
     } catch (e) {
-        console.log(`ERROR in nodeInt.getAllUserTasks! ${e.name}: ${e.message}\n${e.stack}`);
+        console.log(`ERROR in nodeInt.getTaskUserMessage! ${e.name}: ${e.message}\n${e.stack}`);
         return false;
     }
 }
@@ -417,7 +474,7 @@ export let getTaskUserMessageBlock = async (alldata, id) => {
         block = JSON.parse(block)
         return block
     } catch (e) {
-        console.log(`ERROR in nodeInt.getAllUserTasks! ${e.name}: ${e.message}\n${e.stack}`);
+        console.log(`ERROR in nodeInt.getTaskUserMessageBlock! ${e.name}: ${e.message}\n${e.stack}`);
         return false;
     }
 }
@@ -432,20 +489,26 @@ export let getTaskUserMessageBlock = async (alldata, id) => {
 export let getConversationsData = async (data, user, keeperOrSigner) => {
     try {
         let allConversation = await getUserConversationList(data, user)
+        console.log(allConversation)
         let conversationsData = []
         if (allConversation) {
             for (let i = 0; i < allConversation.length; i++) {
                 let userConversationMessages = await getUserConversationMessages(data, allConversation[i])
+                //console.log(2)
                 if (userConversationMessages) {
                     let conversationData = []
                     for (let x = 0; x < userConversationMessages.length; x++) {
                         let message = await getTaskUserMessage(data, userConversationMessages[x].message)
+                        //console.log(3)
                         let check = message.sender == user ? message.recipient : message.sender;
                         let userData = await getUserData(data, check)
+                        //console.log(4)
                         let userDataSender = await getUserData(data, message.sender)
+                        //console.log(5)
                         if (userData) {
                             let decrypted = message.message ? await keeperOrSigner.class.decryptMessage(message.message, userData.publicKey, 'decrybe') : ""
                             let block = await getTaskUserMessageBlock(data, userConversationMessages[x].block)
+                            //console.log(6)
                             conversationData.push(
                                 {
                                     content: decrypted,
@@ -460,25 +523,30 @@ export let getConversationsData = async (data, user, keeperOrSigner) => {
                     }
                     let variant = allConversation[i].sender == user ? allConversation[i].recipient : allConversation[i].sender
                     let uData = await getUserData(data, variant)
-                    //console.log(conversationData)
+                    // console.log(7)
                     let regex = new RegExp(allConversation[i].task)
                     conversationData = conversationData.sort(compareBlock);
                     conversationData = conversationData.filter( message  => regex.test(message.task))
                     //conversationData = conversationData.sort(compareBlock);
                     
-                    //console.log(conversationData)
+                    //console.log(8)
                     let task = await getTaskData(data, allConversation[i].task)
+                    //console.log(9)
+                    if (task) {
 
-                    conversationsData.push({
-                        messages: conversationData, //conversationData.filter( message  => regex.test(message.task)),
-                        id: allConversation[i].task,
-                        uid: allConversation[i].id,
-                        task: task,
-                        user: uData,
-                    })
+                        conversationsData.push({
+                            messages: conversationData, //conversationData.filter( message  => regex.test(message.task)),
+                            id: allConversation[i].task,
+                            uid: allConversation[i].id,
+                            task: task,
+                            user: uData,
+                        })
+                    }
+                    //console.log(10)
                 }
             }
         }
+        console.log(conversationsData)
         return conversationsData
     } catch (e) {
         console.log(`ERROR in nodeInt.getConversationData! ${e.name}: ${e.message}\n${e.stack}`);
@@ -492,9 +560,14 @@ export let getConversationsData = async (data, user, keeperOrSigner) => {
  * @returns {number}
  */
 let compareNumeric = (a, b) => {
-    if (Number(a.created_at) > Number(b.created_at)) return 1;
-    if (Number(a.created_at) == Number(b.created_at)) return 0;
-    if (Number(a.created_at) < Number(b.created_at)) return -1;
+    try {
+        if (Number(a.created_at) > Number(b.created_at)) return 1;
+        if (Number(a.created_at) == Number(b.created_at)) return 0;
+        if (Number(a.created_at) < Number(b.created_at)) return -1;
+    } catch (e) {
+        console.log(`ERROR in nodeInt.compareNumeric! ${e.name}: ${e.message}\n${e.stack}`);
+        //return false;
+    }
 }
 
 /**
@@ -504,11 +577,16 @@ let compareNumeric = (a, b) => {
  * @returns {number}
  */
 let compareBlock = (a, b) => {
-    if (Number(a.block) > Number(b.block)) return 1;
-    if (Number(a.block) == Number(b.block)) {
-        return compareNumeric(a,b)
-    };
-    if (Number(a.block) < Number(b.block)) return -1;
+    try {
+        if (Number(a.block) > Number(b.block)) return 1;
+        if (Number(a.block) == Number(b.block)) {
+            return compareNumeric(a,b)
+        };
+        if (Number(a.block) < Number(b.block)) return -1;
+    } catch (e) {
+        console.log(`ERROR in nodeInt.compareBlock! ${e.name}: ${e.message}\n${e.stack}`);
+        //return false;
+    }
 }
 
 /**
@@ -518,12 +596,17 @@ let compareBlock = (a, b) => {
  * @returns {number}
  */
 let contains = (arr, elem) => {
-    for (var i = 0; i < arr.length; i++) {
-        if (arr[i] === elem) {
-            return true;
+    try {
+        for (var i = 0; i < arr.length; i++) {
+            if (arr[i] === elem) {
+                return true;
+            }
         }
+        return false;
+    } catch (e) {
+        console.log(`ERROR in nodeInt.contains! ${e.name}: ${e.message}\n${e.stack}`);
+        //return false;
     }
-    return false;
 }
 
 /**
@@ -567,7 +650,7 @@ export let getUserConversationList = async (data, user) => {
 
         return result
     } catch (e) {
-        console.log(`ERROR in nodeInt.getUsersAllData! ${e.name}: ${e.message}\n${e.stack}`);
+        console.log(`ERROR in nodeInt.getUserConversationList! ${e.name}: ${e.message}\n${e.stack}`);
         return false;
     }
 }
@@ -604,7 +687,7 @@ export let getUserConversationMessages = async (allData, conversation) => {
         }
         
     } catch (e) {
-        console.log(`ERROR in nodeInt.getUsersAllData! ${e.name}: ${e.message}\n${e.stack}`);
+        console.log(`ERROR in nodeInt.getUserConversationMessages! ${e.name}: ${e.message}\n${e.stack}`);
         return false;
     }
 }

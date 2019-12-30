@@ -1,4 +1,4 @@
-const dAppAddress = "3N3PDiDHb1AJU8tTXJLcvoDNP29fdGNNWqs";
+const dAppAddress = "3MzSNsJLeYj6Eh6u2QzJrbByPCySgFoCbWC";
 const {nodeInteraction} =  require('@waves/waves-transactions');
 
 /**
@@ -100,7 +100,7 @@ export let signUp = async (data, keeperOrSigner) => {
  * @param data - data object
  * @param wavesKeeper - class
  */
-export let createTask = async (item, expiration, data, keeperOrSigner) => {
+export let createTask = async (item, expiration, data, price, keeperOrSigner) => {
     if (keeperOrSigner.type == "keeper") {
         try {
             const state = await keeperOrSigner.class.publicState();
@@ -126,7 +126,7 @@ export let createTask = async (item, expiration, data, keeperOrSigner) => {
                             }
                         ]
                     },
-                    payment: [{assetId: "WAVES", tokens: data.price + data.price*0.02}]
+                    payment: [{assetId: "WAVES", tokens: price + price*0.02}]
                 }
             })
             tx = JSON.parse(tx)
@@ -145,7 +145,6 @@ export let createTask = async (item, expiration, data, keeperOrSigner) => {
         }
     } else if (keeperOrSigner.type == "signer") {
         let tx = await keeperOrSigner.class.invoke({
-            //fee: 1000000,
             dApp: dAppAddress,
             call: {
                 function: "createTask",
@@ -161,7 +160,7 @@ export let createTask = async (item, expiration, data, keeperOrSigner) => {
                     }
                 ]
             },
-            payment: [{assetId: null, amount: (data.price + data.price*0.02) * 10e7}]
+            payment: [{assetId: null, amount: (price + price*0.02) * 10e7}]
         }).broadcast().then()
         let confirmed;
         await keeperOrSigner.class.waitTxConfirm(tx, 1).then((tx2) => {
@@ -275,7 +274,7 @@ export let taskUpdate = async (taskId, data, keeperOrSigner, type = "featured") 
  * @param data - object
  * @param wavesKeeper - class
  */
-export let userUpdate = async (user, data, keeperOrSigner) => {
+export let userUpdate = async (data, keeperOrSigner) => {
     if (keeperOrSigner.type == "keeper") {
         try {
             const state = await keeperOrSigner.class.publicState();
@@ -290,9 +289,6 @@ export let userUpdate = async (user, data, keeperOrSigner) => {
                      call: {
                      	function: 'userUpdate',
                      	args: [
-                            {
-                                type: "string", value: user
-                            },
                             {
                                 type: "string", value: JSON.stringify(data)
                             },
@@ -321,9 +317,6 @@ export let userUpdate = async (user, data, keeperOrSigner) => {
             call: {
                 function: "userUpdate",
                 args: [
-                    {
-                        type: "string", value: user
-                    },
                     {
                         type: "string", value: JSON.stringify(data)
                     },
@@ -355,7 +348,7 @@ export let userUpdate = async (user, data, keeperOrSigner) => {
  * @param publicKey - public key of customer
  * @param keeperOrSigner - class (waves keeper or signer)
  */
-export let hireFreelancer = async (taskId, freelancer, data, keeperOrSigner) => {
+export let hireFreelancer = async (taskId, freelancer, keeperOrSigner) => {
     if (keeperOrSigner.type == "keeper") {
         try {
             const state = await keeperOrSigner.class.publicState();
@@ -375,9 +368,6 @@ export let hireFreelancer = async (taskId, freelancer, data, keeperOrSigner) => 
                             },
                             {
                                 type: "string", value: freelancer
-                            },
-                            {
-                                type: "string", value: JSON.stringify(data)
                             },
                         ]
                     },
@@ -409,9 +399,6 @@ export let hireFreelancer = async (taskId, freelancer, data, keeperOrSigner) => 
                     },
                     {
                         type: "string", value: freelancer
-                    },
-                    {
-                        type: "string", value: JSON.stringify(data)
                     },
                 ]
             }

@@ -16,6 +16,8 @@ import {
 import getInitials from '../../../../../../utils/getInitials'
 import { Label } from '../../../../../../components';
 import CheckIcon from '@material-ui/icons/Check';
+import DoneAllIcon from '@material-ui/icons/DoneAll';
+import DetailsIcon from '@material-ui/icons/Details';
 
 const useStyles = makeStyles(theme => ({
   active: {
@@ -97,9 +99,13 @@ const ConversationListItem = props => {
       }
       <div className={classes.details}>
 
-      {conversation.task.freelancer == conversation.user.address  || conversation.task.freelancer == rootStore.user.getUserAddress ? 
+      {((conversation.task.freelancer == conversation.user.address  || conversation.task.freelancer == rootStore.user.getUserAddress) && conversation.task.status == "In progress") ? 
       <ListItemIcon>
-        <CheckIcon/>
+        <DetailsIcon/>
+      </ListItemIcon> : null}
+      {((conversation.task.freelancer == conversation.user.address  || conversation.task.freelancer == rootStore.user.getUserAddress) && conversation.task.status == "Completed") ? 
+      <ListItemIcon>
+        <DoneAllIcon/>
       </ListItemIcon> : null}
       </div>
     </ListItem>

@@ -27,7 +27,7 @@ class TaskCreateStore {
 	@action("set task title")
 	setTitle (title: String) {
 		this.title = title.replace(/(\s\s)/g, ' ')
-		console.log(this.title)
+		//console.log(this.title)
 	}
 
 	@computed get getTitle() {
@@ -37,7 +37,7 @@ class TaskCreateStore {
 	@action("set task price")
 	setPrice (price) {
 		this.price = Number(price);
-		console.log(price)
+		//console.log(price)
 	}
 
 	@computed get getPrice() {
