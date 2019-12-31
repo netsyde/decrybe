@@ -152,6 +152,7 @@ func getValueTaskReportComplete(freelancer: String, task: String, stage: String)
     getStrByKey(getKeyTaskReportComplete(freelancer, task, stage))
 }
 
+# Report complete task count
 func getKeyTaskReportCompleteCnt(task: String, freelancer: String) = {
     "rc_cnt_" + task + "_" + freelancer
 }
@@ -160,12 +161,49 @@ func getValueTaskReportCompleteCnt(task: String, freelancer: String) = {
     getNumberByKey(getKeyTaskReportCompleteCnt(task, freelancer))
 }
 
+# Decrybe balance
 func getKeyDecrybeBalance() = {
     "decrybe_balance"
 }
 
 func getValueDecrybeBalance() = {
     getNumberByKey(getKeyDecrybeBalance())
+}
+
+# Task rating
+func getKeyTaskRating(task: String) = {
+    "task_rating_" + task
+}
+
+func getValueTaskRating(task: String) = {
+    getNumberByKey(getKeyTaskRating(task))
+}
+
+# Task rating vote
+func getKeyTaskUserVoteRating(task: String, user: String) = {
+    "task_vote_" + task + "_" + user
+}
+
+func getValueTaskUserVoteRating(task: String, user: String) = {
+    getStrByKey(getKeyTaskUserVoteRating(task, user))
+}
+
+# User rating
+func getKeyUserRating(user: String) = {
+    "user_rating_" + user
+}
+
+func getValueUserRating(user: String) = {
+    getNumberByKey(getKeyUserRating(user))
+}
+
+# User rating vote
+func getKeyUserRatingVote(user: String, voting: String) = {
+    "user_vote_" + user + voting
+}
+
+func getValueUserRatingVote(user: String, voting: String) = {
+    getStrByKey(getKeyUserRatingVote(user, voting))
 }
 
 @Callable(i)
@@ -200,7 +238,8 @@ func createTask(task: String, expiration: Int, data: String) = {
             DataEntry(getKeyTaskBank(task), payment),
             DataEntry(getKeyTaskStatus(task), FEATURED),
             DataEntry(getKeyTaskData(task), data),
-            DataEntry(getKeyDecrybeBalance(), getValueDecrybeBalance() + commission)
+            DataEntry(getKeyDecrybeBalance(), getValueDecrybeBalance() + commission),
+            DataEntry(getKeyTaskRating(task), 0)
         ])
     }
 }
@@ -313,7 +352,9 @@ func acceptWork (task: String, complete: Boolean) = {
             if (complete) then {
                 ScriptResult(
                     WriteSet([
-                        DataEntry(getKeyTaskStatus(task), COMPLETED)
+                        DataEntry(getKeyTaskStatus(task), COMPLETED),
+                        DataEntry(getKeyUserRating(freelancer), getValueUserRating(freelancer) + 1), # need rework
+                        DataEntry(getKeyUserRatingVote(account, freelancer), "positive")
                     ]),
                     TransferSet([
                         ScriptTransfer(addressFromStringValue(freelancer), bank, unit)
@@ -347,4 +388,43 @@ func moveDeadline(task: String, deadline: Int) = {
         ])
     }
     
+}
+
+@Callable(i)
+func voteTask (task: String, vote: String) = {
+    let account = toBase58String(i.caller.bytes)
+    if (getValueUserBio(account) == NONE) then throw("User not signup")
+    else if (getValueTaskAuthor(task) == account) then throw("You cannot change the rating of a task")
+    else if (getValueTaskData(task) == NONE) then throw("Task doesnt exist")
+    else if (getValueTaskStatus(task) != FEATURED) then throw("Now you can’t lower the task rating")
+    else if (getValueTaskUserVoteRating(task, account) != NONE) then throw("You have already voted")
+    else {
+        if (vote == "positive") then {
+            WriteSet([
+                DataEntry(getKeyTaskRating(task), getValueTaskRating(task) + 1),
+                DataEntry(getKeyTaskUserVoteRating(task, account), "positive")
+            ])
+        } else if (vote == "negative") then {
+            WriteSet([
+                DataEntry(getKeyTaskRating(task), getValueTaskRating(task) - 1),
+                DataEntry(getKeyTaskUserVoteRating(task, account), "negative")
+            ])
+        } else throw("Use positive/negative only")
+    }
+    
+}
+
+@Callable(i)
+func reportUser (user: String) = {
+    let account = toBase58String(i.caller.bytes)
+    if (getValueUserBio(account) == NONE) then throw("You not signup")
+    else if (getValueUserBio(user) == NONE) then throw("User not signup")
+    else if (user == account) then throw("You can't complain about yourself")
+    else if (getValueUserRatingVote(account, user) != NONE) then throw("You have already voted")
+    else {
+         WriteSet([
+            DataEntry(getKeyUserRating(user), getValueUserRating(user) - 1),
+            DataEntry(getKeyUserRatingVote(account, user), "negative")
+        ])
+    }
 }

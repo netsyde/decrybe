@@ -1,3 +1,12 @@
+### V0.4.8
+
+##### 31-12-2019
+
+#### New
+- Added `voteTask` function to the smart contract
+- Added `reportUser` function to the smart contract
+- Updated `Task Editor` page
+
 ### V0.4.7
 
 ##### 30-12-2019

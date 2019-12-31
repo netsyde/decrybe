@@ -1,6 +1,6 @@
 {
     "name": "decrybe",
-    "version": "0.4.7",
+    "version": "0.4.8",
     "scripts": {
         "start": "node server.ts",
         "build": "webpack --config webpack.config.ts",

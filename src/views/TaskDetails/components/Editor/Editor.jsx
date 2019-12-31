@@ -171,7 +171,7 @@ const Editor = observer((props) => {
             createTime: store.getCreateDate,
             expireTime: store.getEndDate,
             currency: store.getCurrency,
-            author: rootStore.user.getUserAddress,
+            //author: rootStore.user.getUserAddress,
             brief: store.getBriefDescription,
             uuid: taskId,
             tags: store.getTags,
@@ -248,7 +248,7 @@ const Editor = observer((props) => {
         <CardHeader title="About this task" />
         <CardContent>
           <Grid container spacing={3}>
-            <Grid item lg={8} md={6} sm={12} xs={12}>
+            <Grid item lg={12} md={12} sm={12} xs={12}>
               <TextValidator
                 fullWidth
                 label="Task Name"
@@ -264,7 +264,7 @@ const Editor = observer((props) => {
                 validatorListener={validatorListener}
               />
             </Grid>
-            <Grid item lg={4} md={6} sm={12} xs={12}>
+            {/*<Grid item lg={4} md={6} sm={12} xs={12}>
               <TextValidator
                 fullWidth
                 type="number"
@@ -280,7 +280,7 @@ const Editor = observer((props) => {
                 variant="outlined"
                 validatorListener={validatorListener}
               />
-            </Grid>
+              </Grid>*/}
             <Grid item lg={4} md={6} sm={12} xs={12}>
               <TextValidator
                 fullWidth
