@@ -141,7 +141,7 @@ const Task = observer((props) => {
         </Tabs>
         <Divider className={classes.divider} />
         <div className={classes.content}>
-          {tab === 'overview' && <Overview project={project} />}
+          {tab === 'overview' && <Overview project={project} rootStore={props.rootStore}/>}
           {((props.rootStore.user.getUserAddress == project.author.address) && (project.status == "Featured")) ? (tab === 'edit' && <Editor project={project} updateTask={updateTask} history={props.history} rootStore={props.rootStore} id={id}/>) : null}
         </div>
       </Page>

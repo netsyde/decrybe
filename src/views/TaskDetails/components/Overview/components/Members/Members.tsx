@@ -24,7 +24,8 @@ const useStyles = makeStyles(() => ({
     paddingBottom: 0
   },
   content: {
-    paddingTop: 0
+    paddingTop: 0,
+    paddingBottom: 0
   },
   actions: {
     backgroundColor: colors.grey[50]
@@ -38,10 +39,9 @@ const useStyles = makeStyles(() => ({
 }));
 
 const Members = props => {
-  const { members, className, ...rest } = props;
+  const { className, rootStore, project, ...rest } = props;
 
   const classes = useStyles(1);
-  if (members) {
     return (
       <Card
         {...rest}
@@ -49,46 +49,40 @@ const Members = props => {
       >
         <CardHeader
           className={classes.header}
-          title="Project members"
+          title="Project freelancer"
           titleTypographyProps={{
             variant: 'overline'
           }}
         />
         <CardContent className={classes.content}>
           <List>
-
-            {members.map(member => (
               <ListItem
                 disableGutters
-                key={member.id ? member.id : member}
+                key={project.freelancerData ? project.freelancerData.address : 1}
               >
                 <ListItemAvatar>
                   <Avatar
                     alt="Author"
                     className={classes.avatar}
-                    src={member.avatar ? member.avatar : ""}
+                    src={project.freelancerData ? project.freelancerData.avatar : ""}
                   >
-                    {getInitials(member.name ? member.name : "Undefined")}
+                    {getInitials(project.freelancerData ? project.freelancerData.name : "Undefined")}
                   </Avatar>
                 </ListItemAvatar>
                 <ListItemText
-                  primary={member.name ? member.name : "Undefined"}
+                  primary={project.freelancerData ? project.freelancerData.name : "Undefined"}
                   primaryTypographyProps={{ variant: 'h6' }}
-                  secondary={member.bio ? member.bio : "Undefined"}
+                  secondary={project.freelancerData ? project.freelancerData.bio : "Undefined"}
                 />
               </ListItem>
-            ))}
           </List>
         </CardContent>
-        {/*
+        {/* {rootStore.user.getUserAddress == project.author.address ?
         <CardActions className={classes.actions}>
           <Button className={classes.manageButton}>Manage users</Button>
-        </CardActions>*/}
+        </CardActions> : null} */}
       </Card>
     )
-  } else {
-    return null
-  }
 };
 
 export default Members;

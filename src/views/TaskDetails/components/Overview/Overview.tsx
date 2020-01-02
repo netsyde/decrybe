@@ -16,7 +16,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Overview = observer((props) => {
-  const { project, className, ...rest } = props;
+  const { project, className, rootStore, ...rest } = props;
 
   const classes = useStyles(1);
 
@@ -44,10 +44,11 @@ const Overview = observer((props) => {
       >
         <Holder project={project} />
 
-        {/*<Members
+        {project.freelancer ? <Members
           className={classes.members}
-          members={project.members ? project.members : ""}
-        />*/}
+          project={project}
+          rootStore={rootStore}
+        /> : null}
       </Grid>
     </Grid>
   );

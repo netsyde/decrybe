@@ -101,7 +101,7 @@ const ProjectCard = props => {
 
   const classes = useStyles(1);
 
-  const [liked, setLiked] = useState(project.liked);
+  const [liked, setLiked] = useState(false);
   const handleLike = () => {
     setLiked(true);
   };

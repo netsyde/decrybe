@@ -1,3 +1,13 @@
+### V0.4.9
+
+##### 02-01-2020
+
+#### New
+- Added `openTaskDispute` function to the smart contract
+- Added `voteTaskDispute` function to the smart contract
+- Freelancer is now displayed on the task page
+- Some fixes
+
 ### V0.4.8
 
 ##### 31-12-2019

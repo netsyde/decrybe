@@ -288,7 +288,15 @@ export let getTaskData = async (alldata, id: String) => {
         }
         let freelancer = await getTaskFreelancer(alldata, id)
         taskData.freelancer = freelancer ? freelancer : ""
-
+        let freelancerData = await getUserData(alldata, freelancer)
+        taskData.freelancerData = {
+            address: freelancerData ? freelancerData : "",
+            publicKey: freelancerData ? freelancerData.publicKey : "",
+            name: freelancerData ? freelancerData.name : "",
+            avatar: freelancerData ? freelancerData.avatar : "",
+            avatarColor: color[getRandomArbitary(0, color.length - 1)],
+            bio: freelancerData ? freelancerData.bio : ""
+        }
         let bank = await getTaskBank(alldata, id)
         taskData.price = bank ? bank / 10e7 : "NaN"
 

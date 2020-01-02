@@ -5,6 +5,7 @@ import { Page } from '../../components';
 import {
   Header,
   Statistics,
+  Tasks
 } from './components';
 import Error401 from '../Error401'
 
@@ -40,6 +41,7 @@ const Overview = inject('rootStore')(observer(({ rootStore }) => {
       >
         <Header rootStore={rootStore}/>
         <Statistics className={classes.statistics} rootStore={rootStore}/>
+        {/* {<Tasks className={classes.projects} rootStore={rootStore}/>} */}
       </Page>
     );
   } else {

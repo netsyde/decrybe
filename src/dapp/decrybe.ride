@@ -206,6 +206,42 @@ func getValueUserRatingVote(user: String, voting: String) = {
     getStrByKey(getKeyUserRatingVote(user, voting))
 }
 
+# Open dispute
+func getKeyTaskDispute(task: String) = {
+    "task_dispute_" + task
+}
+
+func getValueTaskDispute(task: String) = {
+    getStrByKey(getKeyTaskDispute(task))
+}
+
+# Vote for customer
+func getKeyTaskDisputeVoteCustomer(task: String) = {
+    "task_dispvote_cst_" + task
+}
+
+func getValueTaskDisputeVoteCustomer(task: String) = {
+    getNumberByKey(getKeyTaskDisputeVoteCustomer(task))
+}
+
+# Vote for freelancer
+func getKeyTaskDisputeVoteFreelancer(task: String) = {
+    "task_dispvote_flr_" + task
+}
+
+func getValueTaskDisputeVoteFreelancer(task: String) = {
+    getNumberByKey(getKeyTaskDisputeVoteFreelancer(task))
+}
+
+# Dispute message
+func getKeyTaskDisputeMessage(task: String, sender: String, id: String) = {
+    "task_dispmsg_" + task + "_" + sender + "_id:" + id
+}
+
+func getValueTaskDisputeMessage(task: String, sender: String, id: String) = {
+    getNumberByKey(getKeyTaskDisputeMessage(task, sender, id))
+}
+
 @Callable(i)
 func withdrawDecrybeBalance(amount: Int) = {
     let account = toBase58String(i.caller.bytes)
@@ -428,3 +464,41 @@ func reportUser (user: String) = {
         ])
     }
 }
+
+@Callable (i)
+func openTaskDispute (task: String, message: String) = {
+    let account = toBase58String(i.caller.bytes)
+    if (getValueUserBio(account) == NONE) then throw("You not signup")
+    else if (getValueTaskData(task) == NONE) then throw("Task doesnt exist")
+    else if (getValueTaskDispute(task) != NONE) then throw("Dispute already open")
+    else {
+        WriteSet([
+            DataEntry(getKeyTaskDispute(task), account),
+            DataEntry(getKeyTaskDisputeMessage(task, account, "0"), message)
+
+        ])
+    }
+}
+
+@Callable (i)
+func voteTaskDispute (task: String, variant: String) = {
+    let account = toBase58String(i.caller.bytes)
+    let creator = getValueTaskAuthor(task)
+    let freelancer = getValueTaskFreelancer(task)
+    if (getValueUserBio(account) == NONE) then throw("You not signup")
+    else if (getValueTaskData(task) == NONE) then throw("Task doesnt exist")
+    else if (getValueTaskDispute(task) == NONE) then throw("Dispute doesnt exist")
+    else {
+        if (variant == "customer") then {
+            WriteSet([
+                DataEntry(getKeyTaskDisputeVoteCustomer(task), getValueTaskDisputeVoteCustomer(task) + 1)
+            ])
+        } else if (variant == "freelancer") then {
+            WriteSet([
+                DataEntry(getKeyTaskDisputeVoteFreelancer(task), getValueTaskDisputeVoteFreelancer(task) + 1)
+            ])
+        } else throw("Select one of the sides")
+    }
+
+}
+# voteDispute
