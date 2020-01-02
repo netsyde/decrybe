@@ -13,6 +13,7 @@ let COMPLETED = "completed"
 let PENDING = "pending"
 let INDISPUTE = "in dispute"
 let REVISION = "revision"
+let CANCELED = "canceled"
 let DECRYBEFEE = 2 / 100
 let WAVESLET = 100000000
 
@@ -239,7 +240,52 @@ func getKeyTaskDisputeMessage(task: String, sender: String, id: String) = {
 }
 
 func getValueTaskDisputeMessage(task: String, sender: String, id: String) = {
-    getNumberByKey(getKeyTaskDisputeMessage(task, sender, id))
+    getStrByKey(getKeyTaskDisputeMessage(task, sender, id))
+}
+
+# Dispute message block
+func getKeyTaskDisputeMessageBlock(task: String, sender: String, id: String) = {
+    "task_dispmsg_blk_" + task + "_" + sender + "_id:" + id
+}
+
+func getValueTaskDisputeMessageBlock(task: String, sender: String, id: String) = {
+    getStrByKey(getKeyTaskDisputeMessageBlock(task, sender, id))
+}
+
+# Dispute message count
+func getKeyTaskDisputeMessagesCnt(task: String, user: String) = {
+    "task_dispmsg_cnt_" + task + "_" + user
+}
+
+func getValueTaskDisputeMessagesCnt(task: String, user: String) = {
+    getNumberByKey(getKeyTaskDisputeMessagesCnt(task, user))
+}
+
+# Dispute comment
+func getKeyTaskDisputeComment(task: String, sender: String) = {
+    "task_dispcom_" + task + "_" + sender
+}
+
+func getValueTaskDisputeComment(task: String, sender: String) = {
+    getStrByKey(getKeyTaskDisputeComment(task, sender))
+}
+
+# Dispute comment block
+func getKeyTaskDisputeCommentBlock(task: String, sender: String) = {
+    "task_dispcom_blk_" + task + "_" + sender
+}
+
+func getValueTaskDisputeCommentBlock(task: String, sender: String) = {
+    getStrByKey(getKeyTaskDisputeCommentBlock(task, sender))
+}
+
+# Dispute variant
+func getKeyTaskDisputeVoteVariant(task: String, user: String) = {
+    "task_dispvar_" + task + "_" + user
+}
+
+func getValueTaskDisputeVoteVariant(task: String, user: String) = {
+    getStrByKey(getKeyTaskDisputeVoteVariant(task, user))
 }
 
 @Callable(i)
@@ -331,9 +377,10 @@ func sendMessage(task: String, to: String, message: String) = {
 @Callable(i)
 func taskUpdate(task: String, data: String) = {
     let account = toBase58String(i.caller.bytes)
-    if (getValueTaskData(task) == NONE) then throw("Task doesnt exist")
+    if (getValueUserBio(account) == NONE) then throw("User not signup")
+    else if (getValueTaskData(task) == NONE) then throw("Task doesnt exist")
     else if (getValueTaskAuthor(task) != account) then throw("You're not author")
-    else if (getValueTaskStatus(task) == INPROGRESS) then throw("Editing tasks is not available after hiring a freelancer") 
+    else if (getValueTaskStatus(task) != FEATURED) then throw("Editing tasks is not available after hiring a freelancer") 
     else {
         WriteSet([
             DataEntry(getKeyTaskData(task), data)
@@ -468,37 +515,91 @@ func reportUser (user: String) = {
 @Callable (i)
 func openTaskDispute (task: String, message: String) = {
     let account = toBase58String(i.caller.bytes)
+    let creator = getValueTaskAuthor(task)
+    let freelancer = getValueTaskFreelancer(task)
     if (getValueUserBio(account) == NONE) then throw("You not signup")
     else if (getValueTaskData(task) == NONE) then throw("Task doesnt exist")
-    else if (getValueTaskDispute(task) != NONE) then throw("Dispute already open")
+    else if (account != creator || account != freelancer) then throw("You must be a freelancer or a customer of this task")
+    else if (getValueTaskStatus(task) == INDISPUTE) then throw("Dispute already open")
     else {
         WriteSet([
             DataEntry(getKeyTaskDispute(task), account),
-            DataEntry(getKeyTaskDisputeMessage(task, account, "0"), message)
+            DataEntry(getKeyTaskDisputeMessage(task, account, "0"), message),
+            DataEntry(getKeyTaskDisputeMessageBlock(task, account, "0"), height),
+            DataEntry(getKeyTaskStatus(task), INDISPUTE)
 
         ])
     }
 }
 
 @Callable (i)
-func voteTaskDispute (task: String, variant: String) = {
+func voteTaskDispute (task: String, variant: String, message: String) = {
     let account = toBase58String(i.caller.bytes)
     let creator = getValueTaskAuthor(task)
     let freelancer = getValueTaskFreelancer(task)
     if (getValueUserBio(account) == NONE) then throw("You not signup")
     else if (getValueTaskData(task) == NONE) then throw("Task doesnt exist")
     else if (getValueTaskDispute(task) == NONE) then throw("Dispute doesnt exist")
+    else if (account == creator) then throw("The creator of the task can not vote")
+    else if (account == freelancer) then throw("The freelancer of the task can not vote")
+    else if (getValueTaskDisputeVoteVariant(task, account) != NONE) then throw("You have already voted")
     else {
         if (variant == "customer") then {
             WriteSet([
-                DataEntry(getKeyTaskDisputeVoteCustomer(task), getValueTaskDisputeVoteCustomer(task) + 1)
+                DataEntry(getKeyTaskDisputeVoteCustomer(task), getValueTaskDisputeVoteCustomer(task) + 1),
+                DataEntry(getKeyTaskDisputeVoteVariant(task, account), "customer"),
+                DataEntry(getKeyTaskDisputeComment(task, account), message),
+                DataEntry(getKeyTaskDisputeCommentBlock(task, account), height)
             ])
         } else if (variant == "freelancer") then {
             WriteSet([
-                DataEntry(getKeyTaskDisputeVoteFreelancer(task), getValueTaskDisputeVoteFreelancer(task) + 1)
+                DataEntry(getKeyTaskDisputeVoteFreelancer(task), getValueTaskDisputeVoteFreelancer(task) + 1),
+                DataEntry(getKeyTaskDisputeVoteVariant(task, account), "freelancer"),
+                DataEntry(getKeyTaskDisputeComment(task, account), message),
+                DataEntry(getKeyTaskDisputeCommentBlock(task, account), height)
             ])
         } else throw("Select one of the sides")
     }
 
 }
-# voteDispute
+
+@Callable (i)
+func taskDisputeMessage (task: String, message: String) = {
+    let account = toBase58String(i.caller.bytes)
+    let creator = getValueTaskAuthor(task)
+    let freelancer = getValueTaskFreelancer(task)
+    let cnt = getValueTaskDisputeMessagesCnt(task, account) + 1
+    if (getValueUserBio(account) == NONE) then throw("You not signup")
+    else if (getValueTaskData(task) == NONE) then throw("Task doesnt exist")
+    else if (getValueTaskDispute(task) == NONE) then throw("Dispute doesnt exist")
+    else if (account != creator || account != freelancer) then throw("You must be a freelancer or a customer of this task")
+    else if (getValueTaskStatus(task) != INDISPUTE) then throw("You cannot send messages at this time")
+    else {
+        WriteSet([
+            DataEntry(getKeyTaskDisputeMessage(task, account, toString(cnt)), message),
+            DataEntry(getKeyTaskDisputeMessageBlock(task, account, toString(cnt)), height)
+
+        ])
+    }
+}
+
+@Callable (i)
+func cancelTask (task: String) = {
+    let account = toBase58String(i.caller.bytes)
+    let creator = getValueTaskAuthor(task)
+    let bank = getValueTaskBank(task)
+    if (getValueUserBio(account) == NONE) then throw("You not signup")
+    else if (getValueTaskData(task) == NONE) then throw("Task doesnt exist")
+    else if (getValueTaskStatus(task) != FEATURED) then throw("You can't cancel the task now")
+    else if (account != creator) then throw("You are not author of the task")
+    else {
+        ScriptResult(
+            WriteSet([
+                DataEntry(getKeyTaskStatus(task), CANCELED)
+            ]),
+            TransferSet([
+                ScriptTransfer(addressFromStringValue(creator), bank, unit)
+            ])
+        )
+    }
+}

@@ -251,9 +251,9 @@ export let taskUpdate = async (taskId, data, keeperOrSigner, type = "featured") 
         let confirmed;
         await keeperOrSigner.class.waitTxConfirm(tx, 1).then((tx2) => {
             if (tx2) {
-                    confirmed = true;
+                confirmed = true;
             } else {
-                    confirmed = false;
+                confirmed = false;
             }
         });
         if (confirmed) {
@@ -326,9 +326,9 @@ export let userUpdate = async (data, keeperOrSigner) => {
         let confirmed;
         await keeperOrSigner.class.waitTxConfirm(tx, 1).then((tx2) => {
             if (tx2) {
-                    confirmed = true;
+                confirmed = true;
             } else {
-                    confirmed = false;
+                confirmed = false;
             }
         });
         if (confirmed) {
@@ -406,9 +406,9 @@ export let hireFreelancer = async (taskId, freelancer, keeperOrSigner) => {
         let confirmed;
         await keeperOrSigner.class.waitTxConfirm(tx, 1).then((tx2) => {
             if (tx2) {
-                    confirmed = true;
+                confirmed = true;
             } else {
-                    confirmed = false;
+                confirmed = false;
             }
         });
         if (confirmed) {
@@ -529,9 +529,9 @@ export let sendMessage = async (taskId, to, message, publicKey, date, keeperOrSi
         let confirmed;
         await keeperOrSigner.class.waitTxConfirm(tx, 1).then((tx2) => {
             if (tx2) {
-                    confirmed = true;
+                confirmed = true;
             } else {
-                    confirmed = false;
+                confirmed = false;
             }
         });
         if (confirmed) {
@@ -596,9 +596,9 @@ export let reportCompleteTask = async (taskId, keeperOrSigner) => {
         let confirmed;
         await keeperOrSigner.class.waitTxConfirm(tx, 1).then((tx2) => {
             if (tx2) {
-                    confirmed = true;
+                confirmed = true;
             } else {
-                    confirmed = false;
+                confirmed = false;
             }
         });
         if (confirmed) {
@@ -669,9 +669,514 @@ export let acceptWork = async (taskId, complete, keeperOrSigner) => {
         let confirmed;
         await keeperOrSigner.class.waitTxConfirm(tx, 1).then((tx2) => {
             if (tx2) {
-                    confirmed = true;
+                confirmed = true;
             } else {
-                    confirmed = false;
+                confirmed = false;
+            }
+        });
+        if (confirmed) {
+            return true
+        } else {
+            return false;
+        }
+    } else {
+        return false
+    }
+}
+
+export let moveDeadline = async (taskId: string, deadline: number, keeperOrSigner) => {
+    if (keeperOrSigner.type == "keeper") {
+        try {
+            const state = await keeperOrSigner.class.publicState();
+            let tx = await keeperOrSigner.class.signAndPublishTransaction({
+                type: 16,
+                data: {
+                     fee: {
+                         "tokens": "0.05",
+                         "assetId": "WAVES"
+                     },
+                     dApp: dAppAddress,
+                     call: {
+                     	function: 'moveDeadline',
+                     	args: [
+                            {
+                                type: "string", value: taskId
+                            },
+                            {
+                                type: "integer", value: deadline
+                            }
+                        ]
+                    },
+                    payment: []
+                }
+            })
+            tx = JSON.parse(tx)
+            if (tx) {
+                console.log(tx.id)
+                let wait = await nodeInteraction.waitForTx(tx.id, {apiBase: state.network.server})
+                if (wait) {
+                    return true
+                }
+            } else {
+                return false
+            }
+        } catch (error) {
+            console.error("Error ", error);
+            return false
+       }
+    } else if (keeperOrSigner.type == "signer") {
+        let tx = await keeperOrSigner.class.invoke({
+            dApp: dAppAddress,
+            call: {
+                function: "moveDeadline",
+                args: [
+                    {
+                        type: "string", value: taskId
+                    },
+                    {
+                        type: "integer", value: deadline
+                    }
+                ]
+            }
+        }).broadcast().then()
+        let confirmed;
+        await keeperOrSigner.class.waitTxConfirm(tx, 1).then((tx2) => {
+            if (tx2) {
+                confirmed = true;
+            } else {
+                confirmed = false;
+            }
+        });
+        if (confirmed) {
+            return true
+        } else {
+            return false;
+        }
+    } else {
+        return false
+    }
+}
+
+export let voteTask = async (taskId: string, vote: string, keeperOrSigner) => {
+    if (keeperOrSigner.type == "keeper") {
+        try {
+            const state = await keeperOrSigner.class.publicState();
+            let tx = await keeperOrSigner.class.signAndPublishTransaction({
+                type: 16,
+                data: {
+                     fee: {
+                         "tokens": "0.05",
+                         "assetId": "WAVES"
+                     },
+                     dApp: dAppAddress,
+                     call: {
+                     	function: 'voteTask',
+                     	args: [
+                            {
+                                type: "string", value: taskId
+                            },
+                            {
+                                type: "string", value: vote
+                            }
+                        ]
+                    },
+                    payment: []
+                }
+            })
+            tx = JSON.parse(tx)
+            if (tx) {
+                console.log(tx.id)
+                let wait = await nodeInteraction.waitForTx(tx.id, {apiBase: state.network.server})
+                if (wait) {
+                    return true
+                }
+            } else {
+                return false
+            }
+        } catch (error) {
+            console.error("Error ", error);
+            return false
+       }
+    } else if (keeperOrSigner.type == "signer") {
+        let tx = await keeperOrSigner.class.invoke({
+            dApp: dAppAddress,
+            call: {
+                function: "voteTask",
+                args: [
+                    {
+                        type: "string", value: taskId
+                    },
+                    {
+                        type: "string", value: vote
+                    }
+                ]
+            }
+        }).broadcast().then()
+        let confirmed;
+        await keeperOrSigner.class.waitTxConfirm(tx, 1).then((tx2) => {
+            if (tx2) {
+                confirmed = true;
+            } else {
+                confirmed = false;
+            }
+        });
+        if (confirmed) {
+            return true
+        } else {
+            return false;
+        }
+    } else {
+        return false
+    }
+}
+
+export let reportUser = async (user: string, keeperOrSigner) => {
+    if (keeperOrSigner.type == "keeper") {
+        try {
+            const state = await keeperOrSigner.class.publicState();
+            let tx = await keeperOrSigner.class.signAndPublishTransaction({
+                type: 16,
+                data: {
+                     fee: {
+                         "tokens": "0.05",
+                         "assetId": "WAVES"
+                     },
+                     dApp: dAppAddress,
+                     call: {
+                     	function: 'reportUser',
+                     	args: [
+                            {
+                                type: "string", value: user
+                            },
+                        ]
+                    },
+                    payment: []
+                }
+            })
+            tx = JSON.parse(tx)
+            if (tx) {
+                console.log(tx.id)
+                let wait = await nodeInteraction.waitForTx(tx.id, {apiBase: state.network.server})
+                if (wait) {
+                    return true
+                }
+            } else {
+                return false
+            }
+        } catch (error) {
+            console.error("Error ", error);
+            return false
+       }
+    } else if (keeperOrSigner.type == "signer") {
+        let tx = await keeperOrSigner.class.invoke({
+            dApp: dAppAddress,
+            call: {
+                function: "reportUser",
+                args: [
+                    {
+                        type: "string", value: user
+                    },
+                ]
+            }
+        }).broadcast().then()
+        let confirmed;
+        await keeperOrSigner.class.waitTxConfirm(tx, 1).then((tx2) => {
+            if (tx2) {
+                confirmed = true;
+            } else {
+                confirmed = false;
+            }
+        });
+        if (confirmed) {
+            return true
+        } else {
+            return false;
+        }
+    } else {
+        return false
+    }
+}
+
+export let openTaskDispute = async (task: string, message: string, keeperOrSigner) => {
+    if (keeperOrSigner.type == "keeper") {
+        try {
+            const state = await keeperOrSigner.class.publicState();
+            let tx = await keeperOrSigner.class.signAndPublishTransaction({
+                type: 16,
+                data: {
+                     fee: {
+                         "tokens": "0.05",
+                         "assetId": "WAVES"
+                     },
+                     dApp: dAppAddress,
+                     call: {
+                     	function: 'openTaskDispute',
+                     	args: [
+                            {
+                                type: "string", value: task
+                            },
+                            {
+                                type: "string", value: message
+                            },
+                        ]
+                    },
+                    payment: []
+                }
+            })
+            tx = JSON.parse(tx)
+            if (tx) {
+                console.log(tx.id)
+                let wait = await nodeInteraction.waitForTx(tx.id, {apiBase: state.network.server})
+                if (wait) {
+                    return true
+                }
+            } else {
+                return false
+            }
+        } catch (error) {
+            console.error("Error ", error);
+            return false
+       }
+    } else if (keeperOrSigner.type == "signer") {
+        let tx = await keeperOrSigner.class.invoke({
+            dApp: dAppAddress,
+            call: {
+                function: "openTaskDispute",
+                args: [
+                    {
+                        type: "string", value: task
+                    },
+                    {
+                        type: "string", value: message
+                    },
+                ]
+            }
+        }).broadcast().then()
+        let confirmed;
+        await keeperOrSigner.class.waitTxConfirm(tx, 1).then((tx2) => {
+            if (tx2) {
+                confirmed = true;
+            } else {
+                confirmed = false;
+            }
+        });
+        if (confirmed) {
+            return true
+        } else {
+            return false;
+        }
+    } else {
+        return false
+    }
+}
+
+export let voteTaskDispute = async (task: string, variant: string, message: string, keeperOrSigner) => {
+    if (keeperOrSigner.type == "keeper") {
+        try {
+            const state = await keeperOrSigner.class.publicState();
+            let tx = await keeperOrSigner.class.signAndPublishTransaction({
+                type: 16,
+                data: {
+                     fee: {
+                         "tokens": "0.05",
+                         "assetId": "WAVES"
+                     },
+                     dApp: dAppAddress,
+                     call: {
+                     	function: 'voteTaskDispute',
+                     	args: [
+                            {
+                                type: "string", value: task
+                            },
+                            {
+                                type: "string", value: variant
+                            },
+                            {
+                                type: "string", value: message
+                            },
+                        ]
+                    },
+                    payment: []
+                }
+            })
+            tx = JSON.parse(tx)
+            if (tx) {
+                console.log(tx.id)
+                let wait = await nodeInteraction.waitForTx(tx.id, {apiBase: state.network.server})
+                if (wait) {
+                    return true
+                }
+            } else {
+                return false
+            }
+        } catch (error) {
+            console.error("Error ", error);
+            return false
+       }
+    } else if (keeperOrSigner.type == "signer") {
+        let tx = await keeperOrSigner.class.invoke({
+            dApp: dAppAddress,
+            call: {
+                function: "voteTaskDispute",
+                args: [
+                    {
+                        type: "string", value: task
+                    },
+                    {
+                        type: "string", value: variant
+                    },
+                    {
+                        type: "string", value: message
+                    },
+                ]
+            }
+        }).broadcast().then()
+        let confirmed;
+        await keeperOrSigner.class.waitTxConfirm(tx, 1).then((tx2) => {
+            if (tx2) {
+                confirmed = true;
+            } else {
+                confirmed = false;
+            }
+        });
+        if (confirmed) {
+            return true
+        } else {
+            return false;
+        }
+    } else {
+        return false
+    }
+}
+
+export let taskDisputeMessage = async (task: string, message: string, keeperOrSigner) => {
+    if (keeperOrSigner.type == "keeper") {
+        try {
+            const state = await keeperOrSigner.class.publicState();
+            let tx = await keeperOrSigner.class.signAndPublishTransaction({
+                type: 16,
+                data: {
+                     fee: {
+                         "tokens": "0.05",
+                         "assetId": "WAVES"
+                     },
+                     dApp: dAppAddress,
+                     call: {
+                     	function: 'taskDisputeMessage',
+                     	args: [
+                            {
+                                type: "string", value: task
+                            },
+                            {
+                                type: "string", value: message
+                            },
+                        ]
+                    },
+                    payment: []
+                }
+            })
+            tx = JSON.parse(tx)
+            if (tx) {
+                console.log(tx.id)
+                let wait = await nodeInteraction.waitForTx(tx.id, {apiBase: state.network.server})
+                if (wait) {
+                    return true
+                }
+            } else {
+                return false
+            }
+        } catch (error) {
+            console.error("Error ", error);
+            return false
+       }
+    } else if (keeperOrSigner.type == "signer") {
+        let tx = await keeperOrSigner.class.invoke({
+            dApp: dAppAddress,
+            call: {
+                function: "taskDisputeMessage",
+                args: [
+                    {
+                        type: "string", value: task
+                    },
+                    {
+                        type: "string", value: message
+                    },
+                ]
+            }
+        }).broadcast().then()
+        let confirmed;
+        await keeperOrSigner.class.waitTxConfirm(tx, 1).then((tx2) => {
+            if (tx2) {
+                confirmed = true;
+            } else {
+                confirmed = false;
+            }
+        });
+        if (confirmed) {
+            return true
+        } else {
+            return false;
+        }
+    } else {
+        return false
+    }
+}
+
+export let cancelTask = async (task: string, message: string, keeperOrSigner) => {
+    if (keeperOrSigner.type == "keeper") {
+        try {
+            const state = await keeperOrSigner.class.publicState();
+            let tx = await keeperOrSigner.class.signAndPublishTransaction({
+                type: 16,
+                data: {
+                     fee: {
+                         "tokens": "0.05",
+                         "assetId": "WAVES"
+                     },
+                     dApp: dAppAddress,
+                     call: {
+                     	function: 'cancelTask',
+                     	args: [
+                            {
+                                type: "string", value: task
+                            },
+                        ]
+                    },
+                    payment: []
+                }
+            })
+            tx = JSON.parse(tx)
+            if (tx) {
+                console.log(tx.id)
+                let wait = await nodeInteraction.waitForTx(tx.id, {apiBase: state.network.server})
+                if (wait) {
+                    return true
+                }
+            } else {
+                return false
+            }
+        } catch (error) {
+            console.error("Error ", error);
+            return false
+       }
+    } else if (keeperOrSigner.type == "signer") {
+        let tx = await keeperOrSigner.class.invoke({
+            dApp: dAppAddress,
+            call: {
+                function: "cancelTask",
+                args: [
+                    {
+                        type: "string", value: task
+                    },
+                ]
+            }
+        }).broadcast().then()
+        let confirmed;
+        await keeperOrSigner.class.waitTxConfirm(tx, 1).then((tx2) => {
+            if (tx2) {
+                confirmed = true;
+            } else {
+                confirmed = false;
             }
         });
         if (confirmed) {
