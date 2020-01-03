@@ -347,8 +347,9 @@ func hireFreelancer(task: String, freelancer: String) = {
     else if (getValueUserBio(account) == NONE) then throw("Customer not signup")
     else if (getValueUserBio(freelancer) == NONE) then throw("Freelancer not signup")
     else if (getValueTaskAuthor(task) != account) then throw("You're not author")
-    else if (getValueTaskStatus(task) == INPROGRESS) then throw("Freelancer is no longer required (the task is already in progress)") 
+    else if (getValueTaskStatus(task) != FEATURED) then throw("Freelancer is no longer required") 
     else if (freelancer == account) then throw("You can't hire yourself")
+    else if (getValueUserMessage(freelancer, account, "1") == NONE) then throw("The freelancer was not attached to the task")
     else {
         WriteSet([
             DataEntry(getKeyTaskFreelancer(task), freelancer),
@@ -407,18 +408,15 @@ func reportCompleteTask(task: String) = {
     let status = getValueTaskStatus(task)
     let freelancerMessagesCnt = getValueUserMessagesCnt(account, taskCreator)
     let lastFreelancerMessage = getValueUserMessage(account, taskCreator, toString(freelancerMessagesCnt))
-    if (getValueTaskFreelancer(task) == account) then {
-        if (status == INPROGRESS) then {
-            WriteSet([
-                DataEntry(getKeyTaskReportComplete(account, task, toString(stage)), freelancerMessagesCnt),
-                DataEntry(getKeyTaskStatus(task), PENDING)
-            ])
-        } else if (status == COMPLETED) then throw("You've already been paid for your work")
-        else throw("The work is awaiting approval")
-    }
-    else if (getValueTaskFreelancer(task) == NONE) then throw("Task freelancer doesnt exist")
+    if (getValueUserBio(account) == NONE) then throw("User not signup")
     else if (getValueTaskAuthor(task) == account) then throw("You are author")
-    else throw("Error #1")
+    else if (getValueTaskFreelancer(task) != account) then throw("You are not freelancer")
+    else if (status != INPROGRESS) then throw("Status must be in progress, now: " + status)
+    else if (getValueTaskFreelancer(task) == NONE) then throw("Task freelancer doesnt exist")
+    else WriteSet([
+            DataEntry(getKeyTaskReportComplete(account, task, toString(stage)), freelancerMessagesCnt),
+            DataEntry(getKeyTaskStatus(task), PENDING)
+    ])
 
 }
 
@@ -430,28 +428,29 @@ func acceptWork (task: String, complete: Boolean) = {
     let stage = getValueTaskReportCompleteCnt(task, freelancer)
     let status = getValueTaskStatus(task)
     let bank = getValueTaskBank(task)
-    if (account == creator) then {
-        if (status == PENDING) then {
-            if (complete) then {
-                ScriptResult(
-                    WriteSet([
-                        DataEntry(getKeyTaskStatus(task), COMPLETED),
-                        DataEntry(getKeyUserRating(freelancer), getValueUserRating(freelancer) + 1), # need rework
-                        DataEntry(getKeyUserRatingVote(account, freelancer), "positive")
-                    ]),
-                    TransferSet([
-                        ScriptTransfer(addressFromStringValue(freelancer), bank, unit)
-                    ])
-                )
-            } else {
+    if (getValueUserBio(account) == NONE) then throw("Sender not signup")
+    else if (getValueTaskData(task) == NONE) then throw("Task doesnt exist")
+    else if (account != creator) then throw("You are not author")
+    else if (status != PENDING) then throw("Freelancer doesnt complete the task")
+    else {
+        if (complete) then {
+            ScriptResult(
                 WriteSet([
-                        DataEntry(getKeyTaskStatus(task), INPROGRESS)
+                    DataEntry(getKeyTaskStatus(task), COMPLETED),
+                    DataEntry(getKeyUserRating(freelancer), getValueUserRating(freelancer) + 1), # need rework
+                    DataEntry(getKeyUserRatingVote(account, freelancer), "positive"),
+                    DataEntry(getKeyTaskBank(task), "0")
+                ]),
+                TransferSet([
+                    ScriptTransfer(addressFromStringValue(freelancer), bank, unit)
                 ])
-            }
-        } else throw("Freelancer doesnt complete the task")
-    } else if (getValueTaskData(task) == NONE) then throw("Task doesnt exist")
-    else if (getValueUserBio(account) == NONE) then throw("Sender not signup")
-    else throw("You are not author")
+            )
+        } else {
+            WriteSet([
+                    DataEntry(getKeyTaskStatus(task), INPROGRESS)
+            ])
+        }
+    }
 }
 
 @Callable(i)
@@ -460,7 +459,7 @@ func moveDeadline(task: String, deadline: Int) = {
     let creator = getValueTaskAuthor(task)
     let expiration = getValueTaskExpiration(task)
     let status = getValueTaskStatus(task)
-    if (status != COMPLETED) then throw("The task is completed")
+    if (status == COMPLETED) then throw("The task is completed")
     else if (status == INDISPUTE) then throw("You can't change the deadline at this time")
     else if (account != creator) then throw("You are not author of the task")
     else if (deadline < height) then throw("The deadline must be > the current block")

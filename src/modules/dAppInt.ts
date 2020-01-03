@@ -187,7 +187,7 @@ export let createTask = async (item, expiration, data, price, keeperOrSigner) =>
  * @param wavesKeeper - class
  * @param type - allow types: featured (default), inprogress, closed
  */
-export let taskUpdate = async (taskId, data, keeperOrSigner, type = "featured") => {    
+export let taskUpdate = async (taskId, data, keeperOrSigner) => {    
     if (keeperOrSigner.type == "keeper") {
         try {
             const state = await keeperOrSigner.class.publicState();
@@ -207,9 +207,6 @@ export let taskUpdate = async (taskId, data, keeperOrSigner, type = "featured") 
                             },
                             {
                                 type: "string", value: JSON.stringify(data)
-                            },
-                            {
-                                type: "string", value: type
                             },
                         ]
                     },
@@ -241,9 +238,6 @@ export let taskUpdate = async (taskId, data, keeperOrSigner, type = "featured") 
                     },
                     {
                         type: "string", value: JSON.stringify(data)
-                    },
-                    {
-                        type: "string", value: type
                     },
                 ]
             }

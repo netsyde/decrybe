@@ -1,3 +1,16 @@
+### V0.5.0
+
+##### 03-01-2020
+
+#### New
+- Added `taskDisputeMessage` function to the smart contract
+- Added `cancelTask` function to the smart contract
+- Improved smart contract security
+- Updated an api for interaction with a smart contract
+- Added tooltip for help icons in the conversations list
+- Added api docs (private)
+- Updated waves keeper decrybe api
+
 ### V0.4.9
 
 ##### 02-01-2020
@@ -7,10 +20,6 @@
 - Added `voteTaskDispute` function to the smart contract
 - Freelancer is now displayed on the task page
 - Some fixes
-- Added `taskDisputeMessage` function to the smart contract
-- Added `cancelTask` function to the smart contract
-- Improved smart contract security
-- Updated an api for interaction with a smart contract
 
 ### V0.4.8
 

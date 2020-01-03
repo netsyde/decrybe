@@ -11,7 +11,8 @@ import {
   ListItemText,
   Avatar,
   ListItemIcon,
-  colors
+  colors,
+  Tooltip
 } from '@material-ui/core';
 import getInitials from '../../../../../../utils/getInitials'
 import { Label } from '../../../../../../components';
@@ -100,13 +101,17 @@ const ConversationListItem = props => {
       <div className={classes.details}>
 
       {((conversation.task.freelancer == conversation.user.address  || conversation.task.freelancer == rootStore.user.getUserAddress) && conversation.task.status == "In progress") ? 
+      <Tooltip title="Task in progress">
       <ListItemIcon>
         <DetailsIcon/>
-      </ListItemIcon> : null}
+      </ListItemIcon>
+      </Tooltip> : null}
       {((conversation.task.freelancer == conversation.user.address  || conversation.task.freelancer == rootStore.user.getUserAddress) && conversation.task.status == "Completed") ? 
+      <Tooltip title="Task is completed">
       <ListItemIcon>
         <DoneAllIcon/>
-      </ListItemIcon> : null}
+      </ListItemIcon>
+      </Tooltip> : null}
       </div>
     </ListItem>
   );

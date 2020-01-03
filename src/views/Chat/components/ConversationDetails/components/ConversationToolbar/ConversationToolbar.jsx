@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState, forwardRef } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
@@ -12,25 +12,18 @@ import {
   ListItemText,
   Menu,
   MenuItem,
-  Paper,
-  Input
 } from '@material-ui/core';
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 import { observer } from 'mobx-react';
 import * as dAppInt from '../../../../../../modules/dAppInt'
-import * as nodeInt from '../../../../../../modules/nodeInt'
-import SearchIcon from '@material-ui/icons/Search';
-import BlockIcon from '@material-ui/icons/Block';
-import DeleteIcon from '@material-ui/icons/DeleteOutlined';
-import ArchiveIcon from '@material-ui/icons/ArchiveOutlined';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
-import NotificationsOffIcon from '@material-ui/icons/NotificationsOffOutlined';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import ReportIcon from '@material-ui/icons/Report';
 import AddAlarmIcon from '@material-ui/icons/AddAlarm';
 import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
 import ThumbDownIcon from '@material-ui/icons/ThumbDown';
 import GavelIcon from '@material-ui/icons/Gavel';
+import AssignmentIcon from '@material-ui/icons/Assignment';
 const useStyles = makeStyles(theme => ({
   root: {
     backgroundColor: '#ffffff'
@@ -74,6 +67,14 @@ const useStyles = makeStyles(theme => ({
     marginRight: theme.spacing(1),
   }
 }));
+
+const CustomRouterLink = forwardRef((props, ref) => (
+  <div
+    //ref={ref}
+  >
+      <RouterLink {...props} />
+  </div>
+));
 
 const ConversationToolbar = observer((props) => {
   const { conversation, className, rootStore, ...rest } = props;
@@ -122,7 +123,11 @@ const ConversationToolbar = observer((props) => {
         console.log("dispute")
         break
       case 5:
-        console.log("report")
+        console.log("task")
+        break
+      case 6:
+        let report = await dAppInt.reportUser(conversation.user.address, rootStore.user.getWavesKeeper)
+        console.log(report)
         break
 
     }
@@ -220,7 +225,6 @@ const ConversationToolbar = observer((props) => {
         </MenuItem> : null}
         {(((rootStore.user.getUserAddress == conversation.task.author.address && conversation.task.freelancer == conversation.user.address) || (rootStore.user.getUserAddress == conversation.task.freelancer)) && conversation.task.status != "Completed") ? <MenuItem
           onClick={event => handleMenuItemClick(event, 4)}
-          //selected={2 === selectedIndex}
         >
           <ListItemIcon>
             <GavelIcon />
@@ -228,8 +232,16 @@ const ConversationToolbar = observer((props) => {
           <ListItemText primary="Open dispute" />
         </MenuItem> : null}
         <MenuItem
-          onClick={event => handleMenuItemClick(event, 5)}
-          //selected={2 === selectedIndex}
+          component={CustomRouterLink}
+          to={`/tasks/${conversation.task.uuid}`}
+        >
+          <ListItemIcon>
+            <AssignmentIcon />
+          </ListItemIcon>
+          <ListItemText primary="Open task" />
+        </MenuItem>
+        <MenuItem
+          onClick={event => handleMenuItemClick(event, 6)}
         >
           <ListItemIcon>
             <ReportIcon />
