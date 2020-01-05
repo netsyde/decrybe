@@ -9,6 +9,7 @@ let color = ["#1abc9c", "#2ecc71", "#3498db", "#9b59b6", "#34495e", "#16a085",
                     "#ff7979", "#badc58", "#f9ca24", "#f0932b",
                     "#eb4d4b", "#6ab04c", "#e056fd", "#686de0", "#30336b", "#130f40"]
 import moment from 'moment'
+import { Brief } from '../views/TaskDetails/components/Overview/components';
 /**
  * Get user balance
  * @param address - user address
@@ -597,6 +598,17 @@ let compareBlock = (a, b) => {
     }
 }
 
+let compareBlockDispute = (a, b) => {
+    try {
+        if (Number(a.block) > Number(b.block)) return 1;
+        if (Number(a.block) == Number(b.block)) return 0
+        if (Number(a.block) < Number(b.block)) return -1;
+    } catch (e) {
+        console.log(`ERROR in nodeInt.compareBlockDispute! ${e.name}: ${e.message}\n${e.stack}`);
+        //return false;
+    }
+}
+
 /**
  * Returns true, if element consists in array, else false
  * @param arr - array
@@ -700,3 +712,243 @@ export let getUserConversationMessages = async (allData, conversation) => {
     }
 }
 
+export let getDisputeCreator = async (storage, taskId) => {
+    try {
+        let fullKey = "task_dispute_" + taskId
+        let creator = await getDataByKey(storage, fullKey)
+        return creator
+    } catch (e) {
+        console.log(`ERROR in nodeInt.getDisputeCreater! ${e.name}: ${e.message}\n${e.stack}`);
+        return false;
+    }
+}
+
+export let getDisputeMessage = async (storage, key) => {
+    try {
+        //let fullKey = "task_dispmsg_" + taskId + "_" + user + "_id:" + id
+        let message = await getDataByKey(storage, key)
+        return message
+    } catch (e) {
+        console.log(`ERROR in nodeInt.getDisputeMessage! ${e.name}: ${e.message}\n${e.stack}`);
+        return false;
+    }
+}
+
+export let getDisputeMessageBlock = async (storage, taskId, user, id) => {
+    try {
+        let fullKey = "task_dispmsg_blk_" + taskId + "_" + user + "_id:" + id
+        let block = await getDataByKey(storage, fullKey)
+        return block
+    } catch (e) {
+        console.log(`ERROR in nodeInt.getDisputeMessageBlock! ${e.name}: ${e.message}\n${e.stack}`);
+        return false;
+    }
+}
+
+export let getDisputeCommentBlock = async (storage, taskId, user) => {
+    try {
+        let fullKey = "task_dispcom_blk_" + taskId + "_" + user
+        let block = await getDataByKey(storage, fullKey)
+        return block
+    } catch (e) {
+        console.log(`ERROR in nodeInt.getDisputeMessageBlock! ${e.name}: ${e.message}\n${e.stack}`);
+        return false;
+    }
+}
+
+export let getDisputeMessagesCnt = async (storage, taskId, user) => {
+    try {
+        let fullKey = "task_dispmsg_cnt_" + taskId + "_" + user
+        let count = await getDataByKey(storage, fullKey)
+        return count
+    } catch (e) {
+        console.log(`ERROR in nodeInt.getDisputeMessagesCnt! ${e.name}: ${e.message}\n${e.stack}`);
+        return false;
+    }
+}
+// let freelancer = await getTaskFreelancer(storage, taskId)
+        // let customer = await getTaskAuthor(storage, taskId);
+        // let freelancerMsgCnt = await getDisputeMessagesCnt(storage, taskId, freelancer)
+        // let customerMsgCnt = await getDisputeMessagesCnt(storage, taskId, customer)
+export let getAllDisputeMessages = async (storage, taskId) => {
+    try {
+        let result = await Promise.all(
+            Object.keys(storage)
+                .map(async key => {
+                    const match = /^task_dispmsg_([0-9a-z-]+)_([0-9a-z-]+)_id:([0-9]+)/i.exec(key);
+                    //console.log(match)
+                    if (match && ( match[1] == taskId) ) {
+                        return {
+                            key: match[0],
+                            task: match[1],
+                            user: match [2],
+                            id: match[3]
+                        }
+                    }
+                })
+        )
+        result = result.filter(Boolean)
+        return result
+
+    } catch (e) {
+        console.log(`ERROR in nodeInt.getAllDisputeMessages! ${e.name}: ${e.message}\n${e.stack}`);
+        return false;
+    }
+}
+
+export let getAllDisputeMessagesData = async (storage, taskId) => {
+    try {
+        let disputeMessages = await getAllDisputeMessages(storage, taskId)
+        if (disputeMessages) {
+            let freelancer = await getTaskFreelancer(storage, taskId)
+            let customer = await getTaskAuthor(storage, taskId)
+            let freelancerData = await getUserData(storage, freelancer)
+            let customerData = await getUserData(storage, customer)
+            let data = await Promise.all(
+                disputeMessages.map(async msg => {
+                    let message = await getDisputeMessage(storage, msg.key)
+                    let block = await getDisputeMessageBlock(storage, msg.task, msg.user, msg.id)
+                    return {
+                        message: "message" in message ? message.message : "",
+                        block: Number(block),
+                        user: msg.user == freelancer ? freelancerData : customerData,
+                        key: msg.key
+                    }
+                })
+            )
+            return data.sort(compareBlockDispute)
+        } else {
+            return false
+        }
+    } catch (e) {
+        console.log(`ERROR in nodeInt.getAllDisputeMessagesData! ${e.name}: ${e.message}\n${e.stack}`);
+        return false;
+    }
+}
+
+export let getAllDisputeComments = async (storage, taskId) => {
+    try {
+        let result = await Promise.all(
+            Object.keys(storage)
+                .map(async key => {
+                    const match = /^task_dispcom_([0-9a-z-]+)_([0-9a-z-]+)/i.exec(key);
+                    if (match && ( match[1] == taskId) ) {
+                        return {
+                            key: match[0],
+                            task: match[1],
+                            user: match[2]
+                        }
+                    }
+                })
+        )
+        result = result.filter(Boolean)
+        return result
+
+    } catch (e) {
+        console.log(`ERROR in nodeInt.getAllDisputeComments! ${e.name}: ${e.message}\n${e.stack}`);
+        return false;
+    }
+}
+
+
+export let getAllDisputeCommentsData = async (storage, taskId) => {
+    try {
+        let disputeComments = await getAllDisputeComments(storage, taskId)
+        if (disputeComments) {
+            let data = await Promise.all(
+                disputeComments.map(async msg => {
+                    let message = await getDataByKey(storage, msg.key)
+                    let block = await getDisputeCommentBlock(storage, msg.task, msg.user)
+                    let user = await getUserData(storage, msg.user)
+
+                    return {
+                        message: message,
+                        block: Number(block),
+                        user: user,
+                        key: msg.key
+                    }
+                })
+            )
+            return data.sort(compareBlockDispute)
+        } else {
+            return false
+        }
+    } catch (e) {
+        console.log(`ERROR in nodeInt.getAllDisputeMessagesData! ${e.name}: ${e.message}\n${e.stack}`);
+        return false;
+    }
+}
+
+export let getDisputeData = async (storage, taskId) => {
+    try {
+        let creator = await getDisputeCreator(storage, taskId);
+        let freelancer = await getTaskFreelancer(storage, taskId)
+        let customer = await getTaskAuthor(storage, taskId)
+        let disputeMessages = await getAllDisputeMessagesData(storage, taskId)
+        let disputeComments = await getAllDisputeCommentsData(storage, taskId)
+        let taskData = await getTaskData(storage, taskId)
+        let dispute = {
+            creator: creator,
+            customer: customer,
+            freelancer: freelancer,
+            task: taskId,
+            messages: disputeMessages,
+            comments: disputeComments
+        }
+
+        return dispute
+
+    } catch (e) {
+        console.log(`ERROR in nodeInt.getDisputeData! ${e.name}: ${e.message}\n${e.stack}`);
+        return false;
+    } 
+}
+
+export let getAllDisputes = async (storage) => {
+    try {
+        let result = await Promise.all(
+            Object.keys(storage)
+                .map(async key => {
+                    const match = /^task_dispute_([0-9a-z-]+)/i.exec(key);
+
+                    if (match) {
+                        return {
+                            key: match[0],
+                            task: match[1]
+                        }
+                    }
+                })
+        )
+        result = result.filter(Boolean)
+        return result
+    } catch (e) {
+        console.log(`ERROR in nodeInt.getAllDisputes! ${e.name}: ${e.message}\n${e.stack}`);
+        return false;
+    } 
+}
+
+export let getAllDisputesData = async (storage) => {
+    try {
+        let allDisputes = await getAllDisputes(storage)
+
+        if (allDisputes) {
+            let data = await Promise.all(
+                allDisputes.map(async dispute => {
+                    let creator = await getDisputeCreator(storage, dispute.task);
+                    let message = await getDataByKey(storage, "task_dispmsg_" + dispute.task + "_" + creator + "_id:0")
+                    return {
+                        creator: creator,
+                        brief: "brief" in message ? message.brief : "",
+                        title: "title" in message ? message.title : ""
+                    }
+                })
+            )
+            return data
+        } else {
+            return false
+        }
+    } catch (e) {
+        console.log(`ERROR in nodeInt.getAllDisputesData! ${e.name}: ${e.message}\n${e.stack}`);
+        return false;
+    } 
+}

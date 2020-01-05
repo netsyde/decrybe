@@ -39,6 +39,16 @@ const routes = [
         component: lazy(() => import('./views/Overview'))
       },
       {
+        path: '/disputes',
+        exact: true,
+        component: lazy(() => import('./views/Dispute'))
+      },
+      {
+        path: '/disputes/:id',
+        exact: true,
+        component: lazy(() => import('./views/Dispute'))
+      },
+      {
         path: '/tasks/create',
         exact: true,
         component: lazy(() => import('./views/TaskCreate'))
@@ -58,6 +68,22 @@ const routes = [
         path: '/tasks/:id/:tab',
         exact: true,
         component: lazy(() => import('./views/TaskDetails'))
+      },
+      // {
+      //   path: '/disputes',
+      //   exact: true,
+      //   //component: lazy(() => import('./views/DisputeList'))
+      // },
+      
+      {
+        path: '/disputes/:id/:tab',
+        exact: true,
+        //component: lazy(() => import('./views/DisputeDetails'))
+      },
+      {
+        path: '/disputes/create',
+        exact: true,
+        //component: lazy(() => import('./views/TaskCreate'))
       },
       {
         path: '/settings',

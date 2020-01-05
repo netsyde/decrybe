@@ -180,6 +180,9 @@ class UserStore {
 					this.userData = state;
 					
 					this.storage = await nodeInt.getAllData(this.dapp, state.network.server);
+					//let disputeMsg = await nodeInt.getAllDisputeMessages(this.storage, "6785ff32-03e1-4777-9c6c-fc6a0321f3e9")
+					//let disputeCmt = await nodeInt.getDisputeData(this.storage, "6785ff32-03e1-4777-9c6c-fc6a0321f3e9")
+					//console.log(disputeCmt)
 					//console.log(this.storage)
 					this.isLogin = true;
 					this.isReg = await nodeInt.checkReg(this.storage, state.account.address);

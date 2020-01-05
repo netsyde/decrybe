@@ -10,3 +10,4 @@ export { default as Overview } from './Overview';
 export { default as Register } from './Register';
 export { default as Profile } from './Profile';
 export { default as Terms } from './Terms';
+export { default as Dispute } from './Dispute';

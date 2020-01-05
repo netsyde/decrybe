@@ -518,7 +518,7 @@ func openTaskDispute (task: String, message: String) = {
     let freelancer = getValueTaskFreelancer(task)
     if (getValueUserBio(account) == NONE) then throw("You not signup")
     else if (getValueTaskData(task) == NONE) then throw("Task doesnt exist")
-    else if (account != creator || account != freelancer) then throw("You must be a freelancer or a customer of this task")
+    else if (account != creator && account != freelancer) then throw("You must be a freelancer (" + freelancer + ") or a customer (" + creator + ") of this task")
     else if (getValueTaskStatus(task) == INDISPUTE) then throw("Dispute already open")
     else {
         WriteSet([
@@ -571,7 +571,7 @@ func taskDisputeMessage (task: String, message: String) = {
     if (getValueUserBio(account) == NONE) then throw("You not signup")
     else if (getValueTaskData(task) == NONE) then throw("Task doesnt exist")
     else if (getValueTaskDispute(task) == NONE) then throw("Dispute doesnt exist")
-    else if (account != creator || account != freelancer) then throw("You must be a freelancer or a customer of this task")
+    else if (account != creator && account != freelancer) then throw("You must be a freelancer (" + freelancer + ") or a customer (" + creator + ") of this task")
     else if (getValueTaskStatus(task) != INDISPUTE) then throw("You cannot send messages at this time")
     else {
         WriteSet([
@@ -589,8 +589,8 @@ func cancelTask (task: String) = {
     let bank = getValueTaskBank(task)
     if (getValueUserBio(account) == NONE) then throw("You not signup")
     else if (getValueTaskData(task) == NONE) then throw("Task doesnt exist")
-    else if (getValueTaskStatus(task) != FEATURED) then throw("You can't cancel the task now")
     else if (account != creator) then throw("You are not author of the task")
+    else if (getValueTaskStatus(task) != FEATURED) then throw("You can't cancel the task now")
     else {
         ScriptResult(
             WriteSet([

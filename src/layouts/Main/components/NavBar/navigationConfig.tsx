@@ -6,12 +6,14 @@ import SettingsIcon from '@material-ui/icons/SettingsOutlined';
 import ChatIcon from '@material-ui/icons/ChatOutlined';
 import { Label } from '../../../../components'
 import { colors } from '@material-ui/core';
-import ViewModuleIcon from '@material-ui/icons/ViewModule';
+import ViewModuleIcon from '@material-ui/icons/ViewModuleOutlined';
+import ImportContactsIcon from '@material-ui/icons/ImportContactsOutlined';
 import HomeIcon from '@material-ui/icons/HomeOutlined';
+import AssignmentIcon from '@material-ui/icons/AssignmentOutlined';
 
 export default [
   {
-    title: 'Pages',
+    title: 'General',
     pages: [
       {
         title: 'Overview',
@@ -21,16 +23,12 @@ export default [
       {
         title: 'Tasks',
         href: '/tasks',
-        icon: FolderIcon,
+        icon: AssignmentIcon,
         children: [
           {
             title: 'Browse',
             href: '/tasks'
           },
-          {
-            title: 'Create',
-            href: '/tasks/create'
-          }
         ]
       },
       {
@@ -56,6 +54,22 @@ export default [
           },
         ]
       },
+    ]
+  },
+  {
+    title: 'Management',
+    pages: [
+      {
+        title: 'Disputes',
+        href: '/disputes',
+        icon: ImportContactsIcon,
+      },
+      // {
+      //   title: 'Suspicious tasks',
+      //   href: '/disputes',
+      //   icon: ImportContactsIcon,
+      // },
+
     ]
   },
   {
