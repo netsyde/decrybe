@@ -11,3 +11,5 @@ export { default as Register } from './Register';
 export { default as Profile } from './Profile';
 export { default as Terms } from './Terms';
 export { default as Dispute } from './Dispute';
+export { default as DisputeList } from './DisputeList';
+export { default as DisputeCreate } from './DisputeCreate';

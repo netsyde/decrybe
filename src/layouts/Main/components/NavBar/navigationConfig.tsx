@@ -29,6 +29,10 @@ export default [
             title: 'Browse',
             href: '/tasks'
           },
+          {
+            title: 'Create',
+            href: '/tasks/create'
+          },
         ]
       },
       {
@@ -39,7 +43,7 @@ export default [
           <Label
             color={colors.red[500]}
           >
-            alpha
+            beta
           </Label>
         )
       },
@@ -63,6 +67,13 @@ export default [
         title: 'Disputes',
         href: '/disputes',
         icon: ImportContactsIcon,
+        label: () => (
+          <Label
+            color={colors.red[500]}
+          >
+            alpha
+          </Label>
+        )
       },
       // {
       //   title: 'Suspicious tasks',

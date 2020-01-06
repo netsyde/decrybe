@@ -54,8 +54,8 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const DisputeComments = props => {
-  const { comments, className, ...rest } = props;
+const DisputeComments = observer((props) => {
+  const { comments, dispute, rootStore, className, ...rest } = props;
 
   const classes = useStyles(props);
 
@@ -66,7 +66,8 @@ const DisputeComments = props => {
       {...rest}
       className={clsx(classes.root, className)}
     >
-      <div className={classes.toolbar}>
+      {(rootStore.user.getUserAddress != dispute.customer && rootStore.user.getUserAddress != dispute.freelancer) ?
+       <div className={classes.toolbar}>
         <Button
           color="primary"
           fullWidth
@@ -75,13 +76,13 @@ const DisputeComments = props => {
           <AddIcon className={classes.addIcon} />
           Compose message
         </Button>
-      </div>
+      </div> : null}
       <Divider />
       {comments.map(comment => (
         <DisputeComment comment={comment} key={comment.key}/>
       ))}
     </div>
   );
-};
+});
 
 export default DisputeComments;

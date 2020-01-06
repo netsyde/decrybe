@@ -19,6 +19,7 @@ import { Label } from '../../../../../../components';
 import CheckIcon from '@material-ui/icons/Check';
 import DoneAllIcon from '@material-ui/icons/DoneAll';
 import DetailsIcon from '@material-ui/icons/Details';
+import CompareArrowsIcon from '@material-ui/icons/CompareArrows';
 
 const useStyles = makeStyles(theme => ({
   active: {
@@ -110,6 +111,12 @@ const ConversationListItem = props => {
       <Tooltip title="Task is completed">
       <ListItemIcon>
         <DoneAllIcon/>
+      </ListItemIcon>
+      </Tooltip> : null}
+      {((conversation.task.freelancer == conversation.user.address  || conversation.task.freelancer == rootStore.user.getUserAddress) && conversation.task.status == "In dispute") ? 
+      <Tooltip title="Task in dispute">
+      <ListItemIcon>
+        <CompareArrowsIcon/>
       </ListItemIcon>
       </Tooltip> : null}
       </div>

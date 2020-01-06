@@ -60,7 +60,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const DisputeMessage = observer((props) => {
-  const { message } = props;
+  const { message, dispute } = props;
 
   const classes = useStyles(props);
   return (
@@ -78,10 +78,10 @@ const DisputeMessage = observer((props) => {
               display="inline"
               variant="h5"
             >
-              {message.user.name}
+              {message.user.name} ({message.user.address == dispute.freelancer ? "Freelancer" : "Customer"})
             </Typography>
             <Typography variant="body2">
-              {message.block}
+            {moment(message.createdAt).format('MMMM Do YYYY, h:mm:ss a')} (block: {message.block})
             </Typography>
           </div>
         </div>
@@ -108,15 +108,15 @@ const DisputeDetails = observer((props) => {
       {...rest}
       className={clsx(classes.root, className)}
     >
-      <DisputeToolbar />
+      <DisputeToolbar dispute={dispute}/>
       <Divider />
       
       {dispute.messages ? dispute.messages.map(message => (
-        <DisputeMessage message={message} key={message.key}/>
+        <DisputeMessage message={message} dispute={dispute} key={message.key}/>
       )) : null}
 
       {rootStore.user.getUserAddress == dispute.customer || rootStore.user.getUserAddress == dispute.freelancer ? 
-      <DisputeForm rootStore={rootStore}/> : null}
+      <DisputeForm rootStore={rootStore} dispute={dispute}/> : null}
     </div>
   );
 });

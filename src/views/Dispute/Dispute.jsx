@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { observer, inject } from 'mobx-react';
 import { Page } from '../../components';
 import { DisputeComments, DisputeDetails } from './components';
+import { Redirect } from 'react-router-dom';
 import * as nodeInt from '../../modules/nodeInt'
 import Error401 from '../Error401'
 const useStyles = makeStyles(theme => ({
@@ -73,7 +74,21 @@ const DisputeContainer = observer((props) => {
   return () => {
     mounted = false;
   };
-}, []);
+}, [props.rootStore.user.getStorage]);
+
+const tabs = [
+  { value: 'overview', label: 'Overview' },
+];
+
+if (!tab) {
+  return <Redirect to={`/disputes/${id}/overview`} />;
+}
+
+
+if (!tabs.find(t => t.value == tab)) {
+  console.log(tab)
+  return <Redirect to="/404" />;
+}
 
   return (
     <Page
@@ -91,6 +106,8 @@ const DisputeContainer = observer((props) => {
         <DisputeComments
           className={classes.emailFolders}
           comments={dispute.comments ? dispute.comments : []}
+          rootStore={props.rootStore}
+          dispute={dispute}
         />
     </Page>
   );

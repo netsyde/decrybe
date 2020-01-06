@@ -25,6 +25,7 @@ class UserStore {
 	@observable storage;
 	@observable online = false
 	@observable tasks = [];
+	@observable attachedTasks = []
 	@observable avatarColor = ""
 	@observable showRegister = false
 	@observable publicKey = ""
@@ -184,6 +185,8 @@ class UserStore {
 					//let disputeCmt = await nodeInt.getDisputeData(this.storage, "6785ff32-03e1-4777-9c6c-fc6a0321f3e9")
 					//console.log(disputeCmt)
 					//console.log(this.storage)
+					//let test = await nodeInt.getAllUserTasksAttached(this.storage, "3N8Ayob7haCp5N32V6gYcdPsLMKMaS3qH3E")
+					//console.log(test)
 					this.isLogin = true;
 					this.isReg = await nodeInt.checkReg(this.storage, state.account.address);
 					if (this.isReg) {
@@ -216,15 +219,21 @@ class UserStore {
 								this.root.settings.setLocation(this.location)
 							}
 							let userTasks = await nodeInt.getAllUserTasks(this.storage, this.address)
+							let userTasksAttached = await nodeInt.getAllUserTasksAttached(this.storage, this.address)
 							if (userTasks) {
 								this.tasks = userTasks;
+							}
+							if (userTasksAttached) {
+								this.attachedTasks = userTasksAttached
 							}
 							console.log("DEBUG: User data loaded")
 						} else {
 							console.log('DEBUG: User data not loaded')
 						}
 						await this.root.tasks.loadTasks(this.isUserLogin, this.getDapp, this.getUserNetwork)
+						await this.root.disputes.loadDisputes(this.isUserLogin)
 						await this.root.users.loadUsers(this.isUserLogin, this.getDapp, this.getUserNetwork)
+						
 					} else {
 						this.showRegister = true;
 						console.log('DEBUG: User is not registered')
@@ -273,8 +282,12 @@ class UserStore {
 							this.root.settings.setLocation(this.location)
 						}
 						let userTasks = await nodeInt.getAllUserTasks(this.storage, this.address)
+						let userTasksAttached = await nodeInt.getAllUserTasksAttached(this.storage, this.address)
 						if (userTasks) {
 							this.tasks = userTasks;
+						}
+						if (userTasksAttached) {
+							this.attachedTasks = userTasksAttached
 						}
 						console.log("DEBUG: User data loaded")
 					} else {
@@ -480,6 +493,14 @@ class UserStore {
 
 	@computed get getUserLocation() {
 		return this.location
+	}
+
+	@computed get getUserTasks() {
+		return this.tasks
+	}
+
+	@computed get getUserAttachedTasks() {
+		return this.attachedTasks
 	}
 
 	@action("set location")

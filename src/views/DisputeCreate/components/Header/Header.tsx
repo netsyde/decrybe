@@ -23,13 +23,13 @@ const Header = props => {
         gutterBottom
         variant="overline"
       >
-        New Task
+        New Dispute
       </Typography>
       <Typography
         component="h1"
         variant="h3"
       >
-        Create new task
+        Create new dispute
       </Typography>
     </div>
   );

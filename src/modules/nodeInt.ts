@@ -420,7 +420,7 @@ export let getAllUserTasks = async (alldata, address) => {
         //console.log(data)
         const matchesFilter = new RegExp(address)
         if (data) {
-            let filteredData = data.filter(task => matchesFilter.test(task.author.address ? task.author.address : ""))
+            let filteredData = data.filter(task => matchesFilter.test(task.author.address ? task.author.address : "") || matchesFilter.test(task.freelancer ? task.freelancer : ""))
             // "avatar" in userData ? userData.avatar : "",
             console.log(filteredData)
             return filteredData;
@@ -808,8 +808,11 @@ export let getAllDisputeMessagesData = async (storage, taskId) => {
                 disputeMessages.map(async msg => {
                     let message = await getDisputeMessage(storage, msg.key)
                     let block = await getDisputeMessageBlock(storage, msg.task, msg.user, msg.id)
+                    message = JSON.parse(message)
                     return {
-                        message: "message" in message ? message.message : "",
+                        message: message.message ? message.message : "", // test
+                        title: message.title ? message.title : "",
+                        createdAt: message.createdAt ? message.createdAt : "",
                         block: Number(block),
                         user: msg.user == freelancer ? freelancerData : customerData,
                         key: msg.key
@@ -935,20 +938,49 @@ export let getAllDisputesData = async (storage) => {
             let data = await Promise.all(
                 allDisputes.map(async dispute => {
                     let creator = await getDisputeCreator(storage, dispute.task);
+                    let creatorData = await getUserData(storage, creator)
                     let message = await getDataByKey(storage, "task_dispmsg_" + dispute.task + "_" + creator + "_id:0")
-                    return {
-                        creator: creator,
-                        brief: "brief" in message ? message.brief : "",
-                        title: "title" in message ? message.title : ""
-                    }
+                    let taskData = await getTaskData(storage, dispute.task)
+                    try {
+                        message = JSON.parse(message)
+                        return {
+                            creator: creatorData,
+                            brief: message.brief ? message.brief : "",
+                            title: message.title ? message.title : "",
+                            task: taskData,
+                            createdAt: message.createdAt ? message.createdAt : ""
+                        }
+                    } catch (e) {
+                        //console.log(`ERROR in nodeInt.getAllDisputesData! ${e.name}: ${e.message}\n${e.stack}`);
+                        return false;
+                    } 
+                
                 })
             )
+            data = data.filter(Boolean)
             return data
         } else {
             return false
         }
     } catch (e) {
         console.log(`ERROR in nodeInt.getAllDisputesData! ${e.name}: ${e.message}\n${e.stack}`);
+        return false;
+    } 
+}
+
+export let getAllUserTasksAttached = async (storage, user) => {
+    try {
+        let tasks = await getAllUserTasks(storage, user)
+
+        if (tasks) {
+            let match = new RegExp("In progress", "i")
+            tasks = tasks.filter(task => match.test(task.status))
+            return tasks
+        } else {
+            return false
+        }
+    } catch (e) {
+        console.log(`ERROR in nodeInt.getAllUserTasksAttached! ${e.name}: ${e.message}\n${e.stack}`);
         return false;
     } 
 }

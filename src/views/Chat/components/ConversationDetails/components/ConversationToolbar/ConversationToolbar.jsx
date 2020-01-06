@@ -121,6 +121,7 @@ const ConversationToolbar = observer((props) => {
         break
       case 4:
         console.log("dispute")
+        rootStore.disputeCreate.setTask(conversation.task.uuid)
         break
       case 5:
         console.log("task")
@@ -223,8 +224,12 @@ const ConversationToolbar = observer((props) => {
           </ListItemIcon>
           <ListItemText primary="Move the deadline" />
         </MenuItem> : null}
-        {(((rootStore.user.getUserAddress == conversation.task.author.address && conversation.task.freelancer == conversation.user.address) || (rootStore.user.getUserAddress == conversation.task.freelancer)) && conversation.task.status != "Completed") ? <MenuItem
+        {(((rootStore.user.getUserAddress == conversation.task.author.address && conversation.task.freelancer == conversation.user.address) || (rootStore.user.getUserAddress == conversation.task.freelancer)) && conversation.task.status != "Completed") ? 
+        <MenuItem
           onClick={event => handleMenuItemClick(event, 4)}
+          component={CustomRouterLink}
+          to={`/disputes/create`}
+        >
         >
           <ListItemIcon>
             <GavelIcon />

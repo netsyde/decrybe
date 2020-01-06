@@ -520,6 +520,7 @@ func openTaskDispute (task: String, message: String) = {
     else if (getValueTaskData(task) == NONE) then throw("Task doesnt exist")
     else if (account != creator && account != freelancer) then throw("You must be a freelancer (" + freelancer + ") or a customer (" + creator + ") of this task")
     else if (getValueTaskStatus(task) == INDISPUTE) then throw("Dispute already open")
+    else if (getValueTaskStatus(task) != INPROGRESS) then throw("You can't create a dispute right now")
     else {
         WriteSet([
             DataEntry(getKeyTaskDispute(task), account),
@@ -576,7 +577,8 @@ func taskDisputeMessage (task: String, message: String) = {
     else {
         WriteSet([
             DataEntry(getKeyTaskDisputeMessage(task, account, toString(cnt)), message),
-            DataEntry(getKeyTaskDisputeMessageBlock(task, account, toString(cnt)), height)
+            DataEntry(getKeyTaskDisputeMessageBlock(task, account, toString(cnt)), height),
+            DataEntry(getKeyTaskDisputeMessagesCnt(task, account), cnt)
 
         ])
     }

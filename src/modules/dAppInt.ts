@@ -910,7 +910,7 @@ export let openTaskDispute = async (task: string, message: string, keeperOrSigne
                                 type: "string", value: task
                             },
                             {
-                                type: "string", value: message
+                                type: "string", value: JSON.stringify(message)
                             },
                         ]
                     },
@@ -941,7 +941,7 @@ export let openTaskDispute = async (task: string, message: string, keeperOrSigne
                         type: "string", value: task
                     },
                     {
-                        type: "string", value: message
+                        type: "string", value: JSON.stringify(message)
                     },
                 ]
             }
@@ -986,7 +986,7 @@ export let voteTaskDispute = async (task: string, variant: string, message: stri
                                 type: "string", value: variant
                             },
                             {
-                                type: "string", value: message
+                                type: "string", value: JSON.stringify(message)
                             },
                         ]
                     },
@@ -1020,7 +1020,7 @@ export let voteTaskDispute = async (task: string, variant: string, message: stri
                         type: "string", value: variant
                     },
                     {
-                        type: "string", value: message
+                        type: "string", value: JSON.stringify(message)
                     },
                 ]
             }
@@ -1043,7 +1043,7 @@ export let voteTaskDispute = async (task: string, variant: string, message: stri
     }
 }
 
-export let taskDisputeMessage = async (task: string, message: string, keeperOrSigner) => {
+export let taskDisputeMessage = async (task: string, message, keeperOrSigner) => {
     if (keeperOrSigner.type == "keeper") {
         try {
             const state = await keeperOrSigner.class.publicState();
@@ -1062,7 +1062,7 @@ export let taskDisputeMessage = async (task: string, message: string, keeperOrSi
                                 type: "string", value: task
                             },
                             {
-                                type: "string", value: message
+                                type: "string", value: JSON.stringify(message)
                             },
                         ]
                     },
@@ -1093,7 +1093,7 @@ export let taskDisputeMessage = async (task: string, message: string, keeperOrSi
                         type: "string", value: task
                     },
                     {
-                        type: "string", value: message
+                        type: "string", value: JSON.stringify(message)
                     },
                 ]
             }

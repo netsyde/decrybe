@@ -44,7 +44,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const DisputeToolbar = props => {
-  const { onBack, className, ...rest } = props;
+  const { onBack, dispute, className, ...rest } = props;
 
   const classes = useStyles(1);
 
@@ -54,7 +54,7 @@ const DisputeToolbar = props => {
       className={clsx(classes.root, className)}
     >
       <Typography variant="h2" component="h3">
-        Task Dispute: the customer deceived me
+        {dispute.messages ? dispute.messages[0].title : "undefined"}
       </Typography>
     {/*
       <Tooltip title="More options">
