@@ -5,15 +5,10 @@ import moment from 'moment';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Avatar,
-  Button,
   Card,
   CardContent,
   CardHeader,
-  Divider,
-  Grid,
-  IconButton,
   Link,
-  Tooltip,
   Typography,
   colors
 } from '@material-ui/core';
@@ -127,9 +122,14 @@ const DisputeComment = props => {
         className={classes.header}
         disableTypography
         subheader={
+          <div>
+          <Typography variant="body2">
+            Side: {comment.side ? comment.side : "undefined"}
+          </Typography>
           <Typography variant="body2">
             Created: {comment.createdAt ? moment(comment.createdAt).fromNow() : "undefined"}
           </Typography>
+          </div>
         }
         title={
           <Link
@@ -148,7 +148,7 @@ const DisputeComment = props => {
             color="textSecondary"
             variant="subtitle2"
           >
-            {comment.message ? validate(comment.message, 100) : "undefined"}
+            {comment.message ? validate(comment.message, 200) : "undefined"}
           </Typography>
         </div>
       </CardContent>

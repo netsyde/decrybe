@@ -1,7 +1,6 @@
 /* eslint-disable react/no-multi-comp */
 /* eslint-disable react/display-name */
 import React from 'react';
-import FolderIcon from '@material-ui/icons/FolderOutlined';
 import SettingsIcon from '@material-ui/icons/SettingsOutlined';
 import ChatIcon from '@material-ui/icons/ChatOutlined';
 import { Label } from '../../../../components'
@@ -36,27 +35,20 @@ export default [
         ]
       },
       {
-        title: 'Chat',
+        title: 'Conversations',
         href: '/chat',
         icon: ChatIcon,
-        label: () => (
-          <Label
-            color={colors.red[500]}
-          >
-            beta
-          </Label>
-        )
       },
       {
         title: 'Settings',
-        href: '/settings',
+        href: '/settings/general',
         icon: SettingsIcon,
-        children: [
-          {
-            title: 'General',
-            href: '/settings/general'
-          },
-        ]
+        // children: [
+        //   {
+        //     title: 'General',
+        //     href: '/settings/general'
+        //   },
+        // ]
       },
     ]
   },
@@ -67,20 +59,7 @@ export default [
         title: 'Disputes',
         href: '/disputes',
         icon: ImportContactsIcon,
-        label: () => (
-          <Label
-            color={colors.red[500]}
-          >
-            alpha
-          </Label>
-        )
       },
-      // {
-      //   title: 'Suspicious tasks',
-      //   href: '/disputes',
-      //   icon: ImportContactsIcon,
-      // },
-
     ]
   },
   {

@@ -5,7 +5,6 @@ import Cookies from 'universal-cookie';
 import Waves from "@waves/signer";
 import Provider from "@waves.exchange/provider-web";
 import { libs } from '@waves/waves-transactions';
-import { isThursday } from "date-fns";
 
 class UserStore {
 	@observable isLogin: boolean = false;
@@ -181,12 +180,6 @@ class UserStore {
 					this.userData = state;
 					
 					this.storage = await nodeInt.getAllData(this.dapp, state.network.server);
-					//let disputeMsg = await nodeInt.getAllDisputeMessages(this.storage, "6785ff32-03e1-4777-9c6c-fc6a0321f3e9")
-					//let disputeCmt = await nodeInt.getDisputeData(this.storage, "6785ff32-03e1-4777-9c6c-fc6a0321f3e9")
-					//console.log(disputeCmt)
-					//console.log(this.storage)
-					//let test = await nodeInt.getAllUserTasksAttached(this.storage, "3N8Ayob7haCp5N32V6gYcdPsLMKMaS3qH3E")
-					//console.log(test)
 					this.isLogin = true;
 					this.isReg = await nodeInt.checkReg(this.storage, state.account.address);
 					if (this.isReg) {

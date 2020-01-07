@@ -3,14 +3,15 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import { IconButton, Input, Paper, Tooltip, Typography } from '@material-ui/core';
-
+import CircularProgress from './components/CircularProgress';
 const useStyles = makeStyles(theme => ({
   root: {
     backgroundColor: "#fff",
     padding: theme.spacing(2),
     height: 68,
     display: 'flex',
-    alignItems: 'center'
+    alignItems: 'center',
+    justifyContent: "space-between"
   },
   backButton: {
     marginRight: theme.spacing(2)
@@ -39,7 +40,13 @@ const useStyles = makeStyles(theme => ({
   nextButton: {
 
   },
-  previousButton: {}
+  previousButton: {},
+  progress: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center"
+  }
 
 }));
 
@@ -56,31 +63,12 @@ const DisputeToolbar = props => {
       <Typography variant="h2" component="h3">
         {dispute.messages ? dispute.messages[0].title : "undefined"}
       </Typography>
-    {/*
-      <Tooltip title="More options">
-        <IconButton
-          className={classes.moreButton}
-          size="small"
-        >
-          <MoreIcon />
-        </IconButton>
-      </Tooltip>
-      <Tooltip title="Previous email">
-        <IconButton
-          className={classes.previousButton}
-          size="small"
-        >
-          <KeyboardArrowLeftIcon />
-        </IconButton>
-      </Tooltip>
-      <Tooltip title="Next email">
-        <IconButton
-          className={classes.nextButton}
-          size="small"
-        >
-          <KeyboardArrowRightIcon />
-        </IconButton>
-      </Tooltip>} */}
+      <div className={classes.progress}>
+      <Typography variant="body2">
+        Votes for dispute creator: {dispute.votes ? ((dispute.votes.creator / dispute.votes.total) * 100).toFixed(0) : "undefined"}%
+        </Typography>
+       <CircularProgress value={dispute.votes ? ((dispute.votes.creator / dispute.votes.total) * 100) : 20} />
+      </div>
     </div>
   );
 };

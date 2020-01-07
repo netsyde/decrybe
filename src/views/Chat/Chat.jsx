@@ -10,6 +10,7 @@ import {
   ConversationPlaceholder
 } from './components';
 import Error401 from '../Error401'
+import Error500 from '../Error500'
 import { CustomSnackbar } from '../../components'
 
 const useStyles = makeStyles(theme => ({
@@ -77,36 +78,48 @@ const Chat = inject('rootStore')(observer(({ rootStore }) => {
   }
 
   if (rootStore.user.isUserLogin && rootStore.user.isUserReg) {
-    return (
-      <Page
-        className={clsx({
-          [classes.root]: true,
-          [classes.openConversion]: selectedConversation
-        })}
-        title="Chat"
-      >
-        <ConversationList
-          className={classes.conversationList}
-          conversations={rootStore.user.getConversations}
-          rootStore={rootStore}
-        />
-        {selectedConversation ? (
-          <ConversationDetails
-            className={classes.conversationDetails}
-            conversation={selectedConversation}
-            rootStore={rootStore}
+    if (rootStore.user.getWavesKeeper.type == "keeper") {
+      if (rootStore.user.getConversations.length > 0) {
+        return (
+          <Page
+            className={clsx({
+              [classes.root]: true,
+              [classes.openConversion]: selectedConversation
+            })}
+            title="Chat"
+          >
+            <ConversationList
+              className={classes.conversationList}
+              conversations={rootStore.user.getConversations}
+              rootStore={rootStore}
+            />
+            {selectedConversation ? (
+              <ConversationDetails
+                className={classes.conversationDetails}
+                conversation={selectedConversation}
+                rootStore={rootStore}
+              />
+            ) : (
+              <ConversationPlaceholder rootStore={rootStore} className={classes.conversationPlaceholder} />
+            )}
+            <CustomSnackbar
+              onClose={handleSnackbarClose}
+              open={openSnackbar}
+              message={snackbarMessage}
+              type={snackbarType}
           />
-        ) : (
-          <ConversationPlaceholder rootStore={rootStore} className={classes.conversationPlaceholder} />
-        )}
-        <CustomSnackbar
-          onClose={handleSnackbarClose}
-          open={openSnackbar}
-          message={snackbarMessage}
-          type={snackbarType}
-      />
-      </Page>
-    );
+          </Page>
+        );
+      } else {
+        return (
+          <Error500 message={"You don't have any active dialogs, start by linking to any task"}/>
+        )
+      }
+    } else {
+      return (
+        <Error500 message={"Need Waves Keeper to use this page yet"}/>
+      )
+    }
   } else {
     return (
       <Error401 />

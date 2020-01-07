@@ -808,17 +808,22 @@ export let getAllDisputeMessagesData = async (storage, taskId) => {
                 disputeMessages.map(async msg => {
                     let message = await getDisputeMessage(storage, msg.key)
                     let block = await getDisputeMessageBlock(storage, msg.task, msg.user, msg.id)
-                    message = JSON.parse(message)
-                    return {
-                        message: message.message ? message.message : "", // test
-                        title: message.title ? message.title : "",
-                        createdAt: message.createdAt ? message.createdAt : "",
-                        block: Number(block),
-                        user: msg.user == freelancer ? freelancerData : customerData,
-                        key: msg.key
-                    }
+                    try {
+                        message = JSON.parse(message)
+                        return {
+                            message: message.message ? message.message : "", // test
+                            title: message.title ? message.title : "",
+                            createdAt: message.createdAt ? message.createdAt : "",
+                            block: Number(block),
+                            user: msg.user == freelancer ? freelancerData : customerData,
+                            key: msg.key
+                        }
+                    } catch (e) {
+                        return false;
+                    } 
                 })
             )
+            data = data.filter(Boolean)
             return data.sort(compareBlockDispute)
         } else {
             return false
@@ -863,15 +868,23 @@ export let getAllDisputeCommentsData = async (storage, taskId) => {
                     let message = await getDataByKey(storage, msg.key)
                     let block = await getDisputeCommentBlock(storage, msg.task, msg.user)
                     let user = await getUserData(storage, msg.user)
-
-                    return {
-                        message: message,
-                        block: Number(block),
-                        user: user,
-                        key: msg.key
-                    }
+                    let side = await getDisputeUserVoteSide(storage, taskId, msg.user)
+                    try {
+                        message = JSON.parse(message)
+                        return {
+                            message: message.message ? message.message : "",
+                            createdAt: message.createdAt ? message.createdAt : "",
+                            block: Number(block),
+                            user: user,
+                            side: side,
+                            key: msg.key
+                        }
+                    } catch (e) {
+                        return false;
+                    } 
                 })
             )
+            data = data.filter(Boolean)
             return data.sort(compareBlockDispute)
         } else {
             return false
@@ -890,13 +903,16 @@ export let getDisputeData = async (storage, taskId) => {
         let disputeMessages = await getAllDisputeMessagesData(storage, taskId)
         let disputeComments = await getAllDisputeCommentsData(storage, taskId)
         let taskData = await getTaskData(storage, taskId)
+        let choose = creator == freelancer ? "freelancer" : "customer"
+        let votes = await getDisputeVotes(storage, taskId, choose)
         let dispute = {
             creator: creator,
             customer: customer,
             freelancer: freelancer,
             task: taskId,
             messages: disputeMessages,
-            comments: disputeComments
+            comments: disputeComments,
+            votes: votes
         }
 
         return dispute
@@ -951,7 +967,6 @@ export let getAllDisputesData = async (storage) => {
                             createdAt: message.createdAt ? message.createdAt : ""
                         }
                     } catch (e) {
-                        //console.log(`ERROR in nodeInt.getAllDisputesData! ${e.name}: ${e.message}\n${e.stack}`);
                         return false;
                     } 
                 
@@ -981,6 +996,66 @@ export let getAllUserTasksAttached = async (storage, user) => {
         }
     } catch (e) {
         console.log(`ERROR in nodeInt.getAllUserTasksAttached! ${e.name}: ${e.message}\n${e.stack}`);
+        return false;
+    } 
+}
+
+export let getDisputeVoteForCustomer = async (storage, taskId) => {
+    try {
+        let fullKey = "task_dispvote_cst_" + taskId
+        let count = await getDataByKey(storage, fullKey)
+        if (count) {
+            return count
+        } else {
+            return 0
+        }
+    } catch (e) {
+        console.log(`ERROR in nodeInt.getDisputeVoteForCustomer! ${e.name}: ${e.message}\n${e.stack}`);
+        return 0
+    } 
+}
+
+export let getDisputeVoteForFreelancer = async (storage, taskId) => {
+    try {
+        let fullKey = "task_dispvote_flr_" + taskId
+        let count = await getDataByKey(storage, fullKey)
+        if (count) {
+            return count
+        } else {
+            return 0
+        }
+    } catch (e) {
+        console.log(`ERROR in nodeInt.getDisputeVoteForCustomer! ${e.name}: ${e.message}\n${e.stack}`);
+        return 0
+    } 
+}
+
+export let getDisputeUserVoteSide = async (storage, taskId, user) => {
+    try {
+        let fullKey = "task_dispvar_" + taskId + "_" + user
+        let side = await getDataByKey(storage, fullKey)
+        return side
+    } catch (e) {
+        console.log(`ERROR in nodeInt.getDisputeVoteForCustomer! ${e.name}: ${e.message}\n${e.stack}`);
+        return false;
+    } 
+}
+
+export let getDisputeVotes = async (storage, taskId, side) => {
+    try {
+        let freelancerVotes = await getDisputeVoteForFreelancer(storage, taskId);
+        let customerVotes = await getDisputeVoteForCustomer(storage, taskId)
+        let total = Number(freelancerVotes) + Number(customerVotes)
+        let data = {
+            freelancer: Number(freelancerVotes),
+            customer: Number(customerVotes),
+            total: total,
+            creator: side == "freelancer" ? Number(freelancerVotes) : Number(customerVotes)
+        }
+        return data
+        
+    } catch (e) {
+        console.log(`ERROR in nodeInt.getDisputeVotes! ${e.name}: ${e.message}\n${e.stack}`);
         return false;
     } 
 }

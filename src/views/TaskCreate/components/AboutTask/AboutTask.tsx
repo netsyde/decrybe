@@ -216,20 +216,20 @@ const AboutTask = observer((props) => {
               
             </TextValidator>
           </Grid>
-          <Grid item lg={4} md={12} sm={12} xs={12}>
-            <TextValidator
-              fullWidth
-              validators={['required']}
-              errorMessages={['This field is required']}
-              className={classes.dateField}
-              label="End Date"
-              name="endDate"
-              onClick={() => handleCalendarOpen('endDate')}
-              value={moment(rootStore.taskCreate.getEndDate).format('DD/MM/YYYY')}
-              variant="outlined"
-              validatorListener={validatorListener}
-            />
-          </Grid>
+            <Grid item lg={4} md={12} sm={12} xs={12}>
+              <TextValidator
+                fullWidth
+                validators={['required']}
+                errorMessages={['This field is required']}
+                className={classes.dateField}
+                label="End Date"
+                name="endDate"
+                onClick={() => handleCalendarOpen('endDate')}
+                value={moment(rootStore.taskCreate.getEndDate).format('DD/MM/YYYY')}
+                variant="outlined"
+                validatorListener={validatorListener}
+              />
+            </Grid>
           </Grid>
           <div className={classes.formGroup}>
             <TextValidator

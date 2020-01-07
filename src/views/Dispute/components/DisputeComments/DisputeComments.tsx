@@ -14,7 +14,7 @@ import AddIcon from '@material-ui/icons/Add';
 import { observer } from 'mobx-react';
 
 import { DisputeComment } from '../../../../components';
-
+import { Application } from './components'
 const useStyles = makeStyles(theme => ({
   root: {
     height: '100%',
@@ -59,8 +59,15 @@ const DisputeComments = observer((props) => {
 
   const classes = useStyles(props);
 
-  const [active, setActive] = useState('inbox');
+  const [openApplication, setOpenApplication] = useState(false);
 
+  const handleApplicationOpen = () => {
+    setOpenApplication(true);
+  };
+
+  const handleApplicationClose = () => {
+    setOpenApplication(false);
+  };
   return (
     <div
       {...rest}
@@ -72,6 +79,7 @@ const DisputeComments = observer((props) => {
           color="primary"
           fullWidth
           variant="contained"
+          onClick={handleApplicationOpen}
         >
           <AddIcon className={classes.addIcon} />
           Compose message
@@ -81,6 +89,13 @@ const DisputeComments = observer((props) => {
       {comments.map(comment => (
         <DisputeComment comment={comment} key={comment.key}/>
       ))}
+      <Application
+        onClose={handleApplicationClose}
+        open={openApplication}
+        rootStore={rootStore}
+        dispute={dispute}
+        handleApplicationClose={handleApplicationClose}
+      />
     </div>
   );
 });

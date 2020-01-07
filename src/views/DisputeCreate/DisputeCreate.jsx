@@ -4,13 +4,12 @@ import { Button } from '@material-ui/core';
 import { Page } from '../../components'
 import { observer, inject } from 'mobx-react';
 import * as dAppInt from '../../modules/dAppInt'
-import * as nodeInt from '../../modules/nodeInt'
 import {
   Header,
   AboutDispute,
 } from './components';
 import Error401 from '../Error401'
-const uuid = require('uuid/v4');
+import Error500 from '../Error500'
 import { ValidatorForm } from 'react-material-ui-form-validator';
 import { CustomSnackbar } from '../../components'
 import { Redirect } from 'react-router-dom';
@@ -149,7 +148,7 @@ const DisputeCreate = inject('rootStore')(observer(({ rootStore }) => {
     );
     } else {
       return (
-        <p>NOPE</p>
+        <Error500 message={"You have no active tasks"}/>
       )
     }
   } else {
