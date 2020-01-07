@@ -39,6 +39,26 @@ const routes = [
         component: lazy(() => import('./views/Overview'))
       },
       {
+        path: '/disputes/create',
+        exact: true,
+        component: lazy(() => import('./views/DisputeCreate'))
+      },
+      {
+        path: '/disputes',
+        exact: true,
+        component: lazy(() => import('./views/DisputeList'))
+      },
+      {
+        path: '/disputes/:id',
+        exact: true,
+        component: lazy(() => import('./views/Dispute'))
+      },
+      {
+        path: '/disputes/:id/:tab',
+        exact: true,
+        component: lazy(() => import('./views/Dispute'))
+      },
+      {
         path: '/tasks/create',
         exact: true,
         component: lazy(() => import('./views/TaskCreate'))

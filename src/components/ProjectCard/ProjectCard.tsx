@@ -160,7 +160,7 @@ const ProjectCard = props => {
             color="textSecondary"
             variant="subtitle2"
           >
-            {project.title ? validate(project.title, 150) : "undefined"}
+            {project.brief ? validate(project.brief, 50) : "undefined"}
           </Typography>
         </div>
         <div className={classes.tags}>

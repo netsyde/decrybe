@@ -5,7 +5,6 @@ import Cookies from 'universal-cookie';
 import Waves from "@waves/signer";
 import Provider from "@waves.exchange/provider-web";
 import { libs } from '@waves/waves-transactions';
-import { isThursday } from "date-fns";
 
 class UserStore {
 	@observable isLogin: boolean = false;
@@ -25,6 +24,7 @@ class UserStore {
 	@observable storage;
 	@observable online = false
 	@observable tasks = [];
+	@observable attachedTasks = []
 	@observable avatarColor = ""
 	@observable showRegister = false
 	@observable publicKey = ""
@@ -180,7 +180,6 @@ class UserStore {
 					this.userData = state;
 					
 					this.storage = await nodeInt.getAllData(this.dapp, state.network.server);
-					//console.log(this.storage)
 					this.isLogin = true;
 					this.isReg = await nodeInt.checkReg(this.storage, state.account.address);
 					if (this.isReg) {
@@ -213,15 +212,21 @@ class UserStore {
 								this.root.settings.setLocation(this.location)
 							}
 							let userTasks = await nodeInt.getAllUserTasks(this.storage, this.address)
+							let userTasksAttached = await nodeInt.getAllUserTasksAttached(this.storage, this.address)
 							if (userTasks) {
 								this.tasks = userTasks;
+							}
+							if (userTasksAttached) {
+								this.attachedTasks = userTasksAttached
 							}
 							console.log("DEBUG: User data loaded")
 						} else {
 							console.log('DEBUG: User data not loaded')
 						}
 						await this.root.tasks.loadTasks(this.isUserLogin, this.getDapp, this.getUserNetwork)
+						await this.root.disputes.loadDisputes(this.isUserLogin)
 						await this.root.users.loadUsers(this.isUserLogin, this.getDapp, this.getUserNetwork)
+						
 					} else {
 						this.showRegister = true;
 						console.log('DEBUG: User is not registered')
@@ -270,8 +275,12 @@ class UserStore {
 							this.root.settings.setLocation(this.location)
 						}
 						let userTasks = await nodeInt.getAllUserTasks(this.storage, this.address)
+						let userTasksAttached = await nodeInt.getAllUserTasksAttached(this.storage, this.address)
 						if (userTasks) {
 							this.tasks = userTasks;
+						}
+						if (userTasksAttached) {
+							this.attachedTasks = userTasksAttached
 						}
 						console.log("DEBUG: User data loaded")
 					} else {
@@ -477,6 +486,14 @@ class UserStore {
 
 	@computed get getUserLocation() {
 		return this.location
+	}
+
+	@computed get getUserTasks() {
+		return this.tasks
+	}
+
+	@computed get getUserAttachedTasks() {
+		return this.attachedTasks
 	}
 
 	@action("set location")

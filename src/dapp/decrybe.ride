@@ -518,8 +518,9 @@ func openTaskDispute (task: String, message: String) = {
     let freelancer = getValueTaskFreelancer(task)
     if (getValueUserBio(account) == NONE) then throw("You not signup")
     else if (getValueTaskData(task) == NONE) then throw("Task doesnt exist")
-    else if (account != creator || account != freelancer) then throw("You must be a freelancer or a customer of this task")
+    else if (account != creator && account != freelancer) then throw("You must be a freelancer (" + freelancer + ") or a customer (" + creator + ") of this task")
     else if (getValueTaskStatus(task) == INDISPUTE) then throw("Dispute already open")
+    else if (getValueTaskStatus(task) != INPROGRESS) then throw("You can't create a dispute right now")
     else {
         WriteSet([
             DataEntry(getKeyTaskDispute(task), account),
@@ -571,12 +572,13 @@ func taskDisputeMessage (task: String, message: String) = {
     if (getValueUserBio(account) == NONE) then throw("You not signup")
     else if (getValueTaskData(task) == NONE) then throw("Task doesnt exist")
     else if (getValueTaskDispute(task) == NONE) then throw("Dispute doesnt exist")
-    else if (account != creator || account != freelancer) then throw("You must be a freelancer or a customer of this task")
+    else if (account != creator && account != freelancer) then throw("You must be a freelancer (" + freelancer + ") or a customer (" + creator + ") of this task")
     else if (getValueTaskStatus(task) != INDISPUTE) then throw("You cannot send messages at this time")
     else {
         WriteSet([
             DataEntry(getKeyTaskDisputeMessage(task, account, toString(cnt)), message),
-            DataEntry(getKeyTaskDisputeMessageBlock(task, account, toString(cnt)), height)
+            DataEntry(getKeyTaskDisputeMessageBlock(task, account, toString(cnt)), height),
+            DataEntry(getKeyTaskDisputeMessagesCnt(task, account), cnt)
 
         ])
     }
@@ -589,8 +591,8 @@ func cancelTask (task: String) = {
     let bank = getValueTaskBank(task)
     if (getValueUserBio(account) == NONE) then throw("You not signup")
     else if (getValueTaskData(task) == NONE) then throw("Task doesnt exist")
-    else if (getValueTaskStatus(task) != FEATURED) then throw("You can't cancel the task now")
     else if (account != creator) then throw("You are not author of the task")
+    else if (getValueTaskStatus(task) != FEATURED) then throw("You can't cancel the task now")
     else {
         ScriptResult(
             WriteSet([
@@ -600,5 +602,51 @@ func cancelTask (task: String) = {
                 ScriptTransfer(addressFromStringValue(creator), bank, unit)
             ])
         )
+    }
+}
+
+@Callable (i)
+func defineDisputeWinner (task: String) = {
+    let account = toBase58String(i.caller.bytes)
+    let customer = getValueTaskAuthor(task)
+    let freelancer = getValueTaskFreelancer(task)
+    let bank = getValueTaskBank(task)
+    let votesForCustomer = getValueTaskDisputeVoteCustomer(task)
+    let votesForFreelancer = getValueTaskDisputeVoteFreelancer(task)
+    let totalVotes = votesForCustomer + votesForFreelancer
+    # let votesForCustomerPercent = votesForCustomer  / totalVotes * 100
+    # let votesForCustomerPercent = votesForCustomer  / totalVotes * 100
+    if (getValueUserBio(account) == NONE) then throw("You not signup")
+    else if (totalVotes < 20) then throw("Need minimum 20 votes")
+    else {
+        if (votesForCustomer > votesForFreelancer) then {
+            ScriptResult(
+                WriteSet([
+                    DataEntry(getKeyTaskStatus(task), COMPLETED)
+                ]),
+                TransferSet([
+                    ScriptTransfer(addressFromStringValue(customer), bank, unit)
+                ])
+            )
+        } else if (votesForCustomer < votesForFreelancer) then {
+            ScriptResult(
+                WriteSet([
+                    DataEntry(getKeyTaskStatus(task), COMPLETED)
+                ]),
+                TransferSet([
+                    ScriptTransfer(addressFromStringValue(freelancer), bank, unit)
+                ])
+            )
+        } else {
+            ScriptResult(
+                WriteSet([
+                    DataEntry(getKeyTaskStatus(task), COMPLETED)
+                ]),
+                TransferSet([
+                    ScriptTransfer(addressFromStringValue(freelancer), bank/2, unit),
+                    ScriptTransfer(addressFromStringValue(customer), bank/2, unit)
+                ])
+            )
+        }
     }
 }

@@ -10,3 +10,5 @@ export { default as ScrollReset } from './ScrollReset';
 export { default as StatusBullet } from './StatusBullet'
 export { default as CustomSnackbar } from './CustomSnackbar'
 export { default as ReviewStars } from './ReviewStars'
+export { default as DisputeComment } from './DisputeComment'
+export { default as DisputeCard } from './DisputeCard'

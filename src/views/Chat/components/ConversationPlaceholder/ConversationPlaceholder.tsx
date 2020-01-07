@@ -42,9 +42,6 @@ const ConversationPlaceholder = observer((props) => {
           >
             Select conversation to display
           </Typography>
-          <Typography variant="subtitle1">
-            To start a conversation just click "Apply for a role" on Task page
-          </Typography>
         </div>
       </div>
     );

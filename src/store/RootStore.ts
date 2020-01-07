@@ -6,6 +6,8 @@ import { UsersStore } from './UsersStore'
 import { SnackbarStore } from './SnackbarStore'
 import { autorun } from "mobx"
 import { TaskEditStore } from './TaskEditStore';
+import { DisputesStore } from './DisputesStore';
+import { DisputeCreateStore } from './DisputeCreateStore';
 
 class RootStore {
   public user: UserStore;
@@ -14,16 +16,20 @@ class RootStore {
   public settings: SettingsStore;
   public users: UsersStore;
   public snackbar: SnackbarStore;
-  public taskEdit: TaskEditStore
+  public taskEdit: TaskEditStore;
+  public disputes: DisputesStore;
+  public disputeCreate: DisputeCreateStore
 	
   constructor() {
     this.user = new UserStore(this);
     this.tasks = new TasksStore(this);
     this.taskCreate = new TaskCreateStore(this);
-    this.settings = new SettingsStore(this)
-    this.users = new UsersStore(this)
-    this.snackbar = new SnackbarStore(this)
-    this.taskEdit = new TaskEditStore(this)
+    this.settings = new SettingsStore(this);
+    this.users = new UsersStore(this);
+    this.snackbar = new SnackbarStore(this);
+    this.taskEdit = new TaskEditStore(this);
+    this.disputes = new DisputesStore(this);
+    this.disputeCreate = new DisputeCreateStore(this);
   }
 }
 
