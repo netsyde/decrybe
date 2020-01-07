@@ -69,7 +69,7 @@ export default [
         title: 'Changelog',
         href: '/changelog',
         icon: ViewModuleIcon,
-        label: () => <Label color={colors.blue['500']}>v0.5</Label>
+        label: () => <Label color={colors.blue['500']}>v0.5.3</Label>
       }
     ]
   }

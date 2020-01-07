@@ -61,7 +61,9 @@ class DisputesStore {
     }
     
     @computed get getDisputes () {
-		return this.allDisputesData;
+		let matchesFilter = new RegExp("In dispute", "i")
+		let filtered = this.allDisputesData.filter( dispute  => matchesFilter.test(dispute.task.status))
+		return filtered;
 	}
 
 	@action

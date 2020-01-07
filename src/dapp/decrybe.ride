@@ -604,3 +604,49 @@ func cancelTask (task: String) = {
         )
     }
 }
+
+@Callable (i)
+func defineDisputeWinner (task: String) = {
+    let account = toBase58String(i.caller.bytes)
+    let customer = getValueTaskAuthor(task)
+    let freelancer = getValueTaskFreelancer(task)
+    let bank = getValueTaskBank(task)
+    let votesForCustomer = getValueTaskDisputeVoteCustomer(task)
+    let votesForFreelancer = getValueTaskDisputeVoteFreelancer(task)
+    let totalVotes = votesForCustomer + votesForFreelancer
+    # let votesForCustomerPercent = votesForCustomer  / totalVotes * 100
+    # let votesForCustomerPercent = votesForCustomer  / totalVotes * 100
+    if (getValueUserBio(account) == NONE) then throw("You not signup")
+    else if (totalVotes < 20) then throw("Need minimum 20 votes")
+    else {
+        if (votesForCustomer > votesForFreelancer) then {
+            ScriptResult(
+                WriteSet([
+                    DataEntry(getKeyTaskStatus(task), COMPLETED)
+                ]),
+                TransferSet([
+                    ScriptTransfer(addressFromStringValue(customer), bank, unit)
+                ])
+            )
+        } else if (votesForCustomer < votesForFreelancer) then {
+            ScriptResult(
+                WriteSet([
+                    DataEntry(getKeyTaskStatus(task), COMPLETED)
+                ]),
+                TransferSet([
+                    ScriptTransfer(addressFromStringValue(freelancer), bank, unit)
+                ])
+            )
+        } else {
+            ScriptResult(
+                WriteSet([
+                    DataEntry(getKeyTaskStatus(task), COMPLETED)
+                ]),
+                TransferSet([
+                    ScriptTransfer(addressFromStringValue(freelancer), bank/2, unit),
+                    ScriptTransfer(addressFromStringValue(customer), bank/2, unit)
+                ])
+            )
+        }
+    }
+}

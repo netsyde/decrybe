@@ -31,7 +31,7 @@ const DisputeList = inject('rootStore')(observer(({ rootStore }) => {
         title="Disputes"
       >
         <Header className={classes.header} rootStore={rootStore} />
-        <Filter className={classes.filter} rootStore={rootStore}/>
+        {/* {<Filter className={classes.filter} rootStore={rootStore}/>} */}
         <Results className={classes.results} />
       </Page>
     );

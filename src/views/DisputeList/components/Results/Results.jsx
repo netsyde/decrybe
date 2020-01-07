@@ -136,11 +136,8 @@ const ProjectsContainer = observer((props) => {
     if (value == "Most recent") {
       let tasks = rootStore.tasks.getFilteredTasks.sort(compareNumeric)
       rootStore.tasks.setFilteredTasks(tasks)
-    } else if (value == "Price high") {
+    } else if (value == "Oldest") {
       let tasks = rootStore.tasks.getFilteredTasks.sort(definePriceHigh)
-      rootStore.tasks.setFilteredTasks(tasks)
-    } else if (value == "Price low") {
-      let tasks = rootStore.tasks.getFilteredTasks.sort(definePriceLow)
       rootStore.tasks.setFilteredTasks(tasks)
     }
   };
@@ -171,7 +168,7 @@ const ProjectsContainer = observer((props) => {
         >
           Showing {rootStore.disputes.getFilteredDisputes ? rootStore.disputes.getFilteredDisputes.slice(offset, offset+9).length : 0} disputes
         </Typography>
-        <div className={classes.actions}>
+        {/* <div className={classes.actions}>
           <Button
             className={classes.sortButton}
             onClick={handleSortOpen}
@@ -190,13 +187,13 @@ const ProjectsContainer = observer((props) => {
               <ViewModuleIcon />
             </ToggleButton>
           </ToggleButtonGroup>
-        </div>
+        </div> */}
       </div>
       <ProjectsGrig classes={classes} mode={mode} projects={rootStore.disputes.getFilteredDisputes.slice(offset, offset+9)} rootStore={rootStore}/>
       <div className={classes.paginate}>
         <Paginate pageCount={Math.ceil(rootStore.disputes.getFilteredDisputes.length/9) || 1} onPageChange={handlePageClick}/>
       </div>
-      <Menu
+      {/* <Menu
         anchorEl={sortRef.current}
         onClose={handleSortClose}
         open={openSort}
@@ -211,7 +208,7 @@ const ProjectsContainer = observer((props) => {
             </MenuItem>
           )
         )}
-      </Menu>
+      </Menu> */}
     </div>
   );
 });
