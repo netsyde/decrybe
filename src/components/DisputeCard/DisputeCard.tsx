@@ -147,7 +147,7 @@ const DisputeCard = props => {
           <Link
             color="textPrimary"
             component={RouterLink}
-            to={`/tasks/${project.uuid ? project.uuid : "undefined"}`}
+            to={`/tasks/${project.task.uuid ? project.task.uuid : "undefined"}`}
             variant="h5"
           >
             {project.title ? validate(project.title, 25) : "undefined"}

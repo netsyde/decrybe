@@ -79,7 +79,7 @@ const DisputeComments = observer((props) => {
       className={clsx(classes.root, className)}
     >
 
-      {((rootStore.user.getUserAddress != dispute.customer && rootStore.user.getUserAddress != dispute.freelancer) && dispute.status == "In dispute" ?
+      {((rootStore.user.getUserAddress != dispute.customer && rootStore.user.getUserAddress != dispute.freelancer) && dispute.status == "in dispute" ?
       <div>
        <div className={classes.toolbar}>
         <Button
@@ -93,7 +93,7 @@ const DisputeComments = observer((props) => {
         </Button>
       </div>
 
-      {dispute.votes ? (dispute.votes.total >= 3 && dispute.status == "In dispute" ? <div className={classes.toolbar}>
+      {dispute.votes ? (dispute.votes.total >= 3 && dispute.status == "in dispute" ? <div className={classes.toolbar}>
         <Button
           color="primary"
           fullWidth
