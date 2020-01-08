@@ -72,8 +72,8 @@ const RegisterForm = inject('rootStore')(observer(({ rootStore }) => {
         bio: values.bio,
         location: "",
         tags: [],
-        address: state.account.address,
-        publicKey: state.account.publicKey,
+        address: rootStore.user.getUserAddress,
+        publicKey: rootStore.user.getUserPublicKey,
         createTime: Date.now(),
         status: "registered",
         socials: {
@@ -83,7 +83,7 @@ const RegisterForm = inject('rootStore')(observer(({ rootStore }) => {
         },
         avatar: values.avatar
       }
-      //console.log(data)
+      console.log(data)
 
       let signTx = await dAppInt.signUp(data, rootStore.user.getWavesKeeper)
       if (signTx.status) {
@@ -110,7 +110,7 @@ const RegisterForm = inject('rootStore')(observer(({ rootStore }) => {
         },
         avatar: values.avatar
       }
-      //console.log(data)
+      console.log(data)
 
       let signTx = await dAppInt.signUp(data, rootStore.user.getWavesKeeper)
       if (signTx.status) {

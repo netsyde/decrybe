@@ -171,7 +171,7 @@ const AboutTask = observer((props) => {
           <Grid item lg={4} md={6} sm={12} xs={12}>
             <TextValidator
               fullWidth
-              type="number"
+              //type="number"
               label="Price"
               name="price"
               validators={['minNumber:1', 'maxNumber: 100000', 'required']}

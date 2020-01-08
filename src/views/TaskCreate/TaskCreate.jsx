@@ -107,7 +107,7 @@ const TaskCreate = inject('rootStore')(observer(({ rootStore }) => {
       description: store.getDescription,
       category: store.getCategory
     }
-    let tx = await dAppInt.createTask(taskId, expiration, data, store.getPrice, rootStore.user.getWavesKeeper)
+    let tx = await dAppInt.createTask(taskId, expiration, data, Number(store.getPrice), rootStore.user.getWavesKeeper)
        
     if (tx) {
       createSnackbar('success', 'Task successfully created!')
