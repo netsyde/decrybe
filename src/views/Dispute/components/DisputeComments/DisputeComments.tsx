@@ -1,18 +1,15 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Button,
   Divider,
-  List,
-  ListItem,
-  Typography,
   colors
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
+import ChangeHistoryIcon from '@material-ui/icons/ChangeHistory';
 import { observer } from 'mobx-react';
-
+import * as dAppInt from '../../../../modules/dAppInt'
 import { DisputeComment } from '../../../../components';
 import { Application } from './components'
 const useStyles = makeStyles(theme => ({
@@ -65,6 +62,14 @@ const DisputeComments = observer((props) => {
     setOpenApplication(true);
   };
 
+  const handleDefineResult = async () => {
+    let tx = await dAppInt.defineDisputeWinner(dispute.task, rootStore.user.getWavesKeeper)
+    if (tx) {
+      console.log("Define success")
+      rootStore.user.updateStorage()
+    }
+  };
+
   const handleApplicationClose = () => {
     setOpenApplication(false);
   };
@@ -73,7 +78,9 @@ const DisputeComments = observer((props) => {
       {...rest}
       className={clsx(classes.root, className)}
     >
-      {(rootStore.user.getUserAddress != dispute.customer && rootStore.user.getUserAddress != dispute.freelancer) ?
+
+      {((rootStore.user.getUserAddress != dispute.customer && rootStore.user.getUserAddress != dispute.freelancer) && dispute.status == "In dispute" ?
+      <div>
        <div className={classes.toolbar}>
         <Button
           color="primary"
@@ -84,7 +91,20 @@ const DisputeComments = observer((props) => {
           <AddIcon className={classes.addIcon} />
           Compose message
         </Button>
-      </div> : null}
+      </div>
+
+      {dispute.votes ? (dispute.votes.total >= 3 && dispute.status == "In dispute" ? <div className={classes.toolbar}>
+        <Button
+          color="primary"
+          fullWidth
+          variant="contained"
+          onClick={handleDefineResult}
+        >
+          Define result
+        </Button>
+      </div>: null) : null} 
+    </div>: null)
+      }
       <Divider />
       {comments.map(comment => (
         <DisputeComment comment={comment} key={comment.key}/>

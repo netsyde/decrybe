@@ -1116,7 +1116,7 @@ export let taskDisputeMessage = async (task: string, message, keeperOrSigner) =>
     }
 }
 
-export let cancelTask = async (task: string, message: string, keeperOrSigner) => {
+export let cancelTask = async (task: string, keeperOrSigner) => {
     if (keeperOrSigner.type == "keeper") {
         try {
             const state = await keeperOrSigner.class.publicState();
@@ -1158,6 +1158,73 @@ export let cancelTask = async (task: string, message: string, keeperOrSigner) =>
             dApp: dAppAddress,
             call: {
                 function: "cancelTask",
+                args: [
+                    {
+                        type: "string", value: task
+                    },
+                ]
+            }
+        }).broadcast().then()
+        let confirmed;
+        await keeperOrSigner.class.waitTxConfirm(tx, 1).then((tx2) => {
+            if (tx2) {
+                confirmed = true;
+            } else {
+                confirmed = false;
+            }
+        });
+        if (confirmed) {
+            return true
+        } else {
+            return false;
+        }
+    } else {
+        return false
+    }
+}
+
+export let defineDisputeWinner = async (task: string, keeperOrSigner) => {
+    if (keeperOrSigner.type == "keeper") {
+        try {
+            const state = await keeperOrSigner.class.publicState();
+            let tx = await keeperOrSigner.class.signAndPublishTransaction({
+                type: 16,
+                data: {
+                     fee: {
+                         "tokens": "0.05",
+                         "assetId": "WAVES"
+                     },
+                     dApp: dAppAddress,
+                     call: {
+                     	function: 'defineDisputeWinner',
+                     	args: [
+                            {
+                                type: "string", value: task
+                            },
+                        ]
+                    },
+                    payment: []
+                }
+            })
+            tx = JSON.parse(tx)
+            if (tx) {
+                console.log(tx.id)
+                let wait = await nodeInteraction.waitForTx(tx.id, {apiBase: state.network.server})
+                if (wait) {
+                    return true
+                }
+            } else {
+                return false
+            }
+        } catch (error) {
+            console.error("Error ", error);
+            return false
+       }
+    } else if (keeperOrSigner.type == "signer") {
+        let tx = await keeperOrSigner.class.invoke({
+            dApp: dAppAddress,
+            call: {
+                function: "defineDisputeWinner",
                 args: [
                     {
                         type: "string", value: task

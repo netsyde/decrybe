@@ -8,11 +8,10 @@ import {
   IconButton,
   Input,
   Paper,
-  Tooltip
+  Tooltip,
+  LinearProgress 
 } from '@material-ui/core';
 import SendIcon from '@material-ui/icons/Send';
-import AddPhotoIcon from '@material-ui/icons/AddPhotoAlternate';
-import AttachFileIcon from '@material-ui/icons/AttachFile';
 import { observer } from 'mobx-react';
 import * as dAppInt from '../../../../../../modules/dAppInt'
 import getInitials from '../../../../../../utils/getInitials'
@@ -50,7 +49,7 @@ const ConversationForm = observer((props) => {
   const fileInputRef = useRef(null);
 
   const [value, setValue] = useState('');
-
+  const [progressOn, setProgressOn] = useState(false);
   const sender = {
     avatar: '/img/gag.png'
   };
@@ -67,11 +66,15 @@ const ConversationForm = observer((props) => {
   };
 
   const onApply = async event => {
+    setProgressOn(true)
     //await dAppInt.takeTask(project.uuid, value, project.author.publicKey, rootStore.user.getWavesKeeper)
     let message = await dAppInt.sendMessage(conversation.id, conversation.user.address, value, conversation.user.publicKey, Date.now(), rootStore.user.getWavesKeeper)
     if (message) {
       setValue('')
+      setProgressOn(false)
       await rootStore.user.updateStorage()
+    } else {
+      setProgressOn(false)
     }
   };
 
