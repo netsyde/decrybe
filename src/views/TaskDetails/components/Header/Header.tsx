@@ -85,7 +85,7 @@ const Header = observer((props) => {
             Share
           </Button>
 
-          {((rootStore.user.getUserAddress != project.author.address) && (project.status == "Featured"))?
+          {rootStore.user.getWavesKeeper.type == "keeper" ? ( ( ( rootStore.user.getUserAddress != project.author.address ) && (project.status == "Featured") ) ?
             <Button
               className={classes.applyButton}
               onClick={handleApplicationOpen}
@@ -93,7 +93,7 @@ const Header = observer((props) => {
             >
               Apply for a role
             </Button>
-          : null}
+          : null ) : null}
         </Grid>
       </Grid>
       <Application

@@ -902,7 +902,7 @@ export let getDisputeData = async (storage, taskId) => {
         let customer = await getTaskAuthor(storage, taskId)
         let disputeMessages = await getAllDisputeMessagesData(storage, taskId)
         let disputeComments = await getAllDisputeCommentsData(storage, taskId)
-        let taskData = await getTaskData(storage, taskId)
+        let status = await getTaskStatus(storage, taskId)
         let choose = creator == freelancer ? "freelancer" : "customer"
         let votes = await getDisputeVotes(storage, taskId, choose)
         let dispute = {
@@ -912,7 +912,8 @@ export let getDisputeData = async (storage, taskId) => {
             task: taskId,
             messages: disputeMessages,
             comments: disputeComments,
-            votes: votes
+            votes: votes,
+            status: status
         }
 
         return dispute

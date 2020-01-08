@@ -10,6 +10,7 @@ import {
   ConversationPlaceholder
 } from './components';
 import Error401 from '../Error401'
+import Error501 from '../Error501'
 import Error500 from '../Error500'
 import { CustomSnackbar } from '../../components'
 
@@ -112,7 +113,7 @@ const Chat = inject('rootStore')(observer(({ rootStore }) => {
         );
       } else {
         return (
-          <Error500 message={"You don't have any active dialogs, start by linking to any task"}/>
+          <Error501 message={"You don't have any active dialogs, start by linking to any task"}/>
         )
       }
     } else {

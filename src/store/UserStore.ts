@@ -88,7 +88,7 @@ class UserStore {
 
 	async withoutWavesKeeper () {
 		const waves = new Waves({NODE_URL: this.network});
-		const provider = new Provider('https://signer.decrybe.com/');
+		const provider = new Provider('https://testnet.waves.exchange/signer/'); // https://signer.decrybe.com/
 		
 		waves.setProvider(provider);
 		this.waves = waves;
@@ -99,7 +99,7 @@ class UserStore {
 
 	async restoreWithoutWavesKeeper () {
 		const waves = new Waves({NODE_URL: this.network});
-		const provider = new Provider('https://signer.decrybe.com/');
+		const provider = new Provider('https://testnet.waves.exchange/signer/'); // https://signer.decrybe.com/
 		
 		waves.setProvider(provider);
 		this.waves = waves;

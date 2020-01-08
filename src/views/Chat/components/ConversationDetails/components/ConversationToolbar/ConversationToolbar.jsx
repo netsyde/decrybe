@@ -140,6 +140,7 @@ const ConversationToolbar = observer((props) => {
     event.preventDefault();
     //let data = await nodeInt.getClearTaskData(rootStore.user.getStorage, conversation.task.uuid);
     let tx = await dAppInt.hireFreelancer(conversation.task.uuid, conversation.user.address, rootStore.user.getWavesKeeper)
+    
     console.log(tx)
   };
 
@@ -215,7 +216,7 @@ const ConversationToolbar = observer((props) => {
           </ListItemIcon>
           <ListItemText primary="Reject work" />
         </MenuItem> : null}
-        {rootStore.user.getUserAddress == conversation.task.author.address && conversation.task.freelancer == conversation.user.address && conversation.task.status != "Completed" ? <MenuItem
+        {/* {rootStore.user.getUserAddress == conversation.task.author.address && conversation.task.freelancer == conversation.user.address && conversation.task.status == "In progress" ? <MenuItem
           onClick={event => handleMenuItemClick(event, 3)}
           //selected={2 === selectedIndex}
         >
@@ -223,8 +224,8 @@ const ConversationToolbar = observer((props) => {
             <AddAlarmIcon />
           </ListItemIcon>
           <ListItemText primary="Move the deadline" />
-        </MenuItem> : null}
-        {(((rootStore.user.getUserAddress == conversation.task.author.address && conversation.task.freelancer == conversation.user.address) || (rootStore.user.getUserAddress == conversation.task.freelancer)) && conversation.task.status != "Completed") ? 
+        </MenuItem> : null} */}
+        {(((rootStore.user.getUserAddress == conversation.task.author.address && conversation.task.freelancer == conversation.user.address) || (rootStore.user.getUserAddress == conversation.task.freelancer)) && conversation.task.status == "In progress" || conversation.task.status == "Pending") ? 
         <MenuItem
           onClick={event => handleMenuItemClick(event, 4)}
           component={CustomRouterLink}

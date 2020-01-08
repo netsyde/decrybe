@@ -516,11 +516,12 @@ func openTaskDispute (task: String, message: String) = {
     let account = toBase58String(i.caller.bytes)
     let creator = getValueTaskAuthor(task)
     let freelancer = getValueTaskFreelancer(task)
+    let status = getValueTaskStatus(task)
     if (getValueUserBio(account) == NONE) then throw("You not signup")
     else if (getValueTaskData(task) == NONE) then throw("Task doesnt exist")
     else if (account != creator && account != freelancer) then throw("You must be a freelancer (" + freelancer + ") or a customer (" + creator + ") of this task")
-    else if (getValueTaskStatus(task) == INDISPUTE) then throw("Dispute already open")
-    else if (getValueTaskStatus(task) != INPROGRESS) then throw("You can't create a dispute right now")
+    else if (status == INDISPUTE) then throw("Dispute already open")
+    else if (status != INPROGRESS && status != PENDING) then throw("You can't create a dispute right now")
     else {
         WriteSet([
             DataEntry(getKeyTaskDispute(task), account),
@@ -617,7 +618,8 @@ func defineDisputeWinner (task: String) = {
     # let votesForCustomerPercent = votesForCustomer  / totalVotes * 100
     # let votesForCustomerPercent = votesForCustomer  / totalVotes * 100
     if (getValueUserBio(account) == NONE) then throw("You not signup")
-    else if (totalVotes < 20) then throw("Need minimum 20 votes")
+    else if (getValueTaskStatus(task) != INDISPUTE) then throw("The dispute is closed or not open")
+    else if (totalVotes < 3) then throw("Need minimum 3 votes. Now: " + toString(totalVotes))
     else {
         if (votesForCustomer > votesForFreelancer) then {
             ScriptResult(

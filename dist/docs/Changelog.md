@@ -1,5 +1,19 @@
-### V0.5.0
+### V0.5.5
+ 
+##### 08-01-2020
 
+#### New
+- Add `Dispute Create` page
+- Add `Disputes List` page
+- Add `Dispute Overview` page
+- Now you can open disputes
+- Freelancer and customer may respond to disputes
+- Any member of the platform, except a freelancer and customer, can vote in disputes
+- After reaching a certain number of votes (now 3 for the test), any participant of the platform can determine the winner
+- Added special stub pages
+
+### V0.5.0
+ 
 ##### 03-01-2020
 
 #### New
