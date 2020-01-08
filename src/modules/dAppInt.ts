@@ -126,7 +126,7 @@ export let createTask = async (item, expiration, data, price, keeperOrSigner) =>
                             }
                         ]
                     },
-                    payment: [{assetId: "WAVES", tokens: price + price*0.02}]
+                    payment: [{assetId: "WAVES", tokens: Number(price) + Number(price)*0.02}]
                 }
             })
             tx = JSON.parse(tx)
@@ -160,7 +160,7 @@ export let createTask = async (item, expiration, data, price, keeperOrSigner) =>
                     }
                 ]
             },
-            payment: [{assetId: null, amount: (price + price*0.02) * 10e7}]
+            payment: [{assetId: null, amount: (Number(price) + Number(price)*0.02) * 10e7}]
         }).broadcast().then()
         let confirmed;
         await keeperOrSigner.class.waitTxConfirm(tx, 1).then((tx2) => {

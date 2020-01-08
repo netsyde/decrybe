@@ -11,7 +11,7 @@ class TaskCreateStore {
 	@observable tags: Array<String> = ['Decrybe', 'ReactJS'];
 	@observable tag: String = ""
 	@observable description: String = "";
-	@observable price = 1;
+	@observable price = "1";
 	@observable currency: String = "Waves";
 	@observable author: String = this.root.user.getUserAddress;
 	@observable updatedAt: Number;
@@ -36,13 +36,13 @@ class TaskCreateStore {
 
 	@action("set task price")
 	setPrice (price) {
-		this.price = Number(price);
+		this.price = price;
 		//console.log(price)
 	}
 
 	@computed get getPrice() {
 		//console.log(this.price)
-		return Number(this.price)
+		return this.price
 	}
 
 	@computed get getPriceCommision() {
