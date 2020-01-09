@@ -422,7 +422,7 @@ export let getAllUserTasks = async (alldata, address) => {
         if (data) {
             let filteredData = data.filter(task => matchesFilter.test(task.author.address ? task.author.address : "") || matchesFilter.test(task.freelancer ? task.freelancer : ""))
             // "avatar" in userData ? userData.avatar : "",
-            console.log(filteredData)
+            //console.log(filteredData)
             return filteredData;
         } else {
             return false
@@ -498,7 +498,7 @@ export let getTaskUserMessageBlock = async (alldata, id) => {
 export let getConversationsData = async (data, user, keeperOrSigner) => {
     try {
         let allConversation = await getUserConversationList(data, user)
-        console.log(allConversation)
+        //console.log(allConversation)
         let conversationsData = []
         if (allConversation) {
             for (let i = 0; i < allConversation.length; i++) {
@@ -555,7 +555,7 @@ export let getConversationsData = async (data, user, keeperOrSigner) => {
                 }
             }
         }
-        console.log(conversationsData)
+        //console.log(conversationsData)
         return conversationsData
     } catch (e) {
         console.log(`ERROR in nodeInt.getConversationData! ${e.name}: ${e.message}\n${e.stack}`);

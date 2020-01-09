@@ -57,11 +57,11 @@ const DisputeContainer = observer((props) => {
   const { id, tab } = props.match.params;
 
   useEffect(() => {
-    console.log(id)
+    //console.log(id)
     let mounted = true;
     const fetchDispute = async () => {
       let disputeData = await nodeInt.getDisputeData(props.rootStore.user.getStorage, id)
-      console.log(disputeData)
+      //console.log(disputeData)
       setDispute(disputeData)
     };
     
@@ -86,7 +86,7 @@ if (!tab) {
 
 
 if (!tabs.find(t => t.value == tab)) {
-  console.log(tab)
+  //console.log(tab)
   return <Redirect to="/404" />;
 }
 

@@ -77,6 +77,7 @@ autorun(async () => {
   });
   
   }
+  setInterval(() => rootStore.user.updateStorage(), 60000);
 });
 
 export default rootStore;
