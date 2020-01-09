@@ -10,6 +10,7 @@ import {
   AboutTask,
 } from './components';
 import Error401 from '../Error401'
+import Error500 from '../Error500'
 const uuid = require('uuid/v4');
 import { ValidatorForm } from 'react-material-ui-form-validator';
 import { CustomSnackbar } from '../../components'
@@ -126,36 +127,40 @@ const TaskCreate = inject('rootStore')(observer(({ rootStore }) => {
   }
 
   if (rootStore.user.isUserLogin && rootStore.user.isUserReg) {
-    return (
-      <Page
-        className={classes.root}
-        title="Create Task"
-      >
-
-        <Header />
-        <ValidatorForm onSubmit={handleSubmit} onError={errors => console.log(errors)}
-          ref={formRef}
+    if (rootStore.user.getWavesKeeper.type == "keeper") {
+      return (
+        <Page
+          className={classes.root}
+          title="Create Task"
         >
-          <AboutTask className={classes.aboutProject} rootStore={rootStore} validatorListener={validatorListener}/>
-          <div className={classes.actions}>
-            <Button
-              color="primary"
-              variant="contained"
-              type="submit"
-              disabled={!isValid}
-            >
-              Create task
-            </Button>
-          </div>
-        </ValidatorForm>
-        <CustomSnackbar
-          onClose={handleSnackbarClose}
-          open={openSnackbar}
-          message={snackbarMessage}
-          type={snackbarType}
-        />
-      </Page>
-    );
+
+          <Header />
+          <ValidatorForm onSubmit={handleSubmit} onError={errors => console.log(errors)}
+            ref={formRef}
+          >
+            <AboutTask className={classes.aboutProject} rootStore={rootStore} validatorListener={validatorListener}/>
+            <div className={classes.actions}>
+              <Button
+                color="primary"
+                variant="contained"
+                type="submit"
+                disabled={!isValid}
+              >
+                Create task
+              </Button>
+            </div>
+          </ValidatorForm>
+          <CustomSnackbar
+            onClose={handleSnackbarClose}
+            open={openSnackbar}
+            message={snackbarMessage}
+            type={snackbarType}
+          />
+        </Page>
+      );
+    } else {
+      return <Error500 message={"Need Waves Keeper to use this page yet"}/>
+    }
   } else {
     return (
       <Error401 />
