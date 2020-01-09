@@ -77,7 +77,7 @@ class UserStore {
 	@action("update storage")
 	async updateStorage () {
 		this.storage = await nodeInt.getAllData(this.dapp, this.network);
-		await this.root.tasks.loadTasks(this.isUserLogin, this.getDapp, this.getUserNetwork)
+		await this.root.tasks.loadTasks(this.isUserLogin)
 		let conversations = await nodeInt.getConversationsData(this.getStorage, this.getUserAddress, this.getWavesKeeper)
 		if (conversations) {
 			this.conversations = conversations
@@ -180,8 +180,6 @@ class UserStore {
 					this.userData = state;
 					
 					this.storage = await nodeInt.getAllData(this.dapp, state.network.server);
-					let test = await nodeInt.getUserReviewsData(this.storage, "3NBdfiSHLWVRUW4EPHcrtX47pky4TzKq8fb")
-					console.log(test)
 					this.isLogin = true;
 					this.isReg = await nodeInt.checkReg(this.storage, state.account.address);
 					if (this.isReg) {
@@ -225,7 +223,7 @@ class UserStore {
 						} else {
 							console.log('DEBUG: User data not loaded')
 						}
-						await this.root.tasks.loadTasks(this.isUserLogin, this.getDapp, this.getUserNetwork)
+						await this.root.tasks.loadTasks(this.isUserLogin)
 						await this.root.disputes.loadDisputes(this.isUserLogin)
 						await this.root.users.loadUsers(this.isUserLogin, this.getDapp, this.getUserNetwork)
 						
@@ -288,7 +286,8 @@ class UserStore {
 					} else {
 						console.log('DEBUG: User data not loaded')
 					}
-					await this.root.tasks.loadTasks(this.isUserLogin, this.getDapp, this.getUserNetwork)
+					await this.root.tasks.loadTasks(this.isUserLogin)
+					await this.root.disputes.loadDisputes(this.isUserLogin)
 					await this.root.users.loadUsers(this.isUserLogin, this.getDapp, this.getUserNetwork)
 				} else {
 					this.showRegister = true;
