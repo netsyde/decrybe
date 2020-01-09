@@ -1,20 +1,19 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import moment from 'moment';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Avatar,
   Divider,
-  IconButton,
+  Typography,
   Link,
-  Tooltip,
-  Typography
+  colors
 } from '@material-ui/core';
 import { observer } from 'mobx-react';
 import getInitials from '../../../../utils/getInitials';
 import { Markdown } from '../../../../components';
 import { DisputeToolbar, DisputeForm } from './components';
+import { Link as RouterLink } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -47,9 +46,59 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(2)
   },
   message: {
-    //marginTop: theme.spacing(2),
-    '& > p': {
-      ...theme.typography.subtitle1
+    marginTop: theme.spacing(2),
+    '& h1': {
+      ...theme.typography.h1,
+      marginBottom: theme.spacing(1)
+    },
+    '& h2': {
+      ...theme.typography.h2,
+      marginBottom: theme.spacing(1)
+    },
+    '& h3': {
+      ...theme.typography.h3,
+      marginBottom: theme.spacing(1)
+    },
+    '& h4': {
+      ...theme.typography.h4,
+      marginBottom: theme.spacing(1)
+    },
+    '& h5': {
+      ...theme.typography.h5,
+      marginBottom: theme.spacing(1)
+    },
+    '& h6': {
+      ...theme.typography.h6,
+      marginBottom: theme.spacing(1)
+    },
+    '& p': {
+      ...theme.typography.subtitle1,
+      marginBottom: theme.spacing(2)
+    },
+    '& ul': {
+      marginLeft: theme.spacing(3),
+      marginBottom: theme.spacing(2)
+    },
+    '& ol': {
+      marginLeft: theme.spacing(3),
+      marginBottom: theme.spacing(2)
+    },
+    '& li': {
+      ...theme.typography.subtitle1,
+      marginBottom: theme.spacing(1)
+    },
+    '& hr': {
+      marginTop: theme.spacing(3),
+      marginBottom: theme.spacing(3),
+      backgroundColor: colors.grey[300],
+      border: 0,
+      height: 1
+    },
+    '& a': {
+      color: colors.blue[800],
+      '&:hover': {
+        textDecoration: 'underline'
+      }
     }
   },
   divider: {
@@ -74,12 +123,14 @@ const DisputeMessage = observer((props) => {
             {getInitials(message.user.name)}
           </Avatar>
           <div>
-            <Typography
-              display="inline"
+            <Link
+              color="textPrimary"
               variant="h5"
+              component={RouterLink}
+              to={`/profile/${message.user ? message.user.address : "undefined"}`}
             >
               {message.user.name} ({message.user.address == dispute.freelancer ? "Freelancer" : "Customer"})
-            </Typography>
+            </Link>
             <Typography variant="body2">
             {moment(message.createdAt).format('MMMM Do YYYY, h:mm:ss a')} (block: {message.block})
             </Typography>
@@ -115,7 +166,7 @@ const DisputeDetails = observer((props) => {
         <DisputeMessage message={message} dispute={dispute} key={message.key}/>
       )) : null}
 
-      {rootStore.user.getUserAddress == dispute.customer || rootStore.user.getUserAddress == dispute.freelancer ? 
+      {(rootStore.user.getUserAddress == dispute.customer || rootStore.user.getUserAddress == dispute.freelancer) && dispute.status == "in dispute" ? 
       <DisputeForm rootStore={rootStore} dispute={dispute}/> : null}
     </div>
   );

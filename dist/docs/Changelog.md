@@ -1,3 +1,11 @@
+### V0.5.6
+ 
+##### 09-01-2020
+
+#### New
+- Now you can leave a review
+- Fixed some bugs
+
 ### V0.5.5
  
 ##### 08-01-2020

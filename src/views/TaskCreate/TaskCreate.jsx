@@ -110,11 +110,11 @@ const TaskCreate = inject('rootStore')(observer(({ rootStore }) => {
     let tx = await dAppInt.createTask(taskId, expiration, data, Number(store.getPrice), rootStore.user.getWavesKeeper)
        
     if (tx) {
-      createSnackbar('success', 'Task successfully created!')
-      rootStore.taskCreate.clean();
       await rootStore.user.updateStorage()
+      createSnackbar('success', 'Task successfully created!')
       setTask(taskId)
       setTaskCreated(true)
+      rootStore.taskCreate.clean();
             
     } else {
       createSnackbar('error', 'Error: transaction is rejected')

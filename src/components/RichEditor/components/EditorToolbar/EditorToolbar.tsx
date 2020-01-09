@@ -90,31 +90,31 @@ const BLOCK_TYPES = [
     tooltip: 'Ordered list',
     icon: FormatListNumberedIcon
   },
-  {
-    blockType: 'code-block',
-    tooltip: 'Code Block',
-    icon: CodeIcon
-  },
-  {
-    blockType: 'left',
-    tooltip: 'Align left',
-    icon: FormatAlignLeftIcon
-  },
-  {
-    blockType: 'center',
-    tooltip: 'Align center',
-    icon: FormatAlignCenterIcon
-  },
-  {
-    blockType: 'right',
-    tooltip: 'Align right',
-    icon: FormatAlignRightIcon
-  },
-  {
-    blockType: 'justify',
-    tooltip: 'Justify',
-    icon: FormatAlignJustifyIcon
-  }
+  // {
+  //   blockType: 'code-block',
+  //   tooltip: 'Code Block',
+  //   icon: CodeIcon
+  // },
+  // {
+  //   blockType: 'left',
+  //   tooltip: 'Align left',
+  //   icon: FormatAlignLeftIcon
+  // },
+  // {
+  //   blockType: 'center',
+  //   tooltip: 'Align center',
+  //   icon: FormatAlignCenterIcon
+  // },
+  // {
+  //   blockType: 'right',
+  //   tooltip: 'Align right',
+  //   icon: FormatAlignRightIcon
+  // },
+  // {
+  //   blockType: 'justify',
+  //   tooltip: 'Justify',
+  //   icon: FormatAlignJustifyIcon
+  // }
 ];
 
 const INLINE_STYLES = [
@@ -136,13 +136,13 @@ const INLINE_STYLES = [
     icon: FormatUnderlined,
     text: "Underline"
   },
-  {
-    inlineStyle: 'CODE',
-    tooltip: 'Monospace',
-    icon: CodeIcon,
-    text: "Monospace"
+  // {
+  //   inlineStyle: 'CODE',
+  //   tooltip: 'Monospace',
+  //   icon: CodeIcon,
+  //   text: "Monospace"
 
-  }
+  // }
 ];
 
 const ButtonBase = props => {

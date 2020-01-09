@@ -196,16 +196,7 @@ const Header = observer((props) => {
                 <ChatIcon className={classes.mailIcon} />
                 Edit profile
               </Button> 
-                :
-              <Button
-                color="secondary"
-                component={RouterLink}
-                to="/chat"
-                variant="contained"
-              >
-                <ChatIcon className={classes.mailIcon} />
-                Send message
-              </Button>
+                : null
             }
             <Tooltip title="More options">
               <IconButton>

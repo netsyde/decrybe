@@ -180,6 +180,8 @@ class UserStore {
 					this.userData = state;
 					
 					this.storage = await nodeInt.getAllData(this.dapp, state.network.server);
+					let test = await nodeInt.getUserReviewsData(this.storage, "3NBdfiSHLWVRUW4EPHcrtX47pky4TzKq8fb")
+					console.log(test)
 					this.isLogin = true;
 					this.isReg = await nodeInt.checkReg(this.storage, state.account.address);
 					if (this.isReg) {

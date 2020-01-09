@@ -1,5 +1,6 @@
 const TerserPlugin = require('terser-webpack-plugin');
 const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 module.exports = {
 	entry: [
 		'./src/index.tsx'
@@ -46,7 +47,11 @@ module.exports = {
 			},
 			{
 				test: /(\.ts|\.tsx)$/, 
-				loaders: ["ts-loader"],
+				loader: "ts-loader",
+				exclude: /node_modules/,
+				options: {
+					transpileOnly: true
+				}
 			},
 			{
 				test: /\.s[ac]ss$/i,
@@ -58,4 +63,7 @@ module.exports = {
 			  },
 		]
 	},
+	plugins: [
+		new ForkTsCheckerWebpackPlugin()
+	],
 };

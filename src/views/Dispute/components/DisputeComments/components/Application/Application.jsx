@@ -16,7 +16,6 @@ import {
 } from '@material-ui/core';
 import * as dAppInt from '../../../../../../modules/dAppInt'
 import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator';
-import { Redirect } from 'react-router-dom';
 import getInitials from '../../../../../../utils/getInitials'
 const useStyles = makeStyles(theme => ({
   root: {

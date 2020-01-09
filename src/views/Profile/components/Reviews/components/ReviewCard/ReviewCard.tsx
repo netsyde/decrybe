@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import moment from 'moment';
 import { makeStyles } from '@material-ui/core/styles';
@@ -14,6 +13,8 @@ import {
   Link,
   Typography
 } from '@material-ui/core';
+
+import getInitials from '../../../../../../utils/getInitials'
 
 import { ReviewStars } from '../../../../../../components';
 
@@ -30,7 +31,6 @@ const useStyles = makeStyles(theme => ({
   stars: {
     display: 'flex',
     alignItems: 'center',
-    marginRight: theme.spacing(1)
   },
   rating: {
     marginLeft: theme.spacing(1),
@@ -57,7 +57,7 @@ const ReviewCard = props => {
   const { review, className, ...rest } = props;
 
   const classes = useStyles(1);
-
+  const handleBrokenImage = e => (e.target.src = "/img/gag.png");
   return (
     <Card
       {...rest}
@@ -68,9 +68,10 @@ const ReviewCard = props => {
           <Avatar
             alt="Reviewer"
             className={classes.avatar}
-            src={review.reviewer.avatar}
+            src={review.sender.avatar || ""}
+            imgProps={{ onError: handleBrokenImage }}
           >
-            {review.reviewer.name}
+            {review.sender ? getInitials(review.sender.name) : "undefined"}
           </Avatar>
         }
         className={classes.header}
@@ -78,7 +79,7 @@ const ReviewCard = props => {
         subheader={
           <div className={classes.subheader}>
             <div className={classes.stars}>
-              <ReviewStars value={review.rating} />
+              <ReviewStars value={review.stars} />
               <Typography
                 className={classes.rating}
                 variant="h6"
@@ -87,16 +88,7 @@ const ReviewCard = props => {
               </Typography>
             </div>
             <Typography variant="body2">
-              | Reviewd by{' '}
-              <Link
-                color="textPrimary"
-                component={RouterLink}
-                to="/profile/1/timeline"
-                variant="h6"
-              >
-                {review.reviewer.name}
-              </Link>{' '}
-              | {moment(review.created_at).fromNow()}
+              {moment(review.createdAt).fromNow()}
             </Typography>
           </div>
         }
@@ -104,10 +96,10 @@ const ReviewCard = props => {
           <Link
             color="textPrimary"
             component={RouterLink}
-            to="/projects/1/overview"
+            to={`/profile/${review.sender.address}`}
             variant="h5"
           >
-            {review.project.title}
+            {review.sender.name}
           </Link>
         }
       />
@@ -116,41 +108,9 @@ const ReviewCard = props => {
           <Typography variant="subtitle2">{review.message}</Typography>
         </div>
         <Divider />
-        <div className={classes.details}>
-          <Grid
-            alignItems="center"
-            container
-            justify="space-between"
-            spacing={3}
-          >
-            <Grid item>
-              <Typography variant="h5">
-                {review.currency}
-                {review.project.price}
-              </Typography>
-              <Typography variant="body2">Project price</Typography>
-            </Grid>
-            <Grid item>
-              <Typography variant="h5">
-                {review.currency}
-                {review.pricePerHour}
-              </Typography>
-              <Typography variant="body2">Per project</Typography>
-            </Grid>
-            <Grid item>
-              <Typography variant="h5">{review.hours}</Typography>
-              <Typography variant="body2">Hours</Typography>
-            </Grid>
-          </Grid>
-        </div>
       </CardContent>
     </Card>
   );
-};
-
-ReviewCard.propTypes = {
-  className: PropTypes.string,
-  review: PropTypes.object.isRequired
 };
 
 export default ReviewCard;
