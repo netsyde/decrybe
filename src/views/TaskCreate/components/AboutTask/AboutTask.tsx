@@ -64,6 +64,9 @@ const useStyles = makeStyles(theme => ({
     marginRight: theme.spacing(1),
     marginBottom: theme.spacing(3),
   },
+  textFieldWithoutPadding: {
+    marginRight: theme.spacing(1),
+  }
 }));
 const categories = [
   {
@@ -157,7 +160,7 @@ const AboutTask = observer((props) => {
               fullWidth
               label="Task Name"
               name="name"
-              className={classes.textField}
+              className={classes.textFieldWithoutPadding}
               onChange={event =>
                 rootStore.taskCreate.setTitle(event.target.value)
               }
@@ -176,7 +179,7 @@ const AboutTask = observer((props) => {
               name="price"
               validators={['minNumber:1', 'maxNumber: 100000', 'required']}
               errorMessages={['Minimum price is 1', 'Maximum price is 100k', 'This field is required']}
-              className={classes.textField}
+              className={classes.textFieldWithoutPadding}
               onChange={event =>
                 rootStore.taskCreate.setPrice(event.target.value)
               }

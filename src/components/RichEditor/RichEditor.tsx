@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => ({
   root: {},
   editorContainer: {
     padding: theme.spacing(2),
-    minHeight: 400,
+    minHeight: 180,
     '& .public-DraftEditorPlaceholder-root': {
       ...theme.typography.body2
     },

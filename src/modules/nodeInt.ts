@@ -766,10 +766,7 @@ export let getDisputeMessagesCnt = async (storage, taskId, user) => {
         return false;
     }
 }
-// let freelancer = await getTaskFreelancer(storage, taskId)
-        // let customer = await getTaskAuthor(storage, taskId);
-        // let freelancerMsgCnt = await getDisputeMessagesCnt(storage, taskId, freelancer)
-        // let customerMsgCnt = await getDisputeMessagesCnt(storage, taskId, customer)
+
 export let getAllDisputeMessages = async (storage, taskId) => {
     try {
         let result = await Promise.all(
@@ -1057,6 +1054,77 @@ export let getDisputeVotes = async (storage, taskId, side) => {
         
     } catch (e) {
         console.log(`ERROR in nodeInt.getDisputeVotes! ${e.name}: ${e.message}\n${e.stack}`);
+        return false;
+    } 
+}
+
+
+export let getUserReview = async (storage, sender, recipient) => {
+    try {
+        let fullKey = "review_" + sender + "_" + recipient
+        let review = await getDataByKey(storage, fullKey)
+        return review
+    } catch (e) {
+        console.log(`ERROR in nodeInt.getUserReview! ${e.name}: ${e.message}\n${e.stack}`);
+        return false;
+    } 
+}
+
+export let getUserReviews = async (storage, user) => {
+    try {
+        let result = await Promise.all(
+            Object.keys(storage)
+                .map(async key => {
+                    const match = /^review_([0-9a-z-]+)_([0-9a-z-]+)/i.exec(key);
+
+                    if (match && match[2] == user) {
+                        return {
+                            key: match[0],
+                            sender: match[1],
+                            recipient: match[2]
+                        }
+                    }
+                })
+        )
+        result = result.filter(Boolean)
+        return result
+        
+    } catch (e) {
+        console.log(`ERROR in nodeInt.getUserReviews! ${e.name}: ${e.message}\n${e.stack}`);
+        return false;
+    } 
+}
+
+export let getUserReviewsData = async (storage, user) => {
+    try {
+        let reviews = await getUserReviews(storage, user)
+        let recipientData = await getUserData(storage, user)
+        if (reviews) {
+            let data = await Promise.all(
+                reviews.map(async review => {
+                    let senderData = await getUserData(storage, review.sender)
+                    let reviewData = await getUserReview(storage, review.sender, review.recipient)
+                    try {
+                        reviewData = JSON.parse(reviewData)
+                        return {
+                            key: review.key,
+                            sender: senderData,
+                            recipient: recipientData,
+                            stars: reviewData.stars ? Number(reviewData.stars) : 0,
+                            message: reviewData.message ? reviewData.message : "undefined",
+                            createdAt: reviewData.createdAt ? reviewData.createdAt : 0,
+                        }
+                    } catch(e) {
+                        return false
+                    }
+                })
+            )
+            data = data.filter(Boolean)
+            return data
+        }
+        
+    } catch (e) {
+        console.log(`ERROR in nodeInt.getUserReviewsData! ${e.name}: ${e.message}\n${e.stack}`);
         return false;
     } 
 }

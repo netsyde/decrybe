@@ -288,6 +288,15 @@ func getValueTaskDisputeVoteVariant(task: String, user: String) = {
     getStrByKey(getKeyTaskDisputeVoteVariant(task, user))
 }
 
+# Review
+func getKeyUserReview(user1: String, user2: String) = {
+    "review_" + user1 + "_" + user2
+}
+
+func getValueUserReview(user1: String, user2: String) = {
+    getStrByKey(getKeyUserReview(user1, user2))
+}
+
 @Callable(i)
 func withdrawDecrybeBalance(amount: Int) = {
     let account = toBase58String(i.caller.bytes)
@@ -651,4 +660,20 @@ func defineDisputeWinner (task: String) = {
             )
         }
     }
+}
+
+@Callable (i)
+func leaveUserReview (user: String, task: String, review: String) = {
+    let account = toBase58String(i.caller.bytes)
+    let customer = getValueTaskAuthor(task)
+    let freelancer = getValueTaskFreelancer(task)
+    if (getValueUserBio(account) == NONE) then throw("You not signup")
+    else if (account == user) then throw("You can't leave a review for yourself")
+    #else if (account != customer && account != freelancer) then throw("You have not worked with this user")
+    else if (user != customer && user != freelancer && account != customer && account != freelancer) then throw("You have not worked with this user")
+    else if (getValueTaskStatus(task) != COMPLETED) then throw("You can't leave feedback until the task is completed")
+    else if (getValueUserReview(account, user) != NONE) then throw("have you already left a review for this user")
+    else WriteSet([
+        DataEntry(getKeyUserReview(account, user), review)
+    ])
 }

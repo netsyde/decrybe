@@ -8,7 +8,7 @@ class TaskCreateStore {
 	@observable createTime: Number;
 	@observable endDate: Number = Date.now() + 84000 * 1000;
 	@observable briefDescription: String = "";
-	@observable tags: Array<String> = ['Decrybe', 'ReactJS'];
+	@observable tags: Array<String> = ['Decrybe'];
 	@observable tag: String = ""
 	@observable description: String = "";
 	@observable price = "1";

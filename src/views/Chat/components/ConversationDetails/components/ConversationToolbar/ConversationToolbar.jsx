@@ -24,6 +24,8 @@ import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
 import ThumbDownIcon from '@material-ui/icons/ThumbDown';
 import GavelIcon from '@material-ui/icons/Gavel';
 import AssignmentIcon from '@material-ui/icons/Assignment';
+import RateReviewIcon from '@material-ui/icons/RateReview';
+import { Application } from './components'
 const useStyles = makeStyles(theme => ({
   root: {
     backgroundColor: '#ffffff'
@@ -124,7 +126,7 @@ const ConversationToolbar = observer((props) => {
         rootStore.disputeCreate.setTask(conversation.task.uuid)
         break
       case 5:
-        console.log("task")
+        console.log("review")
         break
       case 6:
         let report = await dAppInt.reportUser(conversation.user.address, rootStore.user.getWavesKeeper)
@@ -142,6 +144,16 @@ const ConversationToolbar = observer((props) => {
     let tx = await dAppInt.hireFreelancer(conversation.task.uuid, conversation.user.address, rootStore.user.getWavesKeeper)
     
     console.log(tx)
+  };
+
+  const [openApplication, setOpenApplication] = useState(false);
+
+  const handleApplicationOpen = () => {
+    setOpenApplication(true);
+  };
+
+  const handleApplicationClose = () => {
+    setOpenApplication(false);
   };
 
   return (
@@ -231,11 +243,19 @@ const ConversationToolbar = observer((props) => {
           component={CustomRouterLink}
           to={`/disputes/create`}
         >
-        >
           <ListItemIcon>
             <GavelIcon />
           </ListItemIcon>
           <ListItemText primary="Open dispute" />
+        </MenuItem> : null}
+        {(((rootStore.user.getUserAddress == conversation.task.author.address && conversation.task.freelancer == conversation.user.address) || (rootStore.user.getUserAddress == conversation.task.freelancer)) && conversation.task.status == "Completed") ? 
+        <MenuItem
+          onClick={handleApplicationOpen}
+        >
+          <ListItemIcon>
+            <RateReviewIcon />
+          </ListItemIcon>
+          <ListItemText primary="Leave a review" />
         </MenuItem> : null}
         <MenuItem
           component={CustomRouterLink}
@@ -255,6 +275,13 @@ const ConversationToolbar = observer((props) => {
           <ListItemText primary="Report user" />
         </MenuItem>
       </Menu>
+      <Application
+        onClose={handleApplicationClose}
+        open={openApplication}
+        rootStore={rootStore}
+        conversation={conversation}
+        handleApplicationClose={handleApplicationClose}
+      />
     </Toolbar>
   );
 });

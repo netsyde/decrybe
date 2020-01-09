@@ -124,10 +124,7 @@ const DisputeComment = props => {
         subheader={
           <div>
           <Typography variant="body2">
-            Side: {comment.side ? comment.side : "undefined"}
-          </Typography>
-          <Typography variant="body2">
-            Created: {comment.createdAt ? moment(comment.createdAt).fromNow() : "undefined"}
+            Side: {comment.side ? comment.side : "undefined"} ({comment.createdAt ? moment(comment.createdAt).fromNow() : "undefined"})
           </Typography>
           </div>
         }
@@ -135,7 +132,7 @@ const DisputeComment = props => {
           <Link
             color="textPrimary"
             component={RouterLink}
-            to={`/users/${comment.user ? comment.user.address : "undefined"}`}
+            to={`/profile/${comment.user ? comment.user.address : "undefined"}`}
             variant="h5"
           >
             {comment.user ? (comment.user.name ? comment.user.name: "undefined") : "undefined"}

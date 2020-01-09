@@ -65,9 +65,9 @@ const DisputeToolbar = props => {
       </Typography>
       <div className={classes.progress}>
       <Typography variant="body2">
-        Votes for dispute creator: {dispute.votes ? ((dispute.votes.creator / dispute.votes.total) * 100).toFixed(0) : "0"}%
+        Votes for dispute creator: {dispute.votes ? ((dispute.votes.creator / (dispute.votes.total ? dispute.votes.total : 1)) * 100).toFixed(0) : "0"}%
         </Typography>
-       <CircularProgress value={dispute.votes ? ((dispute.votes.creator / dispute.votes.total) * 100) : 0} />
+       <CircularProgress value={dispute.votes ? ((dispute.votes.creator / (dispute.votes.total ? dispute.votes.total : 1)) * 100) : 0} />
       </div>
     </div>
   );

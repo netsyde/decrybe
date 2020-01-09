@@ -12,6 +12,7 @@ import {
 import * as dAppInt from '../../../../../../modules/dAppInt'
 import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator';
 import { Redirect } from 'react-router-dom';
+import getInitials from '../../../../../../utils/getInitials'
 const useStyles = makeStyles(theme => ({
   root: {
     width: 960
@@ -151,7 +152,7 @@ const Application = props => {
               src={author.avatar || ""}
               imgProps={{ onError: handleBrokenImage }}
             >
-              {author.name ? author.name : ""}
+              {author.name ? getInitials(author.name) : ""}
             </Avatar>
             <div>
               <Typography variant="h3">{author ? author.name : "Undefined"}</Typography>

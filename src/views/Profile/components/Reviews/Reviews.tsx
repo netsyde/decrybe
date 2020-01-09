@@ -3,7 +3,8 @@ import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
 import { OverallReviews, ReviewCard } from './components';
-
+import * as nodeInt from '../../../../modules/nodeInt'
+import { observer, inject } from 'mobx-react';
 const useStyles = makeStyles(theme => ({
   review: {
     marginTop: theme.spacing(2)
@@ -24,54 +25,33 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Reviews = props => {
+const Reviews = observer((props) => {
   const { className, rootStore, id, ...rest } = props;
 
   const classes = useStyles(1);
   const [reviews, setReviews] = useState([]);
 
   useEffect(() => {
-    let reviews2 = [
-      {
-        id: 1,
-        rating: 4,
-        message:
-          'Shen was really great during the all time session we created the project',
-        reviewer: {
-          name: 'Ekaterina Tankova',
-          avatar: 'https://img1.goodfon.ru/original/2726x1823/c/57/lana-del-rey-lana-del-rey-1013.jpg'
-        },
-        project: {
-          title: 'Mella Full Screen Slider',
-          price: '5,240.00'
-        },
-        pricePerHour: '43.00',
-        hours: 31,
-        currency: '$',
-        created_at: 1
-      },
-      {
-        id: 2,
-        rating: 5,
-        reviewer: {
-          name: 'Cao Yu',
-          avatar: 'https://www.koeitecmoamerica.com/dw9/images/characters/gi/junyu.png'
-        },
-        project: {
-          title: 'Dashboard Design',
-          price: '3,680.00'
-        },
-        pricePerHour: '38.00',
-        hours: 76,
-        currency: '$',
-        message:
-          'Being the savage\'s bowsman, that is, the person who pulled the bow-oar in his boat (the second one from forward), it was my cheerful duty to attend upon him while taking that hard-scrabble scramble upon the dead whale\'s back. You have seen Italian organ-boys holding a dancing-ape by a long cord. Just so, from the ship\'s steep side, did I hold Queequeg down there in the sea, by what is technically called in the fishery a monkey-rope, attached to a strong strip of canvas belted round his waist.',
-        created_at: 2
+    let mounted = true;
+    const fetchReviews = async () => {
+      let reviewsData = await nodeInt.getUserReviewsData(rootStore.user.getStorage, id)
+      console.log(reviewsData)
+      if (reviewsData) {
+        setReviews(reviewsData)
       }
-    ];
-    setReviews(reviews)
+    };
     
-  }, []);
+    if (props.rootStore.user.isLogin) {
+      if (mounted) {
+        fetchReviews();
+      }
+    }
+
+    return () => {
+      mounted = false;
+    };
+    
+  }, [rootStore.user.getStorage]);
   if (reviews.length > 0) {
     return (
       
@@ -79,14 +59,14 @@ const Reviews = props => {
         {...rest}
         className={clsx(className)}
       >
-        <OverallReviews ratings={reviews.map(review => review.rating)} />
-        {reviews.map(review => (
+        <OverallReviews ratings={reviews ? reviews.map(review => review.stars) : [0]} />
+        {reviews ? reviews.map(review => (
           <ReviewCard
             className={classes.review}
-            key={review.id}
+            key={review.key}
             review={review}
           />
-        ))}
+        )) : null}
       </div>
     );
   } else {
@@ -114,6 +94,6 @@ const Reviews = props => {
     </div>
     )
   }
-};
+});
 
 export default Reviews;
