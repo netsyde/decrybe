@@ -114,17 +114,17 @@ const Chat = inject('rootStore')(observer(({ rootStore }) => {
       } else {
         if (rootStore.user.isKeeperLocked) {
           return (
-            <Error501 message={"To use the chat unlock Waves Keeper (enter password)"}/>
+            <Error501 message={"To use the chat unlock Waves Keeper (enter password)"} title={"Chat"}/>
           )
         } else {
           return (
-            <Error501 message={"You don't have any active dialogs, start by linking to any task"}/>
+            <Error501 message={"You don't have any active dialogs, start by linking to any task"} title={"Chat"}/>
           )
         }
       }
     } else {
       return (
-        <Error500 message={"Need Waves Keeper to use this page yet"}/>
+        <Error500 message={"Need Waves Keeper to use this page yet"} title={"Chat"}/>
       )
     }
   } else {
