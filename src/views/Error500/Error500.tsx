@@ -39,7 +39,7 @@ const Error500 = (props) => {
   return (
     <Page
       className={classes.root}
-      title="Error 404"
+      title={props.title}
     >
       <Typography
         align="center"
