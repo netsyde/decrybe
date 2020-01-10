@@ -167,8 +167,8 @@ const AboutTask = observer((props) => {
               }
               value={rootStore.taskCreate.getTitle}
               variant="outlined"
-              validators={['required', 'minStringLength:5', 'maxStringLength:30', 'trim']}
-              errorMessages={['This field is required', 'Minimum 5 characters', 'Maximum 30 characters', 'Please enter words']}
+              validators={['required', 'minStringLength:5', 'maxStringLength:50', 'trim']}
+              errorMessages={['This field is required', 'Minimum 5 characters', 'Maximum 50 characters', 'Please enter words']}
               validatorListener={validatorListener}
             />
           </Grid>
