@@ -6,7 +6,6 @@ import {
   Card,
   CardHeader,
   CardContent,
-  TextField,
   Button,
   Chip,
   Typography
@@ -118,8 +117,10 @@ const AboutTask = observer((props) => {
 
   const handleTagAdd = () => {
       if (rootStore.taskCreate.getTag && !rootStore.taskCreate.getTags.includes(rootStore.taskCreate.getTag)) {
-        rootStore.taskCreate.tags = [...rootStore.taskCreate.tags];
-        rootStore.taskCreate.tags.push(rootStore.taskCreate.getTag);
+        if (rootStore.taskCreate.tags.length < 3) {
+          rootStore.taskCreate.tags = [...rootStore.taskCreate.tags];
+          rootStore.taskCreate.tags.push(rootStore.taskCreate.getTag);
+        }
       }
 
       rootStore.taskCreate.setTag("");
@@ -166,8 +167,8 @@ const AboutTask = observer((props) => {
               }
               value={rootStore.taskCreate.getTitle}
               variant="outlined"
-              validators={['required', 'minStringLength:5', 'maxStringLength:50', 'trim']}
-              errorMessages={['This field is required', 'Minimum 5 characters', 'Maximum 50 characters', 'Please enter words']}
+              validators={['required', 'minStringLength:5', 'maxStringLength:30', 'trim']}
+              errorMessages={['This field is required', 'Minimum 5 characters', 'Maximum 30 characters', 'Please enter words']}
               validatorListener={validatorListener}
             />
           </Grid>
@@ -258,20 +259,21 @@ const AboutTask = observer((props) => {
                 onChange={event =>
                   rootStore.taskCreate.setTag(event.target.value)
                 }
-                validators={['maxStringLength:15']}
-                errorMessages={['Maximum 15 characters']}
+                validators={['maxStringLength:10']}
+                errorMessages={['Maximum 10 characters']}
                 value={rootStore.taskCreate.getTag}
                 variant="outlined"
                 validatorListener={validatorListener}
               />
-              <Button
+
+              {rootStore.taskCreate.tags.length < 3 ? <Button
                 className={classes.addButton}
                 onClick={handleTagAdd}
                 size="small"
               >
                 <AddIcon className={classes.addIcon} />
                 Add
-              </Button>
+              </Button> : null}
             </div>
             <Typography
               className={classes.fieldHint}

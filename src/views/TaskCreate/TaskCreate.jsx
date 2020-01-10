@@ -87,6 +87,7 @@ const TaskCreate = inject('rootStore')(observer(({ rootStore }) => {
   };
 
   let validatorListener = async () => {
+    let descriptionLength = rootStore.taskCreate.getDescription.length
     const valid = await formRef.current.isFormValid();
     setValid(valid)
   }
@@ -144,7 +145,7 @@ const TaskCreate = inject('rootStore')(observer(({ rootStore }) => {
                 color="primary"
                 variant="contained"
                 type="submit"
-                disabled={!isValid}
+                disabled={!isValid || !rootStore.taskCreate.getDescription.length > 0}
               >
                 Create task
               </Button>
