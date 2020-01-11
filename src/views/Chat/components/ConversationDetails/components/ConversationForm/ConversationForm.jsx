@@ -56,8 +56,9 @@ const ConversationForm = observer((props) => {
 
   const handleChange = event => {
     event.persist();
-
-    setValue(event.target.value);
+    if (/^(|[a-zA-Zа-яА-Я][a-zA-Zа-яА-Я\s]*)$/.test(event.target.value)) {
+      setValue(event.target.value);
+    }
 
   };
 
@@ -77,11 +78,17 @@ const ConversationForm = observer((props) => {
       setProgressOn(false)
     }
   };
-
+  let formRef = React.createRef();
+  const [isValid, setValid] = React.useState(false);
   const handleBrokenImage = e => (e.target.src = "/img/gag.png");
 
+  let validatorListener = async () => {
+    const valid = await formRef.current.isFormValid();
+    setValid(valid)
+  }
+
   return (
-    <ValidatorForm onSubmit={onApply} onError={errors => console.log(errors)}
+    <ValidatorForm onSubmit={onApply} ref={formRef} onError={errors => console.log(errors)}
       {...rest}
       className={clsx(classes.root, className)}
     >
@@ -102,18 +109,18 @@ const ConversationForm = observer((props) => {
           value={value}
           onChange={handleChange}
           placeholder="Leave a message"
-          validators={['required', 'minStringLength:1', 'maxStringLength:500', 'trim']}
-              errorMessages={['This field is required', 'Minimum 1 character', 'Maximum 500 characters', 'Please enter words']}
+          validators={['required', 'maxStringLength:500']}
+          validatorListener={validatorListener}
+          errorMessages={['This field is required', 'Maximum 500 characters']}
         />
       </Paper>
-      <Tooltip title="Send">
         <IconButton 
-          color={value.length > 0 ? 'primary' : 'default'}
+          //color={value.length > 0 ? 'primary' : 'default'}
           type="submit"
+          disabled={!isValid}
           >
           <SendIcon />
         </IconButton>
-      </Tooltip>
      {/* { <Divider className={classes.divider} />
       <Tooltip title="Attach photo">
         <IconButton
