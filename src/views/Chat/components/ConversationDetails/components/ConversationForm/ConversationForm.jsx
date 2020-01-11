@@ -56,7 +56,7 @@ const ConversationForm = observer((props) => {
 
   const handleChange = event => {
     event.persist();
-    if (/^(|[a-zA-Zа-яА-Я][a-zA-Zа-яА-Я\s]*)$/.test(event.target.value)) {
+    if (/^(|[a-zA-Zа-яА-Я0-9~!@#$%^&*()-_=+,./?<>][a-zA-Zа-яА-Я0-9~!@#$%^&*()-_=+,./?<>\s]*)$/.test(event.target.value)) {
       setValue(event.target.value);
     }
 

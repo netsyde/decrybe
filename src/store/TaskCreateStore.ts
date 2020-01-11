@@ -103,8 +103,10 @@ class TaskCreateStore {
 	}
 
 	@action("set task description")
-	setDescription (description: String) {
-		this.description = description;
+	setDescription (description: string) {
+		//if (/^(|[a-zA-Zа-яА-Я0-9~!@#$%^&*()-_=+,./?<>][a-zA-Zа-яА-Я0-9~!@#$%^&*()-_=+,./?<>\s]*)$/.test(description)) {
+			this.description = description;
+		//}
 	}
 
 	@computed get getDescription() {

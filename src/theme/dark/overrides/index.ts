@@ -6,6 +6,7 @@ import MuiPaper from './MuiPaper';
 import MuiTab from './MuiTab';
 import MuiDivider from './MuiDivider'
 import MuiIconButton from './MuiIconButton'
+import MuiChip from './MuiChip'
 export default {
     MuiAppBar,
     MuiFormControl,
@@ -14,5 +15,6 @@ export default {
     MuiPaper,
     MuiTab,
     MuiDivider,
-    MuiIconButton
+    MuiIconButton,
+    MuiChip
 };
