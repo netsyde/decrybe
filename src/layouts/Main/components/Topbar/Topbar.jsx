@@ -6,6 +6,7 @@ import { AppBar, Toolbar, Badge, Hidden, IconButton } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import NotificationsIcon from '@material-ui/icons/NotificationsOutlined';
 import Button from '@material-ui/core/Button';
+import Brightness7Icon from '@material-ui/icons/Brightness7';
 
 import { Login } from './components'
 const useStyles = makeStyles(theme => ({

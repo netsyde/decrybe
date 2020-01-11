@@ -1,14 +1,14 @@
 /* eslint-disable react/no-multi-comp */
 /* eslint-disable react/display-name */
 import React from 'react';
-import SettingsIcon from '@material-ui/icons/SettingsOutlined';
-import ChatIcon from '@material-ui/icons/ChatOutlined';
+import SettingsIcon from '@material-ui/icons/Settings';
+import ChatIcon from '@material-ui/icons/Chat';
 import { Label } from '../../../../components'
 import { colors } from '@material-ui/core';
-import ViewModuleIcon from '@material-ui/icons/ViewModuleOutlined';
-import ImportContactsIcon from '@material-ui/icons/ImportContactsOutlined';
-import HomeIcon from '@material-ui/icons/HomeOutlined';
-import AssignmentIcon from '@material-ui/icons/AssignmentOutlined';
+import ViewModuleIcon from '@material-ui/icons/ViewModule';
+import ImportContactsIcon from '@material-ui/icons/ImportContacts';
+import HomeIcon from '@material-ui/icons/Home';
+import AssignmentIcon from '@material-ui/icons/Assignment';
 
 export default [
   {
@@ -69,7 +69,7 @@ export default [
         title: 'Changelog',
         href: '/changelog',
         icon: ViewModuleIcon,
-        label: () => <Label color={colors.blue['500']}>v0.5.6</Label>
+        label: () => <Label color={colors.blue['500']}>v0.5.7</Label>
       }
     ]
   }

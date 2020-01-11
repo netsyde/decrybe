@@ -29,7 +29,7 @@ const useStyles = makeStyles(theme => ({
     paddingBottom: 0
   },
   button: {
-    color: colors.blueGrey[800],
+    color: theme.navButtonColor,
     padding: '10px 8px',
     justifyContent: 'flex-start',
     textTransform: 'none',
@@ -37,7 +37,7 @@ const useStyles = makeStyles(theme => ({
     width: '100%'
   },
   buttonLeaf: {
-    color: colors.blueGrey[800],
+    color: theme.navbuttonLeafColor,
     padding: '10px 8px',
     justifyContent: 'flex-start',
     textTransform: 'none',
@@ -49,7 +49,7 @@ const useStyles = makeStyles(theme => ({
     }
   },
   icon: {
-    color: colors.blueGrey[600],
+    color: "#909090",//theme.navIconColor,
     display: 'flex',
     alignItems: 'center',
     marginRight: theme.spacing(1)

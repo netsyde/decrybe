@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
+import { observer } from 'mobx-react';
 import {
   Card,
   CardHeader,
@@ -12,7 +13,8 @@ import {
   Typography,
   Button,
   Divider,
-  colors
+  colors,
+  Switch
 } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
@@ -30,10 +32,18 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Other = props => {
-  const { className, ...rest } = props;
+const Other = observer((props) => {
+  const { className, rootStore, ...rest } = props;
 
   const classes = useStyles(props);
+
+  const [state, setState] = useState({
+    isDark: false
+  });
+  const handleChange = name => event => {
+    //setState({ ...state, [name]: event.target.checked });
+    rootStore.user.setTheme(event.target.checked)
+  };
 
   return (
     <Card
@@ -50,74 +60,20 @@ const Other = props => {
             wrap="wrap"
           >
             <Grid
-              className={classes.item}
               item
-              md={4}
-              sm={6}
+              md={6}
               xs={12}
             >
-              <Typography
-                gutterBottom
-                variant="h6"
-              >
-                System
+              <Typography variant="h6">Dark mode</Typography>
+              <Typography variant="body2">
+                Enables dark site theme
               </Typography>
-              <Typography
-                gutterBottom
-                variant="body2"
-              >
-                You will recieve emails in your business email address
-              </Typography>
-              <FormControlLabel
-                control={<Checkbox color="primary" />}
-                label="Push Notifications"
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    color="primary"
-                    defaultChecked //
-                  />
-                }
-                label="Text message"
-              />
-            </Grid>
-            <Grid
-              className={classes.item}
-              item
-              md={4}
-              sm={6}
-              xs={12}
-            >
-              <Typography
-                gutterBottom
-                variant="h6"
-              >
-                Chat App
-              </Typography>
-              <Typography
-                gutterBottom
-                variant="body2"
-              >
-                You will recieve emails in your business email address
-              </Typography>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    color="primary"
-                    defaultChecked //
-                  />
-                }
-                label="Email"
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    color="primary"
-                    defaultChecked //
-                  />
-                }
-                label="Push notifications"
+              <Switch
+                checked={rootStore.user.getTheme}
+                color="secondary"
+                edge="start"
+                name="canHire"
+                onChange={handleChange('isDark')}
               />
             </Grid>
           </Grid>
@@ -134,6 +90,6 @@ const Other = props => {
       </CardActions>
     </Card>
   );
-};
+});
 
 export default Other;

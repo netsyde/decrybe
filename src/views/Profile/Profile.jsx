@@ -16,7 +16,7 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(3)
   },
   divider: {
-    backgroundColor: colors.grey[300]
+    backgroundColor: theme.dividerTask
   },
   content: {
     marginTop: theme.spacing(3)

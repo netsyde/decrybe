@@ -156,8 +156,8 @@ const RegisterForm = inject('rootStore')(observer(({ rootStore }) => {
           helperText="Your nickname"
           onChange={handleChange('name')}
           value={values.name}
-          validators={['required', 'minStringLength:3', 'maxStringLength:15', 'trim']}
-          errorMessages={['This field is required', 'Minimum 3 characters', 'Maximum 15 characters', 'Please enter words']}
+          validators={['required', 'minStringLength:3', 'maxStringLength:20', 'trim']}
+          errorMessages={['This field is required', 'Minimum 3 characters', 'Maximum 20 characters', 'Please enter words']}
           validatorListener={validatorListener}
         />
         <TextValidator

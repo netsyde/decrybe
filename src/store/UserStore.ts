@@ -30,6 +30,7 @@ class UserStore {
 	@observable publicKey = ""
 	@observable conversations = []
 	@observable locked = true
+	@observable theme = false
 	@observable loginVariant;
 	@observable waves;
 	dapp: string = "3MzSNsJLeYj6Eh6u2QzJrbByPCySgFoCbWC";
@@ -45,6 +46,12 @@ class UserStore {
 			if (WavesKeeper) {
 				let address = this.cookies.get("address")
 				let nodeUrl = this.cookies.get("network")
+				let theme = this.cookies.get("theme")
+				if (theme == "dark") {
+					this.setTheme(true)
+				} else {
+					this.setTheme(false)
+				}
 				this.setUserNetwork(nodeUrl)
 				this.setUserAddress(address)
 				console.log('DEBUG: Restore session')
@@ -106,6 +113,12 @@ class UserStore {
 
 		let address = this.cookies.get("address")
 		let nodeUrl = this.cookies.get("network")
+		let theme = this.cookies.get("theme")
+		if (theme == "dark") {
+			this.setTheme(true)
+		} else {
+			this.setTheme(false)
+		}
 		let balance = await nodeInt.getBalance(address, nodeUrl)
 		this.balance = balance
 		this.setUserNetwork(nodeUrl)
@@ -520,6 +533,22 @@ class UserStore {
 
 	@computed get getTasks () {
 		return this.tasks
+	}
+
+	@action("set user bio")
+	setTheme (theme) {
+		//console.log(theme)
+		if (theme) {
+			this.theme = true;
+			this.cookies.set('theme', "dark", { path: '/' });
+		} else {
+			this.theme = false;
+			this.cookies.set('theme', "light", { path: '/' });
+		}
+	}
+
+	@computed get getTheme() {
+		return this.theme
 	}
 	
 }

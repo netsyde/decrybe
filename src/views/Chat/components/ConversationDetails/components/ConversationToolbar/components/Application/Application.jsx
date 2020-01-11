@@ -44,7 +44,7 @@ const useStyles = makeStyles(theme => ({
     marginRight: theme.spacing(2)
   },
   actions: {
-    backgroundColor: colors.grey[100],
+    backgroundColor: theme.palette.application,
     padding: theme.spacing(2),
     display: 'flex',
     justifyContent: 'center'

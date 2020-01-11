@@ -14,7 +14,8 @@ import getInitials from '../../../../utils/getInitials';
 const useStyles = makeStyles(theme => ({
   root: {
     height: '100%',
-    overflowY: 'auto'
+    overflowY: 'auto',
+    backgroundColor: theme.palette.navBackground
   },
   content: {
     padding: theme.spacing(2)

@@ -17,7 +17,7 @@ import { ConversationListItem } from './components';
 
 const useStyles = makeStyles(theme => ({
   root: {
-    backgroundColor: '#ffffff'
+    backgroundColor: theme.palette.chat
   },
   searchInput: {
     flexGrow: 1

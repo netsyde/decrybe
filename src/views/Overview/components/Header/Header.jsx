@@ -91,7 +91,7 @@ const Header = observer((props) => {
             <img
               alt="Cover"
               className={classes.image}
-              src="/img/undraw_growth_analytics_8btt.svg"
+              src="/img/undraw_cookie_love_ulvn.svg"
             />
           </Grid>
         </Hidden>

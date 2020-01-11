@@ -17,7 +17,8 @@ import getInitials from '../../utils/getInitials';
 
 const useStyles = makeStyles(theme => ({
   root: {
-    boxShadow: "none"
+    boxShadow: "none",
+    backgroundColor: "inherit"
   },
   header: {
     paddingBottom: 0

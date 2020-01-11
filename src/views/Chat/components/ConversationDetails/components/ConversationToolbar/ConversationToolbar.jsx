@@ -28,7 +28,7 @@ import RateReviewIcon from '@material-ui/icons/RateReview';
 import { Application } from './components'
 const useStyles = makeStyles(theme => ({
   root: {
-    backgroundColor: '#ffffff'
+    backgroundColor: theme.palette.chat
   },
   backButton: {
     marginRight: theme.spacing(2),

@@ -1,22 +1,27 @@
 import React, { useState, Suspense } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { NavBar, Topbar } from './components';
-import { Provider, observer, inject } from 'mobx-react';
+import { observer } from 'mobx-react';
 import rootStore from '../../store/RootStore'
 import { LinearProgress } from '@material-ui/core';
 const stores = { rootStore };
 import { renderRoutes } from 'react-router-config';
 import { Snackbar } from '../../components'
 import { Redirect } from 'react-router-dom';
+import { ThemeProvider } from '@material-ui/core/styles';
+import light from '../../theme/light';
+import dark from '../../theme/dark'
+import '../../assets/light/scss/index.scss';
 
 const useStyles = makeStyles(theme => ({
-  root: {
+  root: props => ({
     height: '100%',
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
-    overflow: 'hidden'
-  },
+    overflow: 'hidden',
+    backgroundColor: props.theme == false ? "#F4F6F8" : "#212121"
+  }),
   topBar: {
     zIndex: 2,
     position: 'relative'
@@ -35,13 +40,14 @@ const useStyles = makeStyles(theme => ({
   content: {
     overflowY: 'auto',
     flex: '1 1 auto'
-  }
+  },
+  
 }));
 
 const Main = observer((props) => {
   const { route } = props; // children
-
-  const classes = useStyles(1);
+  let theme = rootStore.user.getTheme;
+  const classes = useStyles({theme});
 
   const [openNavBarMobile, setOpenNavBarMobile] = useState(false);
 
@@ -58,6 +64,7 @@ const Main = observer((props) => {
   }
   
   return (
+    <ThemeProvider theme={rootStore.user.getTheme == false ? light : dark}>
       <div className={classes.root}>
       <Topbar
         className={classes.topBar}
@@ -76,6 +83,7 @@ const Main = observer((props) => {
         </main>
       </div>
     </div>
+    </ThemeProvider>
   );
 });
 

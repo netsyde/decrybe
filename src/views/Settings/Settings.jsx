@@ -22,7 +22,7 @@ const useStyles = makeStyles(theme => ({
     marginTop: theme.spacing(3)
   },
   divider: {
-    backgroundColor: colors.grey[300]
+    backgroundColor: theme.dividerTask
   },
   content: {
     marginTop: theme.spacing(3)
@@ -40,7 +40,7 @@ const SettingsContainer = props => {
 
   const tabs = [
     { value: 'general', label: 'General' },
-    /*{ value: 'other', label: 'Other' }*/,
+    { value: 'other', label: 'Other' },
   ];
 
   if (!tab) {
@@ -75,7 +75,7 @@ const SettingsContainer = props => {
       <Divider className={classes.divider} />
       <div className={classes.content}>
         {tab === 'general' && <General rootStore={rootStore} />}
-        {tab === 'other' && <Other />}
+        {tab === 'other' && <Other rootStore={rootStore}/>}
       </div>
     </Page>
   );

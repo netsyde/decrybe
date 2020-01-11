@@ -1,0 +1,43 @@
+@import '~react-perfect-scrollbar/dist/css/styles.css';
+@import './prismjs';
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  height: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  //background-color: #212121;
+  height: 100%;
+}
+
+a {
+  text-decoration: none;
+}
+
+#app {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  overflow: hidden;
+  flex-direction: column;
+}
+
+:not(pre) > code {
+  font-family: Inconsolata, Monaco, Consolas, 'Courier New', Courier, monospace;
+  //background-color: //#333333;
+  padding: 2px 4px;
+  direction: ltr;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  line-height: 1.5;
+  font-size: 14px;
+}

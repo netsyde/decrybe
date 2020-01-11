@@ -1,3 +1,11 @@
+### V0.5.7
+ 
+##### 11-01-2020
+
+#### New
+- Added a dark theme (you can enable it in the settings)
+- Fixed some bugs
+
 ### V0.5.6
  
 ##### 09-01-2020
