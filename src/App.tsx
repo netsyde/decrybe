@@ -10,7 +10,6 @@ import { Provider } from 'mobx-react';
 import rootStore from './store/RootStore'
 const stores = { rootStore };
 const browserHistory = createBrowserHistory();
-import { YMInitializer } from 'react-yandex-metrika';
 
 import {
   ScrollReset,
@@ -22,7 +21,6 @@ export default class App extends Component {
     
     return (
       <Provider { ...stores }>
-          <YMInitializer accounts={[57003187]} />
           <Router history={browserHistory}>
           <ScrollReset />
             {renderRoutes(routes)}
