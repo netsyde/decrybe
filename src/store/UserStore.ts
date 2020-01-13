@@ -89,6 +89,7 @@ class UserStore {
 		if (conversations) {
 			this.conversations = conversations
 		}
+		await this.root.disputes.loadDisputes(this.isUserLogin)
 		console.log('DEBUG: Storage update')
 	}
 	@action("Register without waves keeper")
