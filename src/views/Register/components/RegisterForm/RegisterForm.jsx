@@ -86,12 +86,12 @@ const RegisterForm = inject('rootStore')(observer(({ rootStore }) => {
       console.log(data)
 
       let signTx = await dAppInt.signUp(data, rootStore.user.getWavesKeeper)
-      if (signTx.status) {
+      if (signTx) {
         createSnackbar('success', 'You have successfully registered!')
         rootStore.user.actionAfterSignup()
         history.push('/')
       } else {
-        createSnackbar('error', signTx.error ? (signTx.error.message ? signTx.error.message : (signTx.error.data ? sign.error.data : signTx.error )) : "")
+        createSnackbar('error', "Check console")
       }
     } else {
       let data = {
@@ -113,13 +113,13 @@ const RegisterForm = inject('rootStore')(observer(({ rootStore }) => {
       console.log(data)
 
       let signTx = await dAppInt.signUp(data, rootStore.user.getWavesKeeper)
-      if (signTx.status) {
+      if (signTx) {
         createSnackbar('success', 'You have successfully registered!')
         rootStore.user.actionAfterSignup()
         history.push('/')
       } else {
         console.log(signTx)
-        createSnackbar('error', signTx.error ? (signTx.error.message ? signTx.error.message : (signTx.error.data ? sign.error.data : signTx.error )) : "")
+        createSnackbar('error', "Check console")
       }
     }
   };
