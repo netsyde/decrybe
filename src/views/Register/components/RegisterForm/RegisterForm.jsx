@@ -86,12 +86,12 @@ const RegisterForm = inject('rootStore')(observer(({ rootStore }) => {
       console.log(data)
 
       let signTx = await dAppInt.signUp(data, rootStore.user.getWavesKeeper)
-      if (signTx.status) {
+      if (signTx) {
         createSnackbar('success', 'You have successfully registered!')
         rootStore.user.actionAfterSignup()
         history.push('/')
       } else {
-        createSnackbar('error', signTx.error ? (signTx.error.message ? signTx.error.message : (signTx.error.data ? sign.error.data : signTx.error )) : "")
+        createSnackbar('error', "Check console")
       }
     } else {
       let data = {
@@ -113,13 +113,13 @@ const RegisterForm = inject('rootStore')(observer(({ rootStore }) => {
       console.log(data)
 
       let signTx = await dAppInt.signUp(data, rootStore.user.getWavesKeeper)
-      if (signTx.status) {
+      if (signTx) {
         createSnackbar('success', 'You have successfully registered!')
         rootStore.user.actionAfterSignup()
         history.push('/')
       } else {
         console.log(signTx)
-        createSnackbar('error', signTx.error ? (signTx.error.message ? signTx.error.message : (signTx.error.data ? sign.error.data : signTx.error )) : "")
+        createSnackbar('error', "Check console")
       }
     }
   };
@@ -156,8 +156,8 @@ const RegisterForm = inject('rootStore')(observer(({ rootStore }) => {
           helperText="Your nickname"
           onChange={handleChange('name')}
           value={values.name}
-          validators={['required', 'minStringLength:3', 'maxStringLength:20', 'trim']}
-          errorMessages={['This field is required', 'Minimum 3 characters', 'Maximum 20 characters', 'Please enter words']}
+          validators={['required', 'minStringLength:3', 'maxStringLength:15', 'trim']}
+          errorMessages={['This field is required', 'Minimum 3 characters', 'Maximum 15 characters', 'Please enter words']}
           validatorListener={validatorListener}
         />
         <TextValidator

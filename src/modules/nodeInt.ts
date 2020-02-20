@@ -1,7 +1,7 @@
 const { broadcast, data, nodeInteraction } =  require('@waves/waves-transactions');
 const axios = require('axios');
 
-const dApp = "3MzSNsJLeYj6Eh6u2QzJrbByPCySgFoCbWC"
+const dApp = "3N9kox62MPg67TokQMTTZJKTYQBPwtJL2Tk"
 const nodeUrl = "https://testnodes.wavesnodes.com"
 
 let color = ["#1abc9c", "#2ecc71", "#3498db", "#9b59b6", "#34495e", "#16a085",
@@ -9,6 +9,7 @@ let color = ["#1abc9c", "#2ecc71", "#3498db", "#9b59b6", "#34495e", "#16a085",
                     "#ff7979", "#badc58", "#f9ca24", "#f0932b",
                     "#eb4d4b", "#6ab04c", "#e056fd", "#686de0", "#30336b", "#130f40"]
 import moment from 'moment'
+import { Brief } from '../views/TaskDetails/components/Overview/components';
 /**
  * Get user balance
  * @param address - user address
@@ -87,9 +88,8 @@ export let getDataByKey = async (data, key: String) => {
 					response = null;
 				}
 			}
-        }
-        
-		return response
+		}
+		return response;
     } catch (e) {
         return false
     }
