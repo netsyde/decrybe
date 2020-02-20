@@ -1,6 +1,6 @@
 {
     "name": "decrybe",
-    "version": "0.6.0",
+    "version": "0.5.7",
     "scripts": {
         "start": "node server.ts",
         "build": "webpack --config webpack.config.ts",
@@ -55,6 +55,7 @@
         "react-perfect-scrollbar": "^1.5.3",
         "react-router-config": "^5.1.1",
         "react-router-dom": "^5.0.1",
+        "react-yandex-metrika": "^2.6.0",
         "sass-loader": "^8.0.0",
         "style-loader": "^1.0.0",
         "terser-webpack-plugin": "^2.2.1",
